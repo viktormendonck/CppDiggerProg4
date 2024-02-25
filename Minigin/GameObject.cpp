@@ -1,24 +1,48 @@
-#include <string>
 #include "GameObject.h"
-#include "ResourceManager.h"
-#include "Renderer.h"
+
+#include "Component.h"
+
 
 dae::GameObject::~GameObject() = default;
 
-void dae::GameObject::Update(){}
+void dae::GameObject::Update()
+{
+	for (const auto& component : m_Components)
+	{
+		component->Update();
+	}
+}
+void dae::GameObject::FixedUpdate()
+{
+	for (const auto& component : m_Components)
+	{
+		component->FixedUpdate();
+	}
+}
 
 void dae::GameObject::Render() const
 {
-	const auto& pos = m_transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
-}
-
-void dae::GameObject::SetTexture(const std::string& filename)
-{
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
+	for (const auto& component : m_Components)
+	{
+		component->Render();
+	}
 }
 
 void dae::GameObject::SetPosition(float x, float y)
 {
-	m_transform.SetPosition(x, y, 0.0f);
+	m_Transform.SetPosition(x, y, 0.0f);
+}
+
+void dae::GameObject::AddComponent(std::unique_ptr<Component> pComponent)
+{
+	m_Components.push_back(std::move(pComponent));
+}
+
+void dae::GameObject::RemoveComponent(const Component * pComponent)
+{
+	std::erase_if(m_Components, [&](const std::unique_ptr<Component>& pCurrentComp) -> bool
+	{
+		return pCurrentComp.get() == pComponent;
+	});
+
 }
