@@ -2,55 +2,61 @@
 #include <glm/gtc/matrix_transform.hpp>
 #pragma warning(disable: 4201)
 #include <glm/gtx/quaternion.hpp>
+#include <iostream>
+#include "GameObject.h"
 
 
+
+dae::Transform::Transform(GameObject* GameObject)
+	:m_pGameObject(GameObject)
+{
+}
 
 void dae::Transform::Translate(const glm::vec2& delta)
 {
-	m_Position += delta;
-	m_IsDirty = true;
+	m_LocalPosition += delta;
+	SetDirty();
 }
-
-void dae::Transform::SetPosition(const glm::vec2& position)
-{
-	m_Position = position;
-	m_IsDirty = true;
-}
-
 void dae::Transform::Rotate(const float delta)
 {
-	m_Rotation += delta;
-	m_IsDirty = true;
+	m_LocalRotation += delta;
+	SetDirty();
 }
 
-void dae::Transform::SetRotation(const float rotation)
+void dae::Transform::SetLocalPosition(const glm::vec2& position)
 {
-	m_Rotation = rotation;
-	m_IsDirty = true;
+	m_LocalPosition = position;
+	SetDirty();
+}
+void dae::Transform::SetLocalRotation(const float rotation)
+{
+	m_LocalRotation = rotation;
+	SetDirty();
+}
+void dae::Transform::SetLocalScale(const glm::vec2& scale)
+{
+	m_LocalScale = scale;
+	SetDirty();
 }
 
-void dae::Transform::SetScale(const glm::vec2& scale)
-{
-	m_Scale = scale;
-	m_IsDirty = true;
-}
 
-const glm::vec2 dae::Transform::GetPosition()
+const glm::vec2 dae::Transform::GetWorldPosition()
 {
-	glm::vec3 position = GetTransformationMatrix()[3];
-	return { position.x,position.y};
+	if (m_IsDirty)
+		UpdateTransformationMatrix();
+	return m_WorldPosition;
 }
-
-const float dae::Transform::GetRotation()
+const float dae::Transform::GetWorldRotation()
 {
-	// Extract the rotation part of the matrix
-	return glm::eulerAngles(glm::quat_cast(GetTransformationMatrix())).z;
+	if (m_IsDirty)
+		UpdateTransformationMatrix();
+	return m_WorldRotation;
 }
-
-const glm::vec2 dae::Transform::GetScale()
+const glm::vec2 dae::Transform::GetWorldScale()
 {
-	GetTransformationMatrix();
-	return { glm::length(m_TransformationMatrix[0]),glm::length(m_TransformationMatrix[1]) };
+	if (m_IsDirty)
+		UpdateTransformationMatrix();
+	return m_WorldScale;
 }
 
 glm::mat4& dae::Transform::GetTransformationMatrix()
@@ -66,14 +72,37 @@ void dae::Transform::UpdateTransformationMatrix()
 	m_IsDirty = false;
 
 	glm::mat4 transformationMatrix = glm::mat4(1.0f); // Start with the identity matrix
+	transformationMatrix = glm::translate(transformationMatrix, {m_LocalPosition, 1});
+	transformationMatrix = rotate(transformationMatrix, m_LocalRotation, glm::vec3(0.f, 0.f, 1.f));
+	transformationMatrix = glm::scale(transformationMatrix, { m_LocalScale, 1});
+	if (m_pGameObject->GetParent() == nullptr)
+	{
+		m_TransformationMatrix = transformationMatrix;
+	}
+	else
+	{
+		Transform& parentTransform{ m_pGameObject->GetParent()->GetTransform() };
+		m_TransformationMatrix = parentTransform.GetTransformationMatrix() * transformationMatrix;
 
-	// Apply transformations
-	transformationMatrix = glm::translate(transformationMatrix, {m_Position, 1});
+	}
+	DecomposeMatrix();
+}
 
-	// Apply rotations around the x, y, and z axes
-	transformationMatrix = rotate(transformationMatrix, m_Rotation, glm::vec3(0.f, 0.f, 1.f));
+void dae::Transform::DecomposeMatrix()
+{
+	// Extract position, rotation, and scale from the transformation matrix
+	m_WorldPosition = m_TransformationMatrix[3];
+	
+	m_WorldRotation = glm::eulerAngles(glm::quat_cast(m_TransformationMatrix)).z;
+	m_WorldScale = { glm::length(m_TransformationMatrix[0]),glm::length(m_TransformationMatrix[1]) };
+}
 
-	// Apply scaling
-	transformationMatrix = glm::scale(transformationMatrix, { m_Scale, 1});
-	m_TransformationMatrix = transformationMatrix;
+void dae::Transform::SetDirty()
+{
+	m_IsDirty = true;
+
+	for (auto& child : m_pGameObject->GetChildren())
+	{
+		child->GetTransform().SetDirty();
+	}
 }

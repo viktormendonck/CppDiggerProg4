@@ -4,6 +4,11 @@
 #include <stdexcept>
 
 
+dae::GameObject::GameObject()
+	:m_Transform{ Transform(this) }
+{
+}
+
 dae::GameObject::~GameObject() = default;
 
 void dae::GameObject::Update()
@@ -76,17 +81,7 @@ void dae::GameObject::SetParent(GameObject* pParent)
 	m_pParent = pParent;
 }
 
-glm::vec2 dae::GameObject::GetWorldPos()
-{
-	if (m_pParent)
-	{
-		return m_pParent->GetWorldPos() + m_Transform.GetPosition();
-	}
-	else
-	{
-		return m_Transform.GetPosition();
-	}
-}
+
 
 std::shared_ptr<dae::GameObject> dae::GameObject::DetachChild(GameObject* go, bool keepWorldPosition)
 {
@@ -100,21 +95,21 @@ std::shared_ptr<dae::GameObject> dae::GameObject::DetachChild(GameObject* go, bo
 	m_Children.erase(it);
 	if (keepWorldPosition)
 	{
-		childDetached->GetTransform().SetPosition(childDetached->GetWorldPos() + childDetached->GetTransform().GetPosition());
+		childDetached->GetTransform().SetLocalPosition(childDetached->GetTransform().GetWorldPosition() + childDetached->GetTransform().GetWorldPosition());
 	}
 	return childDetached;
 }
 
-void dae::GameObject::AttachChild(std::shared_ptr<dae::GameObject> go, bool keepWorldPosition)
+void dae::GameObject::AttachChild(std::shared_ptr<dae::GameObject> go, bool keepChildsWorldPosition)
 {
 	go->SetParent(this);
-	if (keepWorldPosition)
+	if (keepChildsWorldPosition)
 	{
-		go->GetTransform().SetPosition(go->GetTransform().GetPosition() - GetWorldPos());
+		go->GetTransform().SetLocalPosition(go->GetTransform().GetLocalPosition() - GetTransform().GetWorldPosition());
 	}
 	else
 	{
-		go->GetTransform().SetPosition(go->GetWorldPos());
+		go->GetTransform().SetLocalPosition(go->GetTransform().GetWorldPosition());
 	}
 
 	m_Children.emplace_back(std::move(go));

@@ -10,30 +10,41 @@ namespace dae
 	{
 	public:
 	
-		Transform() = default;
+		Transform(GameObject* GameObject);
 
 		void Translate(const glm::vec2& delta);
-		void SetPosition(const glm::vec2& position);
-		
 		void Rotate(const float delta);
-		void SetRotation(const float rotation);
 		
-		void SetScale(const glm::vec2& scale);
+		void SetLocalPosition(const glm::vec2& position);
+		void SetLocalRotation(const float rotation);
+		void SetLocalScale(const glm::vec2& scale);
 
-
-		const glm::vec2 GetPosition();
-		const float GetRotation();
-		const glm::vec2 GetScale();
-
+		const glm::vec2 GetLocalPosition() const { return m_LocalPosition; }
+		const float GetLocalRotation() const { return m_LocalRotation; }
+		const glm::vec2 GetLocalScale() const { return m_LocalScale; }
+		
+		const glm::vec2 GetWorldPosition();
+		const float GetWorldRotation();
+		const glm::vec2 GetWorldScale();
+		
 		glm::mat4& GetTransformationMatrix();
-
 	private:
 		void UpdateTransformationMatrix();
+		void DecomposeMatrix();
+		void SetDirty();
+
+		GameObject* m_pGameObject{};
+
 		glm::mat4 m_TransformationMatrix{};
 
-		glm::vec2 m_Position{};
-		float m_Rotation{};
-		glm::vec2 m_Scale{ 1,1};
+		glm::vec2 m_WorldPosition{};
+		float m_WorldRotation{};
+		glm::vec2 m_WorldScale{ 1,1 };
+
+		glm::vec2 m_LocalPosition{};
+		float m_LocalRotation{};
+		glm::vec2 m_LocalScale{ 1,1 };
+
 		bool m_IsDirty = true;
 	};
 }

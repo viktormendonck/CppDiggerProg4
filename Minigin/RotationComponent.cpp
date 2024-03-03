@@ -10,6 +10,6 @@ dae::RotationComponent::RotationComponent(GameObject* pParent, float rotationSpe
 void dae::RotationComponent::Update()
 {
 	//test transform
-	GetParent()->GetTransform().Translate({ m_RotationSpeed * GameTime::GetInstance().GetDeltaTime(),0 });
-	//GetParent()->GetTransform().Rotate(m_RotationSpeed * GameTime::GetInstance().GetDeltaTime());
+	//GetParent()->GetTransform().Translate({ m_RotationSpeed * GameTime::GetInstance().GetDeltaTime(),0 });
+	GetParent()->GetTransform().Rotate(m_RotationSpeed * GameTime::GetInstance().GetDeltaTime());
 }

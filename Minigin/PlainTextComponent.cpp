@@ -34,7 +34,7 @@ void dae::PlainTextComponent::Render() const
 	if (!m_pTexture)
 		throw (std::string("PlainTextComponent::Render() > No texture found!"));
 
-	const glm::vec2& pos = GetParent()->GetTransform().GetPosition();
+	const glm::vec2& pos = GetParent()->GetTransform().GetWorldPosition();
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }
 
