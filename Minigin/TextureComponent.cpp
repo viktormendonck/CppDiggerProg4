@@ -17,7 +17,7 @@ void dae::TextureComponent::Render() const
 	if (!m_pTexture)
 		throw (std::string("TextureRenderer::Render() > No texture found!"));
 
-	const glm::vec3& pos = GetParent()->GetTransform().GetPosition();
+	const glm::vec2& pos = GetParent()->GetWorldPos();
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }
 

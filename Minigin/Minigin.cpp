@@ -98,14 +98,20 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		const float delta{ std::chrono::duration<float>(start - lastFrameStartTime).count() };
 		lastFrameStartTime = start;
 		gameTime.SetDeltaTime(delta);
+
+		doContinue = input.ProcessInput();
 		lag += delta;
+
 		while (lag > GameTime::FIXED_TIMESTEP) {
 			sceneManager.FixedUpdate();
 			lag	-= GameTime::FIXED_TIMESTEP;
 		}
 
-		doContinue = input.ProcessInput();
 		sceneManager.Update();
+		
+		sceneManager.LateUpdate();
+		
+
 		renderer.Render();
 
 		const auto sleepTime = start + std::chrono::milliseconds(targetFrameTimeMS) - std::chrono::high_resolution_clock::now();

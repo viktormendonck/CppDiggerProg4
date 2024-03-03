@@ -1,16 +1,20 @@
 #pragma once
-#include "PlainTextComponent.h"
-
+#include "Component.h"
 namespace dae
 {
-	class FPSDisplay final : public PlainTextComponent
+	struct MissingComponentException {};
+
+	class PlainTextComponent;
+	class FPSDisplay final : public Component
 	{
 	public:
-		FPSDisplay(GameObject* pParent, std::shared_ptr<Font> font, SDL_Color color, float updateTime);
+		FPSDisplay(GameObject* pParent, float updateTime);
 		void Update() override;
 	private:
-		float m_updateTime{ };
-		float m_deltasBetweenUpdates{};
-		float m_accumulatedDeltas{};
+		PlainTextComponent* m_pPlainTextComponent{};
+
+		const float m_UpdateTime{};
+		int m_DeltasBetweenUpdates{};
+		float m_AccumulatedDeltas{};
 	};
 }

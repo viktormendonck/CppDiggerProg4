@@ -20,20 +20,30 @@ dae::PlainTextComponent::PlainTextComponent(GameObject* pParent,std::string text
 		CreateTexture();
 }
 
+void dae::PlainTextComponent::Update()
+{
+	if (m_Dirty)
+	{
+		CreateTexture();
+		m_Dirty = false;
+	}
+}
+
 void dae::PlainTextComponent::Render() const
 {
 	if (!m_pTexture)
 		throw (std::string("PlainTextComponent::Render() > No texture found!"));
 
-	const glm::vec3& pos = GetParent()->GetTransform().GetPosition();
+	const glm::vec2& pos = GetParent()->GetTransform().GetPosition();
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }
 
 void dae::PlainTextComponent::SetText(const std::string& text)
 {
 	m_Text = text;
-	CreateTexture();
+	m_Dirty = true;
 }
+
 
 void dae::PlainTextComponent::CreateTexture()
 {

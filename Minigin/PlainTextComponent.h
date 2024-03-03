@@ -14,7 +14,7 @@ namespace dae
 	public:
 		explicit PlainTextComponent(GameObject* pParent, std::string text , std::shared_ptr<Font> m_pFont, SDL_Color color);
 
-		void Update() override {};
+		void Update() override;
 		void Render() const override;
 		void SetText(const std::string& text);
 
@@ -23,6 +23,7 @@ namespace dae
 		std::shared_ptr<Font> m_pFont;
 		std::string m_Text;
 		SDL_Color m_Color;
+		bool m_Dirty = true;
 
 		void CreateTexture();
 	};

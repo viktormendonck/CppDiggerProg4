@@ -1,29 +1,40 @@
 #include "FPSdisplay.h"
 #include "GameTime.h"
+#include "GameObject.h"
+#include "PlainTextComponent.h"
 #include <sstream>
 #include <iomanip>
 
-dae::FPSDisplay::FPSDisplay(GameObject* pParent, std::shared_ptr<Font> font, SDL_Color color, float updateTime)
-	: PlainTextComponent{ pParent,"FPS: 0", font, color }, m_updateTime{ updateTime }
+
+
+dae::FPSDisplay::FPSDisplay(GameObject* pParent, float updateTime)
+	: Component{ pParent }, m_UpdateTime{ updateTime }
 {
+	m_pPlainTextComponent = pParent->GetComponent<PlainTextComponent>();
+
+	if (!m_pPlainTextComponent) 
+	{
+		throw MissingComponentException{};
+	}
 }
+
 
 void dae::FPSDisplay::Update()
 {
-	if (m_accumulatedDeltas >= m_updateTime)
+	if (m_AccumulatedDeltas >= m_UpdateTime)
 	{
 		std::stringstream fpsStream;
 
-		fpsStream <<"FPS:" << std::fixed << std::setprecision(2) << 1 / ( m_accumulatedDeltas / m_deltasBetweenUpdates);
+		fpsStream <<"FPS:" << std::fixed << std::setprecision(2) << 1 / ( m_AccumulatedDeltas / m_DeltasBetweenUpdates);
 
-
-		SetText(fpsStream.str());
-		m_accumulatedDeltas = 0;
-		m_deltasBetweenUpdates = 0;
+		m_pPlainTextComponent->SetText(fpsStream.str());
+		m_AccumulatedDeltas = 0;
+		m_DeltasBetweenUpdates = 0;
 	}
 	else {
-		m_deltasBetweenUpdates++;
-		m_accumulatedDeltas += GameTime::GetInstance().GetDeltaTime();
+		m_DeltasBetweenUpdates++;
+		m_AccumulatedDeltas += GameTime::GetInstance().GetDeltaTime();
 	}
 	
 }
+

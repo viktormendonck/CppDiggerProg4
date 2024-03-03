@@ -11,19 +11,23 @@
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>
+      </Extensions>
     </Filter>
     <Filter Include="Engine\base engine">
       <UniqueIdentifier>{13eed464-4d33-41f9-80ba-82c42ebc1cc0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\self made">
+    <Filter Include="Engine\GameFiles">
       <UniqueIdentifier>{09eefda4-b2df-42b0-bb51-a27359c91d21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\self made\Components">
+    <Filter Include="Engine\GameFiles\Components">
       <UniqueIdentifier>{d28abbce-8783-4467-b316-6c81165ca0e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\self made\Components\Text">
+    <Filter Include="Engine\GameFiles\Components\Text">
       <UniqueIdentifier>{238fe3c0-0067-4879-92b4-cd45658c9a45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameFiles\Components\movement">
+      <UniqueIdentifier>{e8381e03-13a7-422c-a369-26993bc967ac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,20 +64,23 @@
     <ClInclude Include="Transform.h">
       <Filter>Engine\base engine</Filter>
     </ClInclude>
-    <ClInclude Include="GameTime.h">
-      <Filter>Engine\self made</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Engine\self made</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureComponent.h">
-      <Filter>Engine\self made</Filter>
-    </ClInclude>
     <ClInclude Include="FPSdisplay.h">
-      <Filter>Engine\self made\Components\Text</Filter>
+      <Filter>Engine\GameFiles\Components\Text</Filter>
     </ClInclude>
     <ClInclude Include="PlainTextComponent.h">
-      <Filter>Engine\self made\Components\Text</Filter>
+      <Filter>Engine\GameFiles\Components\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Engine\GameFiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTime.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RotationComponent.h">
+      <Filter>Engine\GameFiles\Components\movement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +94,6 @@
       <Filter>Engine\base engine</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>Engine\base engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
       <Filter>Engine\base engine</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
@@ -110,20 +114,26 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Engine\base engine</Filter>
     </ClCompile>
-    <ClCompile Include="GameTime.cpp">
-      <Filter>Engine\self made</Filter>
-    </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureComponent.cpp">
-      <Filter>Engine\self made</Filter>
-    </ClCompile>
     <ClCompile Include="FPSdisplay.cpp">
-      <Filter>Engine\self made\Components\Text</Filter>
+      <Filter>Engine\GameFiles\Components\Text</Filter>
     </ClCompile>
     <ClCompile Include="PlainTextComponent.cpp">
-      <Filter>Engine\self made\Components\Text</Filter>
+      <Filter>Engine\GameFiles\Components\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComponent.cpp">
+      <Filter>Engine\GameFiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Engine\GameFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RotationComponent.cpp">
+      <Filter>Engine\GameFiles\Components\movement</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
