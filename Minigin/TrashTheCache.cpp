@@ -8,7 +8,7 @@
 dae::TrashTheCache::TrashTheCache(GameObject* pParent)
 	: Component(pParent)
 {
-	for (int i{};i<m_PlotConfigs.size();i++)
+	for (size_t i{};i<m_PlotConfigs.size();i++)
 	{
 		m_PlotConfigs[i].scale.min = 0;
 		m_PlotConfigs[i].tooltip.show = true;
@@ -65,7 +65,7 @@ void dae::TrashTheCache::ImGuiUpdate()
 	}
 
 	int amountOfGraphs{};
-	for (int i{};i<m_ShowPlot.size();i++)  
+	for (size_t i{};i<m_ShowPlot.size();i++)  
 	{
 		if (m_ShowPlot[i])
 		{
@@ -97,7 +97,6 @@ void dae::TrashTheCache::ImGuiUpdate()
 		}
 	}
 	ImGui::End();
-
 }
 
 
@@ -112,7 +111,7 @@ std::vector<float> dae::TrashTheCache::GetGOAltTimes()
 		for (int i = 0; i < m_Samples; ++i)
 		{
 			auto start = std::chrono::high_resolution_clock::now();
-			for (int j = 0; j < m_ObjectsAmount; j += stepSize)
+			for (size_t j = 0; j < m_ObjectsAmount; j += stepSize)
 			{
 				values[j].ID += 1;
 			}
@@ -123,7 +122,7 @@ std::vector<float> dae::TrashTheCache::GetGOAltTimes()
 		std::ranges::sort(temp);
 
 		float sum{};
-		for (int i{ 1 }; i < temp.size() - 1; ++i)
+		for (size_t i{ 1 }; i < temp.size() - 1; ++i)
 		{
 			sum += temp[i];
 		}
@@ -144,7 +143,7 @@ std::vector<float> dae::TrashTheCache::GetGOTimes()
 		for (int i = 0; i < m_Samples; ++i)
 		{
 			auto start = std::chrono::high_resolution_clock::now();
-			for (int j = 0; j < m_ObjectsAmount; j += stepSize)
+			for (size_t j = 0; j < m_ObjectsAmount; j += stepSize)
 			{
 				values[j].ID += 1;
 			}
@@ -155,7 +154,7 @@ std::vector<float> dae::TrashTheCache::GetGOTimes()
 		std::ranges::sort(temp);
 
 		float sum{};
-		for (int i{ 1 }; i < temp.size() - 1; ++i)
+		for (size_t i{ 1 }; i < temp.size() - 1; ++i)
 		{
 			sum += temp[i];
 		}
@@ -176,7 +175,7 @@ std::vector<float> dae::TrashTheCache::GetIntTimes()
 		for (int i = 0; i < m_Samples; ++i)
 		{
 			auto start = std::chrono::high_resolution_clock::now();
-			for (int j = 0; j < m_ObjectsAmount; j += stepSize)
+			for (size_t j = 0; j < m_ObjectsAmount; j += stepSize)
 			{
 				values[j] += 1;
 			}
@@ -187,7 +186,7 @@ std::vector<float> dae::TrashTheCache::GetIntTimes()
 		std::ranges::sort(temp);
 
 		float sum{};
-		for (int i{ 1 }; i < temp.size() - 1; ++i)
+		for (size_t i{ 1 }; i < temp.size() - 1; ++i)
 		{
 			sum += temp[i];
 		}

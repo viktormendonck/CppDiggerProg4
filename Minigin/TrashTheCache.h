@@ -22,7 +22,7 @@ namespace dae
 
         std::vector <ImGui::PlotConfig> m_PlotConfigs{{},{},{},{}};
         int m_Samples{10};
-        const long long m_ObjectsAmount{ 67'108'864 };
+        const size_t m_ObjectsAmount{ 67'108'864 };
         bool m_UpdateCombined{};
 
 
