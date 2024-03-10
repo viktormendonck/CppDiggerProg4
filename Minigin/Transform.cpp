@@ -2,13 +2,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #pragma warning(disable: 4201)
 #include <glm/gtx/quaternion.hpp>
+
+#include <glm/glm.hpp>
 #include <iostream>
 #include "GameObject.h"
+#include <numbers>
 
 
 
-dae::Transform::Transform(GameObject* GameObject)
-	:m_pGameObject(GameObject)
+dae::Transform::Transform(GameObject* gameObject)
+	:m_pGameObject(gameObject)
 {
 }
 
@@ -20,6 +23,9 @@ void dae::Transform::Translate(const glm::vec2& delta)
 void dae::Transform::Rotate(const float delta)
 {
 	m_LocalRotation += delta;
+	if (m_LocalRotation > 2 * static_cast<float>(std::numbers::pi)) {
+		m_LocalRotation -= 2 * static_cast<float>(std::numbers::pi);
+	}
 	SetDirty();
 }
 
@@ -40,33 +46,34 @@ void dae::Transform::SetLocalScale(const glm::vec2& scale)
 }
 
 
-const glm::vec2 dae::Transform::GetWorldPosition()
+glm::vec2 dae::Transform::GetWorldPosition()
 {
 	if (m_IsDirty)
-		UpdateTransformationMatrix();
+		UpdateTransformation();
 	return m_WorldPosition;
 }
-const float dae::Transform::GetWorldRotation()
+
+float dae::Transform::GetWorldRotation()
 {
 	if (m_IsDirty)
-		UpdateTransformationMatrix();
+		UpdateTransformation();
 	return m_WorldRotation;
 }
-const glm::vec2 dae::Transform::GetWorldScale()
+glm::vec2 dae::Transform::GetWorldScale()
 {
 	if (m_IsDirty)
-		UpdateTransformationMatrix();
+		UpdateTransformation();
 	return m_WorldScale;
 }
 
 glm::mat4& dae::Transform::GetTransformationMatrix()
 {
 	if (m_IsDirty)
-		UpdateTransformationMatrix();
+		UpdateTransformation();
 	return m_TransformationMatrix;
 }
 
-void dae::Transform::UpdateTransformationMatrix()
+void dae::Transform::UpdateTransformation()
 {
 	// Reset the dirty flag
 	m_IsDirty = false;
@@ -101,7 +108,7 @@ void dae::Transform::SetDirty()
 {
 	m_IsDirty = true;
 
-	for (auto& child : m_pGameObject->GetChildren())
+	for (const auto& child : m_pGameObject->GetChildren())
 	{
 		child->GetTransform().SetDirty();
 	}

@@ -57,6 +57,19 @@ void dae::GameObject::Render() const
 	}
 }
 
+void dae::GameObject::ImGuiUpdate()
+{
+	for (const auto& component : m_Components)
+	{
+		component->ImGuiUpdate();
+	}
+	for (const auto& child : m_Children)
+	{
+		child->ImGuiUpdate();
+	}
+
+}
+
 void dae::GameObject::AddComponent(std::unique_ptr<Component> pComponent)
 {
 	if (!pComponent) 
@@ -66,7 +79,7 @@ void dae::GameObject::AddComponent(std::unique_ptr<Component> pComponent)
 	m_Components.push_back(std::move(pComponent));
 }
 
-void dae::GameObject::RemoveComponent(const Component * pComponent)
+void dae::GameObject::RemoveComponent(const Component* pComponent)
 {
 	std::erase_if(m_Components, [&](const std::unique_ptr<Component>& pCurrentComp) -> bool
 	{
@@ -76,43 +89,69 @@ void dae::GameObject::RemoveComponent(const Component * pComponent)
 }
 
 
-void dae::GameObject::SetParent(GameObject* pParent)
+void dae::GameObject::SetParent(GameObject* pParent,bool keepWorldPos)
 {
+	//if parent is already parent or if it creates a loop, return
+	if (m_pParent == pParent || IsInChildTree(pParent)) return;
+	
+	//remove itself from previous parent
+	if (m_pParent)
+	{
+		m_pParent->DetachChild(this,keepWorldPos);
+	}
+	//add itself to new parent
+	if (pParent)
+	{
+		pParent->AttachChild(shared_from_this(), keepWorldPos);
+	}
+	//set new parent
 	m_pParent = pParent;
+	GetTransform().SetDirty();
 }
 
 
-
-std::shared_ptr<dae::GameObject> dae::GameObject::DetachChild(GameObject* go, bool keepWorldPosition)
+void dae::GameObject::DetachChild(GameObject* go, bool keepWorldPosition)
 {
-	auto it = std::find_if(m_Children.begin(), m_Children.end(), [&](auto pChild) -> bool
-		{
-			return pChild.get() == go;
-		});
+	//use the find_if algorithm from ranges to find the child
+	const auto it = std::ranges::find_if(m_Children, [&](auto pChild) -> bool
+	{
+		return pChild.get() == go;
+	});
 
-	std::shared_ptr<GameObject> childDetached{ std::move(*it) };
-	childDetached->SetParent(nullptr);
-	m_Children.erase(it);
+	const std::shared_ptr<GameObject> childDetached{ std::move(*it) };
 	if (keepWorldPosition)
 	{
 		childDetached->GetTransform().SetLocalPosition(childDetached->GetTransform().GetWorldPosition() + childDetached->GetTransform().GetWorldPosition());
 	}
-	return childDetached;
+	m_Children.erase(it);
 }
 
-void dae::GameObject::AttachChild(std::shared_ptr<dae::GameObject> go, bool keepChildsWorldPosition)
+void dae::GameObject::AttachChild(std::shared_ptr<dae::GameObject> go, bool keepParentWorldPosition)
 {
-	go->SetParent(this);
-	if (keepChildsWorldPosition)
+	if (keepParentWorldPosition)
 	{
-		go->GetTransform().SetLocalPosition(go->GetTransform().GetLocalPosition() - GetTransform().GetWorldPosition());
+		go->GetTransform().SetLocalPosition(go->GetTransform().GetLocalPosition() - go->GetTransform().GetWorldPosition());
 	}
 	else
 	{
-		go->GetTransform().SetLocalPosition(go->GetTransform().GetWorldPosition());
+		go->GetTransform().SetLocalPosition(go->GetTransform().GetLocalPosition());
 	}
 
 	m_Children.emplace_back(std::move(go));
 }
 
+bool dae::GameObject::IsInChildTree(dae::GameObject* go) const
+{
+
+	for (const auto& child : m_Children)
+	{
+		if (child.get() == go) return true;
+		if (child->m_Children.empty())
+		{
+			if (child->IsInChildTree(go)) return true;
+		}
+	}
+	return false;
+}
+	
 

@@ -1,6 +1,5 @@
 #include "Scene.h"
 #include "GameObject.h"
-
 #include <algorithm>
 
 using namespace dae;
@@ -9,10 +8,6 @@ unsigned int Scene::m_IdCounter = 0;
 
 Scene::Scene(const std::string& name) : m_Name(name) {}
 
-void dae::Scene::ObjectDestruction(const std::shared_ptr<GameObject>& object)
-{
-	std::erase(m_Objects, object);
-}
 
 Scene::~Scene() = default;
 
@@ -21,9 +16,22 @@ void Scene::Add(std::shared_ptr<GameObject> object)
 	m_Objects.emplace_back(std::move(object));
 }
 
-void Scene::Remove(std::shared_ptr<GameObject> object)
+void dae::Scene::ObjectDestruction(const std::shared_ptr<GameObject>& object)
 {
-	m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), object), m_Objects.end());
+	std::erase(m_Objects, object);
+}
+
+void Scene::ImGuiUpdate()
+{
+	for (auto& object : m_Objects)
+	{
+				object->ImGuiUpdate();
+	}
+}
+
+void Scene::Remove(const std::shared_ptr<GameObject>& object)
+{
+	std::erase(m_Objects, object);
 }
 
 void Scene::RemoveAll()

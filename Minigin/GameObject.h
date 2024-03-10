@@ -8,7 +8,7 @@ namespace dae
 {
 	class Texture2D;
 
-	class GameObject final
+	class GameObject final : public std::enable_shared_from_this<GameObject>
 	{
 	public:
 		GameObject();
@@ -22,6 +22,7 @@ namespace dae
 		void FixedUpdate();
 		void LateUpdate();
 		void Render() const;
+		void ImGuiUpdate();
 
 		Transform& GetTransform() { return m_Transform; }
 		GameObject* GetParent() const { return m_pParent; }
@@ -32,10 +33,8 @@ namespace dae
 		void AddComponent(std::unique_ptr<Component> pComponent);
 		void RemoveComponent(const Component* pComponent);
 
-		void SetParent(GameObject* pParent);
+		void SetParent(GameObject* pParent,bool keepWorldPos);
 
-		std::shared_ptr<dae::GameObject> DetachChild(GameObject* go, bool keepWorldPosition);
-		void AttachChild(std::shared_ptr<dae::GameObject> go, bool keepWorldPosition);
 
 		template<std::derived_from<dae::Component> T>
 
@@ -52,6 +51,10 @@ namespace dae
 			return nullptr;
 		}
 	private:
+		void DetachChild(GameObject* go, bool keepWorldPosition);
+		void AttachChild(std::shared_ptr<dae::GameObject> go, bool keepParentWorldPosition);
+		bool IsInChildTree(dae::GameObject* go) const;
+
 		Transform m_Transform;
 		std::vector<std::unique_ptr<Component>> m_Components{};
 		std::vector<std::shared_ptr<GameObject>> m_Children{};

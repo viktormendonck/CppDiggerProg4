@@ -33,6 +33,14 @@ void dae::SceneManager::Render()
 	}
 }
 
+void dae::SceneManager::ImGuiUpdate()
+{
+	for (const auto& scene : m_Scenes)
+	{
+		scene->ImGuiUpdate();
+	}
+}
+
 void dae::SceneManager::ObjectDestruction()
 {
 	//for (auto& scene : m_Scenes)
