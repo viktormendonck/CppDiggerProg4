@@ -1,8 +1,5 @@
 #pragma once
 #include "InputDevice.h"
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <Xinput.h>
 
 namespace dae
 {
@@ -28,7 +25,7 @@ namespace dae
         };
         explicit ControllerDevice(int controllerIndex);
 
-        ~ControllerDevice() override = default;
+        ~ControllerDevice() override;
         ControllerDevice(const ControllerDevice& other) = delete;
         ControllerDevice(const ControllerDevice&& other) = delete;
         ControllerDevice& operator=(const ControllerDevice& other) = delete;
@@ -38,14 +35,9 @@ namespace dae
 
         void BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button, InputState state);
 	private:
-        std::vector<std::tuple<std::unique_ptr<Command>, ControllerButton, InputState>> m_Commands;
-        const int m_ControllerIndex{};
 
-        XINPUT_STATE m_CurrentState{};
-        XINPUT_STATE m_PreviousState{};
-
-        WORD m_PressedThisFrame{};
-        WORD m_ReleasedThisFrame{};
+        class ControllerDeviceImpl;
+        std::unique_ptr<ControllerDeviceImpl> m_pImpl;
 	};
 }
 

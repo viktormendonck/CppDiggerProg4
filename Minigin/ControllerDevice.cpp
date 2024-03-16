@@ -11,14 +11,39 @@
 
 namespace dae
 {
-	ControllerDevice::ControllerDevice(int controllerIndex)
+	class ControllerDevice::ControllerDeviceImpl
+	{
+	public:
+		explicit ControllerDeviceImpl(int controllerIndex);
+
+		void ProcessInput();
+
+		void BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button, InputState state);
+	private:
+		std::vector<std::tuple<std::unique_ptr<Command>, ControllerButton, InputState>> m_Commands;
+		const int m_ControllerIndex{};
+
+		XINPUT_STATE m_CurrentState{};
+		XINPUT_STATE m_PreviousState{};
+
+		WORD m_PressedThisFrame{};
+		WORD m_ReleasedThisFrame{};
+	};
+
+	ControllerDevice::ControllerDeviceImpl::ControllerDeviceImpl(int controllerIndex)
 		: m_ControllerIndex{controllerIndex}
 	{
 		ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
 		ZeroMemory(&m_PreviousState, sizeof(XINPUT_STATE));
 	}
 
-	void ControllerDevice::ProcessInput()
+	void ControllerDevice::ControllerDeviceImpl::BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button,InputState state)
+	{
+		m_Commands.emplace_back(std::move(pCommand), button, state);
+	}
+
+
+	void ControllerDevice::ControllerDeviceImpl::ProcessInput()
 	{
 		CopyMemory(&m_PreviousState, &m_CurrentState, sizeof(XINPUT_STATE));
 		ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
@@ -43,9 +68,15 @@ namespace dae
 		}
 		
 	}
+	ControllerDevice::ControllerDevice(int controllerIndex)	: m_pImpl{std::make_unique<ControllerDeviceImpl>(controllerIndex)}{}
+	ControllerDevice::~ControllerDevice() = default;
+	void ControllerDevice::ProcessInput()
+	{
+		m_pImpl->ProcessInput();
+	}
 
 	void ControllerDevice::BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button,InputState state)
 	{
-		m_Commands.emplace_back(std::move(pCommand), button, state);
+		m_pImpl->BindCommand(std::move(pCommand), button, state);
 	}
 }
