@@ -38,6 +38,15 @@
     <Filter Include="Engine\GameFiles\Components\Imgui">
       <UniqueIdentifier>{84a824f9-f0a7-4494-ad5e-ff7fc083dbcf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameFiles\Input">
+      <UniqueIdentifier>{58263b36-121e-45c1-97ad-b0c71b784f5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameFiles\Input\Commands">
+      <UniqueIdentifier>{f4b8bae0-65c6-4412-bd79-3a7ca789928c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameFiles\Input\Devices">
+      <UniqueIdentifier>{bea8003a-496c-418e-9bda-94e86fef22b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Font.h">
@@ -112,12 +121,32 @@
     <ClInclude Include="..\3rdParty\imgui-1.90.4\backends\imgui_impl_sdl2.h">
       <Filter>Imgui\backends</Filter>
     </ClInclude>
-    <ClInclude Include="TrashTheCache.h" />
     <ClInclude Include="..\3rdParty\imgui-1.90.4\imgui_plot.h">
       <Filter>Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Minigin.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputDevice.h">
+      <Filter>Engine\GameFiles\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Engine\GameFiles\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectCommand.h">
+      <Filter>Engine\GameFiles\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerDevice.h">
+      <Filter>Engine\GameFiles\Input\Devices</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardDevice.h">
+      <Filter>Engine\GameFiles\Input\Devices</Filter>
+    </ClInclude>
+    <ClInclude Include="TrashTheCache.h">
+      <Filter>Engine\GameFiles\Components\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveCommand.h">
+      <Filter>Engine\GameFiles\Input\Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +227,15 @@
     </ClCompile>
     <ClCompile Include="Minigin.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerDevice.cpp">
+      <Filter>Engine\GameFiles\Input\Devices</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardDevice.cpp">
+      <Filter>Engine\GameFiles\Input\Devices</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveCommand.cpp">
+      <Filter>Engine\GameFiles\Input\Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

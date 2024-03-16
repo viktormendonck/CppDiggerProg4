@@ -17,6 +17,15 @@ bool dae::InputManager::ProcessInput()
 		// Passing event to ImGui
 		ImGui_ImplSDL2_ProcessEvent(&e);
 	}
+	for (const auto& pDevice : m_pDevices)
+	{
+		pDevice->ProcessInput();
+	}
 
 	return true;
+}
+
+void dae::InputManager::AddInputDevice(std::unique_ptr<InputDevice> pDevice)
+{
+	m_pDevices.push_back(std::move(pDevice));
 }

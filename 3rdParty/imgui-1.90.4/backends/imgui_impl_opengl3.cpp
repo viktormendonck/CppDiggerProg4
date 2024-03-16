@@ -269,7 +269,7 @@ bool    ImGui_ImplOpenGL3_Init(const char* glsl_version)
 
     // Setup backend capabilities flags
     ImGui_ImplOpenGL3_Data* bd = IM_NEW(ImGui_ImplOpenGL3_Data)();
-    io.BackendRendererUserData = (void*)bd;
+    io.BackendRendererUserData = static_cast<void*>(bd);
     io.BackendRendererName = "imgui_impl_opengl3";
 
     // Query for GL version (e.g. 320 for GL 3.2)
@@ -281,10 +281,10 @@ bool    ImGui_ImplOpenGL3_Init(const char* glsl_version)
     if (major == 0 && minor == 0)
     {
         // Query GL_VERSION in desktop GL 2.x, the string will start with "<major>.<minor>"
-        const char* gl_version = (const char*)glGetString(GL_VERSION);
+        const char* gl_version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
         sscanf(gl_version, "%d.%d", &major, &minor);
     }
-    bd->GlVersion = (GLuint)(major * 100 + minor * 10);
+    bd->GlVersion = static_cast<GLuint>(major * 100 + minor * 10);
 
     bd->UseBufferSubData = false;
     /*
@@ -339,7 +339,7 @@ bool    ImGui_ImplOpenGL3_Init(const char* glsl_version)
     glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
     for (GLint i = 0; i < num_extensions; i++)
     {
-        const char* extension = (const char*)glGetStringi(GL_EXTENSIONS, i);
+        const char* extension = reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i));
         if (extension != nullptr && strcmp(extension, "GL_ARB_clip_control") == 0)
             bd->HasClipOrigin = true;
     }
@@ -441,7 +441,7 @@ static void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* draw_data, int fb_wid
     GL_CALL(glEnableVertexAttribArray(bd->AttribLocationVtxPos));
     GL_CALL(glEnableVertexAttribArray(bd->AttribLocationVtxUV));
     GL_CALL(glEnableVertexAttribArray(bd->AttribLocationVtxColor));
-    GL_CALL(glVertexAttribPointer(bd->AttribLocationVtxPos,   2, GL_FLOAT,         GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, pos)));
+    GL_CALL(glVertexAttribPointer(bd->AttribLocationVtxPos,   2, GL_FLOAT,         GL_FALSE, sizeof(ImDrawVert), (GLvoid*)(IM_OFFSETOF(ImDrawVert, pos))));
     GL_CALL(glVertexAttribPointer(bd->AttribLocationVtxUV,    2, GL_FLOAT,         GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, uv)));
     GL_CALL(glVertexAttribPointer(bd->AttribLocationVtxColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, col)));
 }
@@ -524,8 +524,8 @@ void    ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
         // - We are now back to using exclusively glBufferData(). So bd->UseBufferSubData IS ALWAYS FALSE in this code.
         //   We are keeping the old code path for a while in case people finding new issues may want to test the bd->UseBufferSubData path.
         // - See https://github.com/ocornut/imgui/issues/4468 and please report any corruption issues.
-        const GLsizeiptr vtx_buffer_size = (GLsizeiptr)cmd_list->VtxBuffer.Size * (int)sizeof(ImDrawVert);
-        const GLsizeiptr idx_buffer_size = (GLsizeiptr)cmd_list->IdxBuffer.Size * (int)sizeof(ImDrawIdx);
+        const GLsizeiptr vtx_buffer_size = static_cast<GLsizeiptr>(cmd_list->VtxBuffer.Size) * static_cast<int>(sizeof(ImDrawVert));
+        const GLsizeiptr idx_buffer_size = static_cast<GLsizeiptr>(cmd_list->IdxBuffer.Size) * static_cast<int>(sizeof(ImDrawIdx));
         if (bd->UseBufferSubData)
         {
             if (bd->VertexBufferSize < vtx_buffer_size)
@@ -538,13 +538,13 @@ void    ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
                 bd->IndexBufferSize = idx_buffer_size;
                 GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, bd->IndexBufferSize, nullptr, GL_STREAM_DRAW));
             }
-            GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, vtx_buffer_size, (const GLvoid*)cmd_list->VtxBuffer.Data));
-            GL_CALL(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, idx_buffer_size, (const GLvoid*)cmd_list->IdxBuffer.Data));
+            GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, vtx_buffer_size, static_cast<const GLvoid*>(cmd_list->VtxBuffer.Data)));
+            GL_CALL(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, idx_buffer_size, static_cast<const GLvoid*>(cmd_list->IdxBuffer.Data)));
         }
         else
         {
-            GL_CALL(glBufferData(GL_ARRAY_BUFFER, vtx_buffer_size, (const GLvoid*)cmd_list->VtxBuffer.Data, GL_STREAM_DRAW));
-            GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, idx_buffer_size, (const GLvoid*)cmd_list->IdxBuffer.Data, GL_STREAM_DRAW));
+            GL_CALL(glBufferData(GL_ARRAY_BUFFER, vtx_buffer_size, static_cast<const GLvoid*>(cmd_list->VtxBuffer.Data), GL_STREAM_DRAW));
+            GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, idx_buffer_size, static_cast<const GLvoid*>(cmd_list->IdxBuffer.Data), GL_STREAM_DRAW));
         }
 
         for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++)
@@ -568,16 +568,15 @@ void    ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
                     continue;
 
                 // Apply scissor/clipping rectangle (Y is inverted in OpenGL)
-                GL_CALL(glScissor((int)clip_min.x, (int)((float)fb_height - clip_max.y), (int)(clip_max.x - clip_min.x), (int)(clip_max.y - clip_min.y)));
+                GL_CALL(glScissor(static_cast<int>(clip_min.x), static_cast<int>(static_cast<float>(fb_height) - clip_max.y), static_cast<int>(clip_max.x - clip_min.x), static_cast<int>(clip_max.y - clip_min.y)));
 
                 // Bind texture, Draw
-                GL_CALL(glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->GetTexID()));
+                GL_CALL(glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(reinterpret_cast<intptr_t>(pcmd->GetTexID()))));
 #ifdef IMGUI_IMPL_OPENGL_MAY_HAVE_VTX_OFFSET
-                if (bd->GlVersion >= 320)
-                    GL_CALL(glDrawElementsBaseVertex(GL_TRIANGLES, (GLsizei)pcmd->ElemCount, sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(intptr_t)(pcmd->IdxOffset * sizeof(ImDrawIdx)), (GLint)pcmd->VtxOffset));
-                else
+                GL_CALL(glDrawElementsBaseVertex(GL_TRIANGLES, static_cast<GLsizei>(pcmd->ElemCount), sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, reinterpret_cast<void*>(static_cast<intptr_t>(pcmd->IdxOffset * sizeof(ImDrawIdx))), static_cast<GLint>(pcmd->VtxOffset)));
+                if (bd->GlVersion < 320)
 #endif
-                GL_CALL(glDrawElements(GL_TRIANGLES, (GLsizei)pcmd->ElemCount, sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(intptr_t)(pcmd->IdxOffset * sizeof(ImDrawIdx))));
+                GL_CALL(glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(pcmd->ElemCount), sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, reinterpret_cast<void*>(static_cast<intptr_t>(pcmd->IdxOffset * sizeof(ImDrawIdx)))));
             }
         }
     }
@@ -618,10 +617,10 @@ void    ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
 #endif
 
 #ifdef IMGUI_IMPL_HAS_POLYGON_MODE
-    glPolygonMode(GL_FRONT_AND_BACK, (GLenum)last_polygon_mode[0]);
+    glPolygonMode(GL_FRONT_AND_BACK, static_cast<GLenum>(last_polygon_mode[0]));
 #endif
-    glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
-    glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
+    glViewport(last_viewport[0], last_viewport[1], static_cast<GLsizei>(last_viewport[2]), static_cast<GLsizei>(last_viewport[3]));
+    glScissor(last_scissor_box[0], last_scissor_box[1], static_cast<GLsizei>(last_viewport[2]), static_cast<GLsizei>(last_viewport[3]));
     (void)bd; // Not all compilation paths use this
 }
 
@@ -649,7 +648,7 @@ bool ImGui_ImplOpenGL3_CreateFontsTexture()
     GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels));
 
     // Store our identifier
-    io.Fonts->SetTexID((ImTextureID)(intptr_t)bd->FontTexture);
+    io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(bd->FontTexture)));
 
     // Restore state
     GL_CALL(glBindTexture(GL_TEXTURE_2D, last_texture));
@@ -676,7 +675,7 @@ static bool CheckShader(GLuint handle, const char* desc)
     GLint status = 0, log_length = 0;
     glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
     glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &log_length);
-    if ((GLboolean)status == GL_FALSE)
+    if (static_cast<GLboolean>(status) == GL_FALSE)
         fprintf(stderr, "ERROR: ImGui_ImplOpenGL3_CreateDeviceObjects: failed to compile %s! With GLSL: %s\n", desc, bd->GlslVersionString);
     if (log_length > 1)
     {
@@ -685,7 +684,7 @@ static bool CheckShader(GLuint handle, const char* desc)
         glGetShaderInfoLog(handle, log_length, nullptr, (GLchar*)buf.begin());
         fprintf(stderr, "%s\n", buf.begin());
     }
-    return (GLboolean)status == GL_TRUE;
+    return static_cast<GLboolean>(status) == GL_TRUE;
 }
 
 // If you get an error please report on GitHub. You may try different GL context version or GLSL version.
@@ -695,7 +694,7 @@ static bool CheckProgram(GLuint handle, const char* desc)
     GLint status = 0, log_length = 0;
     glGetProgramiv(handle, GL_LINK_STATUS, &status);
     glGetProgramiv(handle, GL_INFO_LOG_LENGTH, &log_length);
-    if ((GLboolean)status == GL_FALSE)
+    if (static_cast<GLboolean>(status) == GL_FALSE)
         fprintf(stderr, "ERROR: ImGui_ImplOpenGL3_CreateDeviceObjects: failed to link %s! With GLSL %s\n", desc, bd->GlslVersionString);
     if (log_length > 1)
     {
@@ -704,10 +703,10 @@ static bool CheckProgram(GLuint handle, const char* desc)
         glGetProgramInfoLog(handle, log_length, nullptr, (GLchar*)buf.begin());
         fprintf(stderr, "%s\n", buf.begin());
     }
-    return (GLboolean)status == GL_TRUE;
+    return static_cast<GLboolean>(status) == GL_TRUE;
 }
 
-bool    ImGui_ImplOpenGL3_CreateDeviceObjects()
+bool ImGui_ImplOpenGL3_CreateDeviceObjects()
 {
     ImGui_ImplOpenGL3_Data* bd = ImGui_ImplOpenGL3_GetBackendData();
 
@@ -875,9 +874,9 @@ bool    ImGui_ImplOpenGL3_CreateDeviceObjects()
 
     bd->AttribLocationTex = glGetUniformLocation(bd->ShaderHandle, "Texture");
     bd->AttribLocationProjMtx = glGetUniformLocation(bd->ShaderHandle, "ProjMtx");
-    bd->AttribLocationVtxPos = (GLuint)glGetAttribLocation(bd->ShaderHandle, "Position");
-    bd->AttribLocationVtxUV = (GLuint)glGetAttribLocation(bd->ShaderHandle, "UV");
-    bd->AttribLocationVtxColor = (GLuint)glGetAttribLocation(bd->ShaderHandle, "Color");
+    bd->AttribLocationVtxPos = static_cast<GLuint>(glGetAttribLocation(bd->ShaderHandle, "Position"));
+    bd->AttribLocationVtxUV = static_cast<GLuint>(glGetAttribLocation(bd->ShaderHandle, "UV"));
+    bd->AttribLocationVtxColor = static_cast<GLuint>(glGetAttribLocation(bd->ShaderHandle, "Color"));
 
     // Create buffers
     glGenBuffers(1, &bd->VboHandle);
