@@ -20,9 +20,9 @@ namespace dae
 
         void ProcessInput() override;
 
-        void BindCommand(const std::shared_ptr<Command>& pCommand, SDL_Scancode button, InputState state);
+        void BindCommand(std::unique_ptr<Command> pCommand, SDL_Scancode button, InputState state);
     private:
-        std::vector<std::tuple<std::shared_ptr<Command>, SDL_Scancode, InputState>> m_Commands;
+        std::vector<std::tuple<std::unique_ptr<Command>, SDL_Scancode, InputState>> m_Commands;
 
         std::array<Uint8, SDL_NUM_SCANCODES> m_CurrentState{};
         std::array<Uint8, SDL_NUM_SCANCODES> m_LastFrameState{};

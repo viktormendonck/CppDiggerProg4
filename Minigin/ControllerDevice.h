@@ -36,7 +36,7 @@ namespace dae
 
         void ProcessInput() override;
 
-        void BindCommand(const std::unique_ptr<Command>& pCommand, ControllerButton button, InputState state);
+        void BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button, InputState state);
 	private:
         std::vector<std::tuple<std::unique_ptr<Command>, ControllerButton, InputState>> m_Commands;
         const int m_ControllerIndex{};

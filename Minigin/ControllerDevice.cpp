@@ -29,8 +29,11 @@ namespace dae
 		m_PressedThisFrame = changes & m_CurrentState.Gamepad.wButtons;
 		m_ReleasedThisFrame = changes & m_PreviousState.Gamepad.wButtons;
 
-		for (const auto& [pCommand,button,state] : m_Commands)
+		for (const auto& command : m_Commands)
 		{
+			const auto& pCommand = std::get<0>(command);
+			const auto& button = std::get<1>(command);
+			const auto& state = std::get<2>(command);
 			if (state == InputState::Pressed && m_PressedThisFrame & static_cast<int>(button) ||
 				state == InputState::Held && m_CurrentState.Gamepad.wButtons & static_cast<int>(button) ||
 				state == InputState::Released && m_ReleasedThisFrame & static_cast<int>(button))
@@ -41,8 +44,8 @@ namespace dae
 		
 	}
 
-	void ControllerDevice::BindCommand(const std::unique_ptr<Command>& pCommand, ControllerButton button,InputState state)
+	void ControllerDevice::BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button,InputState state)
 	{
-		m_Commands.emplace_back(pCommand.get(), button, state);
+		m_Commands.emplace_back(std::move(pCommand), button, state);
 	}
 }
