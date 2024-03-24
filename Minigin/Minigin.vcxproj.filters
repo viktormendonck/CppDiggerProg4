@@ -47,6 +47,9 @@
     <Filter Include="Engine\GameFiles\Input\Devices">
       <UniqueIdentifier>{bea8003a-496c-418e-9bda-94e86fef22b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameFiles\Components\Player">
+      <UniqueIdentifier>{5cc91a83-757a-4b00-847e-bf7b5a332058}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Font.h">
@@ -145,8 +148,17 @@
     <ClInclude Include="TrashTheCache.h">
       <Filter>Engine\GameFiles\Components\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="MoveCommand.h">
+    <ClInclude Include="PlayerCommands.h">
       <Filter>Engine\GameFiles\Input\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Signal.h">
+      <Filter>Engine\base engine</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Engine\GameFiles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreDisplays.h">
+      <Filter>Engine\GameFiles\Components\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -234,8 +246,11 @@
     <ClCompile Include="KeyboardDevice.cpp">
       <Filter>Engine\GameFiles\Input\Devices</Filter>
     </ClCompile>
-    <ClCompile Include="MoveCommand.cpp">
-      <Filter>Engine\GameFiles\Input\Commands</Filter>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Engine\GameFiles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreDisplays.cpp">
+      <Filter>Engine\GameFiles\Components\Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

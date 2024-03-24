@@ -61,8 +61,7 @@ namespace dae
 			const auto& state = std::get<2>(command);
 			if (state == InputState::Pressed && m_PressedThisFrame & static_cast<int>(button) ||
 				state == InputState::Held && m_CurrentState.Gamepad.wButtons & static_cast<int>(button) ||
-				state == InputState::Released && m_ReleasedThisFrame & static_cast<int>(button))
-			{
+				state == InputState::Released && m_ReleasedThisFrame & static_cast<int>(button))			{
 				pCommand->Execute();
 			}
 		}

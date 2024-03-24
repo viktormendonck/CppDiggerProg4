@@ -1,19 +1,23 @@
 #pragma once
-#include <SDL_syswm.h>
-
+#include "ControllerDevice.h"
+#include "KeyboardDevice.h"
 #include "Singleton.h"
 #include "GameObject.h"
-#include "InputDevice.h"
 
 namespace dae
 {
+	class KeyboardDevice;
+
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
 		bool ProcessInput();
-		void AddInputDevice(std::unique_ptr<InputDevice> pDevice);
+		int AddInputDevice(std::unique_ptr<ControllerDevice> pDevice);
+		void AddInputDevice(std::unique_ptr<KeyboardDevice> pDevice);
+		KeyboardDevice* GetKeyboardDevice() const { return m_pKeyboardDevice.get(); }
+		ControllerDevice* GetControllerDevice(int index) const { return m_pDevices[index].get(); }
 	private:
-		std::vector<std::unique_ptr<InputDevice>> m_pDevices;
+		std::vector<std::unique_ptr<ControllerDevice>> m_pDevices;
+		std::unique_ptr<KeyboardDevice> m_pKeyboardDevice;
 	};
-
 }

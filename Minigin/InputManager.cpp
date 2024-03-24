@@ -1,6 +1,8 @@
 #include <SDL.h>
 #include "InputManager.h"
 
+#include <stdexcept>
+
 #include "imgui_impl_sdl2.h"
 
 bool dae::InputManager::ProcessInput()
@@ -21,11 +23,26 @@ bool dae::InputManager::ProcessInput()
 	{
 		pDevice->ProcessInput();
 	}
+	m_pKeyboardDevice->ProcessInput();
 
 	return true;
 }
 
-void dae::InputManager::AddInputDevice(std::unique_ptr<InputDevice> pDevice)
+int dae::InputManager::AddInputDevice(std::unique_ptr<ControllerDevice> pDevice)
 {
 	m_pDevices.push_back(std::move(pDevice));
+	return static_cast<int>(m_pDevices.size() - 1);
 }
+
+void dae::InputManager::AddInputDevice(std::unique_ptr<KeyboardDevice> pDevice)
+{
+	if (m_pKeyboardDevice)
+	{
+		throw std::runtime_error("already added a keyboard!");
+	} else
+	{
+		m_pKeyboardDevice = std::move(pDevice);
+	}
+}
+
+

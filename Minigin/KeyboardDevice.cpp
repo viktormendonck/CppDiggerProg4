@@ -1,3 +1,4 @@
+
 #include "KeyboardDevice.h"
 
 #include <iostream>
@@ -34,7 +35,6 @@ namespace dae
 			}
 		}	
 	}
-
 	void KeyboardDevice::BindCommand(std::unique_ptr<Command> pCommand, SDL_Scancode button, InputState state)
 	{
 		m_Commands.emplace_back(std::move(pCommand), button, state);
