@@ -2,7 +2,7 @@
 #include "GameObjectCommand.h"
 #include "GameObject.h"
 #include "PlayerController.h"
-#include "GameTime.h"
+#include "GameData.h"
 namespace dae
 {
 	class PlayerController;
@@ -16,7 +16,7 @@ namespace dae
 		void Execute() override
 		{
 
-			m_pGameObject->GetTransform().Translate(m_Dir * GameTime::GetInstance().GetDeltaTime());
+			m_pGameObject->GetTransform().Translate(m_Dir * GameData::GetInstance().GetDeltaTime());
 		};
 	};
 

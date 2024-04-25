@@ -50,21 +50,18 @@
     <Filter Include="Engine\GameFiles\Components\Player">
       <UniqueIdentifier>{5cc91a83-757a-4b00-847e-bf7b5a332058}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameFiles\Components\Sprite">
+      <UniqueIdentifier>{c3dd8996-17a3-4837-aaca-ea07684b5275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\base engine\Tex">
+      <UniqueIdentifier>{f8bd37ef-9b8c-4f60-aebe-548f7f53dd68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Font.h">
-      <Filter>Engine\base engine</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Engine\base engine</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>Engine\base engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Engine\base engine</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
       <Filter>Engine\base engine</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
@@ -76,9 +73,6 @@
     <ClInclude Include="Singleton.h">
       <Filter>Engine\base engine</Filter>
     </ClInclude>
-    <ClInclude Include="Texture2D.h">
-      <Filter>Engine\base engine</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Engine\base engine</Filter>
     </ClInclude>
@@ -88,13 +82,10 @@
     <ClInclude Include="PlainTextComponent.h">
       <Filter>Engine\GameFiles\Components\Text</Filter>
     </ClInclude>
-    <ClInclude Include="TextureComponent.h">
-      <Filter>Engine\GameFiles\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameTime.h">
+    <ClInclude Include="GameData.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="RotationComponent.h">
@@ -160,30 +151,42 @@
     <ClInclude Include="ScoreDisplays.h">
       <Filter>Engine\GameFiles\Components\Player</Filter>
     </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Engine\GameFiles\Components\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSheetComponent.h">
+      <Filter>Engine\GameFiles\Components\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSheet2D.h">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMapComponent.h">
+      <Filter>Engine\GameFiles\Components\Sprite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Font.cpp">
-      <Filter>Engine\base engine</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Engine\base engine</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Engine\base engine</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Engine\base engine</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Engine\base engine</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Engine\base engine</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
-      <Filter>Engine\base engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture2D.cpp">
       <Filter>Engine\base engine</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
@@ -198,13 +201,10 @@
     <ClCompile Include="PlainTextComponent.cpp">
       <Filter>Engine\GameFiles\Components\Text</Filter>
     </ClCompile>
-    <ClCompile Include="TextureComponent.cpp">
-      <Filter>Engine\GameFiles\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Engine\GameFiles</Filter>
     </ClCompile>
-    <ClCompile Include="GameTime.cpp">
+    <ClCompile Include="GameData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RotationComponent.cpp">
@@ -251,6 +251,27 @@
     </ClCompile>
     <ClCompile Include="ScoreDisplays.cpp">
       <Filter>Engine\GameFiles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComponent.cpp">
+      <Filter>Engine\GameFiles\Components\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSheetComponent.cpp">
+      <Filter>Engine\GameFiles\Components\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Engine\base engine\Tex</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMapComponent.cpp">
+      <Filter>Engine\GameFiles\Components\Sprite</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

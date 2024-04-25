@@ -10,7 +10,11 @@ namespace dae
     {
     public:
         
-        explicit KeyboardDevice() = default;
+        explicit KeyboardDevice()
+        {
+			m_CurrentState.fill(0);
+			m_LastFrameState.fill(0);
+        };
 
         ~KeyboardDevice() override = default;
         KeyboardDevice(const KeyboardDevice& other) = delete;

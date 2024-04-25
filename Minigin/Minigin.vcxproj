@@ -193,7 +193,7 @@
     <ClInclude Include="FPSdisplay.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectCommand.h" />
-    <ClInclude Include="GameTime.h" />
+    <ClInclude Include="GameData.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="ScoreDisplays.h" />
     <ClInclude Include="Signal.h" />
@@ -209,8 +209,11 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SpriteSheet2D.h" />
+    <ClInclude Include="SpriteSheetComponent.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureComponent.h" />
+    <ClInclude Include="TileMapComponent.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TrashTheCache.h" />
   </ItemGroup>
@@ -228,7 +231,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSdisplay.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="GameData.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="KeyboardDevice.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -241,8 +244,10 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScoreDisplays.cpp" />
+    <ClCompile Include="SpriteSheetComponent.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureComponent.cpp" />
+    <ClCompile Include="TileMapComponent.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TrashTheCache.cpp" />
   </ItemGroup>

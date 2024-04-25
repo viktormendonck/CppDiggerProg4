@@ -11,7 +11,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include <chrono>
-#include "GameTime.h"
+#include "GameData.h"
 
 SDL_Window* g_window{};
 
@@ -56,8 +56,8 @@ dae::Minigin::Minigin(const std::string &dataPath)
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
+		800,
 		640,
-		480,
 		SDL_WINDOW_OPENGL
 	);
 	if (g_window == nullptr) 
@@ -73,6 +73,7 @@ dae::Minigin::Minigin(const std::string &dataPath)
 dae::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
+	
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
 	SDL_Quit();
@@ -84,7 +85,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
-	auto& gameTime = GameTime::GetInstance();
+	auto& gameTime = GameData::GetInstance();
 	constexpr float targetFPS{ 144.f };
 	constexpr long targetFrameTimeMS{ static_cast<long>(1.f / targetFPS * 1000) };
 	float lag{ 0.f };
@@ -102,9 +103,9 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		doContinue = input.ProcessInput();
 		
 		lag += delta;
-		while (lag > GameTime::FIXED_TIMESTEP) {
+		while (lag > GameData::FIXED_TIMESTEP) {
 			sceneManager.FixedUpdate();
-			lag	-= GameTime::FIXED_TIMESTEP;
+			lag	-= GameData::FIXED_TIMESTEP;
 		}
 		sceneManager.Update();
 		sceneManager.LateUpdate();

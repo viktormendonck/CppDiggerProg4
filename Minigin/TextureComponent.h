@@ -6,7 +6,6 @@
 namespace dae
 {
 	class Texture2D;
-	class Font;
 	class TextureComponent final : public Component
 	{
 	public:

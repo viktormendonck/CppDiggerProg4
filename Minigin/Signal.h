@@ -11,7 +11,7 @@ namespace dae
     public:
         Signal() = default;
 
-        ~Signal() // Placed inline to avoid extra template
+        ~Signal()
         {
             m_ListenerFunctions.clear();
         }

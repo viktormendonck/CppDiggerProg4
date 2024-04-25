@@ -23,7 +23,10 @@ bool dae::InputManager::ProcessInput()
 	{
 		pDevice->ProcessInput();
 	}
-	m_pKeyboardDevice->ProcessInput();
+	if (m_pKeyboardDevice)
+	{
+		m_pKeyboardDevice->ProcessInput();
+	}
 
 	return true;
 }

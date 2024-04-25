@@ -104,6 +104,31 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, glm::vec2 pos, float
 	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, glm::degrees(rotation), nullptr, SDL_FLIP_NONE);
 }
 
+/**
+ * \brief render a part of a spriteSheet
+ * \param texture 
+ * \param spriteSheetPos 
+ * \param pos 
+ * \param rotation 
+ * \param size 
+ */
+void dae::Renderer::RenderSprite(const Texture2D& texture, glm::ivec2 spriteSheetPos, glm::vec2 pos, float rotation,glm::ivec2 size,glm::vec2 scale) const
+{
+	SDL_Rect src{};
+	src.x = spriteSheetPos.x * size.x;
+	src.y = spriteSheetPos.y * size.y;
+	
+	src.w = static_cast<int>(size.x);
+	src.h = static_cast<int>(size.y);
+
+	SDL_Rect dst{};
+	dst.x = static_cast<int>(pos.x);
+	dst.y = static_cast<int>(pos.y);
+	dst.w = static_cast<int>(src.w * scale.x);
+	dst.h = static_cast<int>(src.h * scale.y);
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst, glm::degrees(rotation), nullptr, SDL_FLIP_NONE);
+
+}
 
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_Renderer; }

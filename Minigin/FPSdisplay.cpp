@@ -1,5 +1,5 @@
 #include "FPSdisplay.h"
-#include "GameTime.h"
+#include "GameData.h"
 #include "GameObject.h"
 #include "PlainTextComponent.h"
 #include <sstream>
@@ -33,7 +33,7 @@ void dae::FPSDisplay::Update()
 	}
 	else {
 		m_DeltasBetweenUpdates++;
-		m_AccumulatedDeltas += GameTime::GetInstance().GetDeltaTime();
+		m_AccumulatedDeltas += GameData::GetInstance().GetDeltaTime();
 	}
 	
 }

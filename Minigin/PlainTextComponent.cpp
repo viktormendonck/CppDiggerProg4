@@ -17,7 +17,7 @@ dae::PlainTextComponent::PlainTextComponent(GameObject* pParent,std::string text
 	, m_pFont{ m_pFont }
 	, m_Color{ color }
 {
-		CreateTexture();
+	CreateTexture();
 }
 
 void dae::PlainTextComponent::Update()

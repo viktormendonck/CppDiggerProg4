@@ -1,6 +1,6 @@
 #include "RotationComponent.h"
 #include "GameObject.h"
-#include "GameTime.h"
+#include "GameData.h"
 #include <iostream>
 
 dae::RotationComponent::RotationComponent(GameObject* pParent, float rotationSpeed)
@@ -11,5 +11,5 @@ dae::RotationComponent::RotationComponent(GameObject* pParent, float rotationSpe
 void dae::RotationComponent::Update()
 {
 	//test transform
-	GetParent()->GetTransform().Rotate(m_RotationSpeed * GameTime::GetInstance().GetDeltaTime());
+	GetParent()->GetTransform().Rotate(m_RotationSpeed * GameData::GetInstance().GetDeltaTime());
 }
