@@ -1,5 +1,6 @@
 ﻿#include "TileMapComponent.h"
 
+#include "GameData.h"
 #include "GameObject.h"
 #include "Renderer.h"
 #include "Texture2D.h"
@@ -8,13 +9,15 @@
 
 namespace dae
 {
-	TileMapComponent::TileMapComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture,int level)
+	TileMapComponent::TileMapComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture,glm::ivec2 tileMapSize,glm::ivec2 mapSize,int level)
 		: Component(pParent),
 		m_pTexture(pTexture),
-		m_TileSize(pTexture->GetSize().x / m_Size.x, pTexture->GetSize().y / m_Size.y),
+		m_TileMapSize(tileMapSize),
+		m_WorldSize(mapSize),
+		m_TileSize(pTexture->GetSize().x / m_TileMapSize.x, pTexture->GetSize().y / m_TileMapSize.y),
 		m_Level(level)
 	{
-		m_TileMap = m_Level1;
+		m_TileMap = GameData::GetInstance().GetLevel(level);
 	}
 
 	void TileMapComponent::Render() const
