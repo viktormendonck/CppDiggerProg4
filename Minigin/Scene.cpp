@@ -55,6 +55,14 @@ void Scene::Update()
 	}
 }
 
+void Scene::Init()
+{
+	for (auto& object : m_Objects)
+	{
+		object->Init();
+	}
+}
+
 void dae::Scene::LateUpdate()
 {
 	for (auto& object : m_Objects)

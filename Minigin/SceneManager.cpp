@@ -9,6 +9,14 @@ void dae::SceneManager::Update()
 	}
 }
 
+void dae::SceneManager::Init()
+{
+	for (auto& scene : m_Scenes)
+	{
+		scene->Init();
+	}
+}
+
 void dae::SceneManager::FixedUpdate()
 {
 	for (auto& scene : m_Scenes)

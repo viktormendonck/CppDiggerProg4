@@ -10,8 +10,8 @@ dae::SpriteSheetComponent::SpriteSheetComponent(dae::GameObject* pParent, std::s
 	: Component(pParent),
 	m_pTexture(pTexture),
 	m_SpriteSheetSize(size),
-	m_CanRotate(canRotate),
 	m_SpriteSize(m_pTexture->GetSize().x / size.x, m_pTexture->GetSize().y / size.y),
+	m_CanRotate(canRotate),
 	m_TimePerFrame(timePerFrame),
 	m_IsAnimated(animated)
 {
@@ -34,13 +34,14 @@ void dae::SpriteSheetComponent::Render() const
 	if (m_pTexture)
 	{
 		dae::Transform& transform = GetParent()->GetTransform();
+		glm::vec2 renderPos{ transform.GetWorldPosition().x - (m_SpriteSize.x / 2),transform.GetWorldPosition().y + (m_SpriteSize.y / 2) };
 		if (m_CanRotate)
 		{
-			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, transform.GetWorldPosition(), transform.GetWorldRotation(), m_SpriteSize,transform.GetLocalScale());
+			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, renderPos, transform.GetWorldRotation(), m_SpriteSize,transform.GetLocalScale());
 		}
 		else
 		{
-			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, transform.GetWorldPosition(), 0, m_SpriteSize, transform.GetLocalScale());
+			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, renderPos, 0, m_SpriteSize, transform.GetLocalScale());
 		}
 	}
 }

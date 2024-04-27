@@ -2,10 +2,10 @@
 #include <sstream>
 
 #include "PlainTextComponent.h"
-#include "PlayerController.h"
+#include "PlayerComponent.h"
 #include "GameObject.h"
 
-dae::ScoreDisplay::ScoreDisplay(GameObject* pParent, PlayerController* pController)
+dae::ScoreDisplay::ScoreDisplay(GameObject* pParent, PlayerComponent* pController)
 	: Component(pParent), m_pPlayerController{ pController }
 {
 	m_pPlainTextComponent = pParent->GetComponent<PlainTextComponent>();
@@ -19,7 +19,7 @@ void dae::ScoreDisplay::UpdateDisplay()
 	m_pPlainTextComponent->SetText(scoreStream.str());
 }
 
-dae::LivesDisplay::LivesDisplay(GameObject* pParent, PlayerController* pController)
+dae::LivesDisplay::LivesDisplay(GameObject* pParent, PlayerComponent* pController)
 	: Component(pParent), m_pPlayerController{ pController }
 {
 	m_pPlainTextComponent = pParent->GetComponent<PlainTextComponent>();

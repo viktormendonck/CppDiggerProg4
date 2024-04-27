@@ -19,6 +19,7 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 		
 		void Update();
+		void Init();
 		void FixedUpdate();
 		void LateUpdate();
 		void Render() const;
@@ -37,12 +38,11 @@ namespace dae
 
 
 		template<std::derived_from<dae::Component> T>
-
-		T* GetComponent() const // currently not using, but could be nice to have
+		T* GetComponent() const 
 		{
 			for (const auto& component : m_Components)
 			{
-				T* comp = dynamic_cast<T*>(component.get());
+				T* comp{ dynamic_cast<T*>(component.get()) };
 				if (comp)
 				{
 					return comp;
@@ -50,6 +50,7 @@ namespace dae
 			}
 			return nullptr;
 		}
+		
 	private:
 		void DetachChild(GameObject* go, bool keepWorldPosition);
 		void AttachChild(std::shared_ptr<dae::GameObject> go, bool keepParentWorldPosition);

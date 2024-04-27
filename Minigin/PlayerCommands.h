@@ -1,31 +1,31 @@
 #pragma once
 #include "GameObjectCommand.h"
 #include "GameObject.h"
-#include "PlayerController.h"
+#include "PlayerComponent.h"
 #include "GameData.h"
 namespace dae
 {
-	class PlayerController;
+	class PlayerComponent;
 
 	class MoveCommand : public GameObjectCommand
 	{
 	public:
-		explicit MoveCommand(GameObject* pGameObject, glm::vec2 dir) : GameObjectCommand(pGameObject), m_Dir{ dir } {};
+		explicit MoveCommand(GameObject* pGameObject, glm::ivec2 dir) : GameObjectCommand(pGameObject), m_Dir{ dir } {};
 	private:
 		glm::vec2 m_Dir;
 		void Execute() override
 		{
 
-			m_pGameObject->GetTransform().Translate(m_Dir * GameData::GetInstance().GetDeltaTime());
+			m_pGameObject->GetComponent<PlayerComponent>()->SetDir(m_Dir);
 		};
 	};
 
 	class AddScoreCommand : public GameObjectCommand
 	{
 	public:
-		explicit AddScoreCommand(GameObject* pGameObject) : GameObjectCommand(pGameObject), m_pPlayerController(pGameObject->GetComponent<PlayerController>()) {};
+		explicit AddScoreCommand(GameObject* pGameObject) : GameObjectCommand(pGameObject), m_pPlayerController(pGameObject->GetComponent<PlayerComponent>()) {};
 	private:
-		PlayerController* m_pPlayerController;
+		PlayerComponent* m_pPlayerController;
 		void Execute() override
 		{
 			if (m_pPlayerController)
@@ -38,9 +38,9 @@ namespace dae
 	class KillCommand : public GameObjectCommand
 	{
 	public:
-		KillCommand(GameObject* pGameObject) : GameObjectCommand(pGameObject), m_pPlayerController(pGameObject->GetComponent<PlayerController>()) {};
+		KillCommand(GameObject* pGameObject) : GameObjectCommand(pGameObject), m_pPlayerController(pGameObject->GetComponent<PlayerComponent>()) {};
 	private:
-		PlayerController* m_pPlayerController;
+		PlayerComponent* m_pPlayerController;
 		void Execute() override
 		{
 			if (m_pPlayerController)

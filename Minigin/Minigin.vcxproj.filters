@@ -145,7 +145,7 @@
     <ClInclude Include="Signal.h">
       <Filter>Engine\base engine</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerController.h">
+    <ClInclude Include="PlayerComponent.h">
       <Filter>Engine\GameFiles\Components\Player</Filter>
     </ClInclude>
     <ClInclude Include="ScoreDisplays.h">
@@ -246,7 +246,7 @@
     <ClCompile Include="KeyboardDevice.cpp">
       <Filter>Engine\GameFiles\Input\Devices</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
+    <ClCompile Include="PlayerComponent.cpp">
       <Filter>Engine\GameFiles\Components\Player</Filter>
     </ClCompile>
     <ClCompile Include="ScoreDisplays.cpp">

@@ -11,6 +11,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include <chrono>
+#include <glm/vec2.hpp>
 #include "GameData.h"
 
 SDL_Window* g_window{};
@@ -93,6 +94,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto lastFrameStartTime = std::chrono::high_resolution_clock::now();
 
 	bool doContinue = true;
+	sceneManager.Init();
 	while (doContinue)
 	{
 		const auto start = std::chrono::high_resolution_clock::now();

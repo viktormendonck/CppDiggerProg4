@@ -23,6 +23,19 @@ void dae::GameObject::Update()
 	}
 	
 }
+
+void dae::GameObject::Init()
+{
+	for (const auto& component : m_Components)
+	{
+		component->Init();
+	}
+	for (const auto& child : m_Children)
+	{
+		child->Init();
+	}
+}
+
 void dae::GameObject::FixedUpdate()
 {
 	for (const auto& component : m_Components)

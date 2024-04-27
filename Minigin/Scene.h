@@ -14,6 +14,7 @@ namespace dae
 
 		void FixedUpdate();
 		void Update();
+		void Init();
 		void LateUpdate();
 		void Render() const;
 		void ObjectDestruction(const std::shared_ptr<GameObject>& object);

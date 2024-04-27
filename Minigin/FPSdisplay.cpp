@@ -1,10 +1,10 @@
 #include "FPSdisplay.h"
-#include "GameData.h"
 #include "GameObject.h"
 #include "PlainTextComponent.h"
 #include <sstream>
 #include <iomanip>
 
+#include "GameData.h"
 
 
 dae::FPSDisplay::FPSDisplay(GameObject* pParent, float updateTime)

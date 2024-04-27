@@ -6,14 +6,14 @@
 namespace dae
 {
 	class PlainTextComponent;
-	class PlayerController;
+	class PlayerComponent;
 	class ScoreDisplay final : public Component
 	{
 	public:
-		explicit ScoreDisplay(GameObject* pParent, PlayerController* pController);
+		explicit ScoreDisplay(GameObject* pParent, PlayerComponent* pController);
 	private:
 		PlainTextComponent* m_pPlainTextComponent{};
-		PlayerController* m_pPlayerController{};
+		PlayerComponent* m_pPlayerController{};
 		
 		void UpdateDisplay();
 	};
@@ -21,10 +21,10 @@ namespace dae
 	class LivesDisplay final : public Component
 	{
 	public:
-		explicit LivesDisplay(GameObject* pParent, PlayerController* pController);
+		explicit LivesDisplay(GameObject* pParent, PlayerComponent* pController);
 	private:
 		PlainTextComponent* m_pPlainTextComponent{};
-		PlayerController* m_pPlayerController{};
+		PlayerComponent* m_pPlayerController{};
 
 		void UpdateDisplay();
 	};

@@ -18,6 +18,7 @@ namespace dae
 		virtual void LateUpdate() {}
 		virtual void Render() const {}
 		virtual void ImGuiUpdate() {}
+		virtual void Init() {}
 
 		GameObject* GetParent() const { return m_pParent; }
 	private:
