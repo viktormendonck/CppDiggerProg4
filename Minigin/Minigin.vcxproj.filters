@@ -56,6 +56,9 @@
     <Filter Include="Engine\base engine\Tex">
       <UniqueIdentifier>{f8bd37ef-9b8c-4f60-aebe-548f7f53dd68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameFiles\SoundSystem">
+      <UniqueIdentifier>{b425b272-7333-48c0-a288-7dd92dc01701}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
@@ -175,6 +178,15 @@
     <ClInclude Include="TileMapComponent.h">
       <Filter>Engine\GameFiles\Components\Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Engine\GameFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Engine\GameFiles\SoundSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="SDLSoundSystem.h">
+      <Filter>Engine\GameFiles\SoundSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -272,6 +284,15 @@
     </ClCompile>
     <ClCompile Include="TileMapComponent.cpp">
       <Filter>Engine\GameFiles\Components\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceLocator.cpp">
+      <Filter>Engine\GameFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Engine\GameFiles\SoundSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SDLSoundSystem.cpp">
+      <Filter>Engine\GameFiles\SoundSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

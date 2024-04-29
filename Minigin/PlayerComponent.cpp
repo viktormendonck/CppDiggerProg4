@@ -4,6 +4,8 @@
 
 #include "GameData.h"
 
+using dae::MapData::TileType;
+
 namespace dae
 {
 	PlayerComponent::PlayerComponent(dae::GameObject* pParent, int level)
@@ -24,7 +26,7 @@ namespace dae
 		{
 			if (m_CurrentDigTime > m_DigTimer)
 			{
-				
+				Dig();
 				m_CurrentDigTime = 0;
 			}
 			else
@@ -73,48 +75,42 @@ namespace dae
 	{
 		if (m_CurrentDir == -1) return;
 		int dir = m_CurrentDir;
-		m_CurrentDir = -1;
-		TileMapComponent* tileMap = GetTileMap();
+		TileMapComponent* pTileMap = GetTileMap();
 		for (int yIdx{ -1 }; yIdx <= 1; ++yIdx)
 		{
 			for (int xIdx{ -1 }; xIdx <= 1; ++xIdx)
 			{
-				glm::ivec2 currentTile = tileMap->LocalToTile(GetParent()->GetTransform().GetLocalPosition());
-				const int idx = (currentTile.y + yIdx) * tileMap->GetTileMapSize().x + currentTile.x + xIdx;
+				const glm::ivec2 currentTile = pTileMap->LocalToTile(GetParent()->GetTransform().GetLocalPosition());
+				
+				const int idx = (currentTile.y + yIdx) * pTileMap->GetWorldSize().x + currentTile.x + xIdx;
 				const int templateIdx = (yIdx + 1) * 3 + (xIdx + 1);
 				const int newTile = MapData::m_DigPatterns[dir][templateIdx];
-				const int oldTile = tileMap->GetTileSprite(idx);
+				const int oldTile = pTileMap->GetTileSprite(idx);
 				if (newTile == -1 || oldTile == 10) continue;
 				if (oldTile == 0)
 				{
-					tileMap->SetTileSprite(idx, MapData::m_DigPatterns[dir][templateIdx]);
+					pTileMap->SetTileSprite(idx, MapData::m_DigPatterns[dir][templateIdx]);
+
 				}
 				else
 				{
-					if (dir % 2 == 0)
+					
+					if (newTile == 10)
 					{
-						if (templateIdx != 3 && templateIdx != 5)
-						{
-							tileMap->SetTileSprite(idx, 10);
-						}
-						else
-						{
-							tileMap->SetTileSprite(idx, MapData::m_DigPatterns[dir][templateIdx]);
-						}
+						pTileMap->SetTileSprite(idx, 10);
+						continue;
 					}
-					else
+					if (newTile == oldTile)
 					{
-						if (templateIdx != 1 && templateIdx != 7)
-						{
-							tileMap->SetTileSprite(idx, 10);
-						}
-						else
-						{
-							tileMap->SetTileSprite(idx, MapData::m_DigPatterns[dir][templateIdx]);
-						}
+						continue;
 					}
+
+					pTileMap->SetTileSprite(idx, MapData::CompareTiles(static_cast<TileType>(newTile), static_cast<TileType>(oldTile)));
 				}
 			}
 		}
+		m_CurrentDir = -1;
 	}
+	
+
 }

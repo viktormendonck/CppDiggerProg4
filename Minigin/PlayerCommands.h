@@ -2,7 +2,9 @@
 #include "GameObjectCommand.h"
 #include "GameObject.h"
 #include "PlayerComponent.h"
-#include "GameData.h"
+#include "ServiceLocator.h"
+#include "SoundSystem.h"
+
 namespace dae
 {
 	class PlayerComponent;
@@ -43,10 +45,8 @@ namespace dae
 		PlayerComponent* m_pPlayerController;
 		void Execute() override
 		{
-			if (m_pPlayerController)
-			{
-				m_pPlayerController->Kill();
-			}
+			auto& soundSystem = ServiceLocator::GetSoundSystem();
+			soundSystem.PlaySound(0, 0.5f, SoundSystem::SoundType::SoundEffect);
 		}
 	};
 

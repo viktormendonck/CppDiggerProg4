@@ -27,7 +27,6 @@ namespace dae
 		void Update() override;
 		void Init() override;
 		void SetDir(glm::ivec2 dir);
-		void Dig();
 
 	private:
 		int m_Score{};
@@ -46,7 +45,9 @@ namespace dae
 		{
 			return GetParent()->GetParent()->GetComponent<TileMapComponent>();
 		}
-
+		void Dig();
+		
+		void DigDecision(int idx, int oldTile, int newTile, TileMapComponent* pTileMap);
 
 	};
 }

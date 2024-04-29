@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Component.h"
 #include <glm/vec2.hpp>
+
+#include "GameData.h"
 #include "memory"
 #include "vector"
 namespace dae
@@ -14,11 +16,13 @@ namespace dae
 		void Render() const override;
 		void SetTileSprite(glm::ivec2 tileId, int tile) { m_TileMap[GetTileIdx(tileId)] = tile; }
 		void SetTileSprite(int idx, int tile) { m_TileMap[idx] = tile; }
+		void SetTileSprite(int idx, MapData::TileType tile) { m_TileMap[idx] = static_cast<int>(tile); }
+		void SetTileSprite(glm::ivec2 tileId, MapData::TileType tile) { m_TileMap[GetTileIdx(tileId)] = static_cast<int>(tile); }
 
 		int GetTileSprite(glm::ivec2 tileId) const { return m_TileMap[GetTileIdx(tileId)]; }
 		int GetTileSprite(int idx) const { return m_TileMap[idx]; }
 		
-		glm::ivec2 GetTileMapSize() const { return m_TileMapSize; }
+		glm::ivec2 GetWorldSize() const { return m_WorldSize; }
 		glm::ivec2 WorldToTile(const glm::vec2& worldPos) const;
 		glm::ivec2 LocalToTile(const glm::vec2& localPos) const;
 		glm::vec2 TileToLocal(const glm::ivec2& tilePos) const;
@@ -33,6 +37,7 @@ namespace dae
 		glm::ivec2 m_TileMapSize{ 6,5 };
 		glm::ivec2 m_WorldSize{ 40,25 };
 		glm::ivec2 m_TileSize;
+
 		int m_Level;
 
 		std::vector<int> m_TileMap{m_WorldSize.x*m_WorldSize.y};
