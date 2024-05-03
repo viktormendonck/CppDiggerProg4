@@ -101,13 +101,12 @@ namespace dae
 		{
 			std::unique_lock lock(m_Mutex);
 			m_ConditionVariable.wait(lock); //instead of constantly checking the queue, we wait until we are notified
-
 			while (!m_SoundQueue.empty())
 			{
-				
+				if (!lock.owns_lock())	lock.lock();
 				const PlaySoundData& currentRequest{m_SoundQueue.front()};
 				m_SoundQueue.pop();
-				
+				lock.unlock();
 
 				switch (currentRequest.type)
 				{
