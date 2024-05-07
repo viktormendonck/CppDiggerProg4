@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{59ff64d8-9054-4e99-9594-0b758aa7ba61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Commands">
+      <UniqueIdentifier>{d66edd3a-83bd-4e89-878e-7b48eecebe35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\movement">
+      <UniqueIdentifier>{29dd9ce1-9103-4301-a03a-5ff134d1ea5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Player">
+      <UniqueIdentifier>{308a57c0-786e-45ce-aab8-544bcf820197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Sprite">
+      <UniqueIdentifier>{e3f572b6-03dc-4f05-bb7b-a75ea6d01a11}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CPPDigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\RotationComponent.cpp">
+      <Filter>Source Files\Components\movement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\PlayerComponent.cpp">
+      <Filter>Source Files\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\ScoreDisplays.cpp">
+      <Filter>Source Files\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\SpriteSheetComponent.cpp">
+      <Filter>Source Files\Components\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\TextureComponent.cpp">
+      <Filter>Source Files\Components\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\TileMapComponent.cpp">
+      <Filter>Source Files\Components\Sprite</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Minigin\RotationComponent.h">
+      <Filter>Source Files\Components\movement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\PlayerComponent.h">
+      <Filter>Source Files\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\ScoreDisplays.h">
+      <Filter>Source Files\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\SpriteSheetComponent.h">
+      <Filter>Source Files\Components\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\TextureComponent.h">
+      <Filter>Source Files\Components\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\TileMapComponent.h">
+      <Filter>Source Files\Components\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\PlayerCommands.h">
+      <Filter>Source Files\Commands</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

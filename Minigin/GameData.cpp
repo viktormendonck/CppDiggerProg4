@@ -12,8 +12,8 @@ uint16_t dae::MapData::GetTileRule(TileType type)
 
 dae::MapData::TileType dae::MapData::GetTileType(uint16_t tile)
 {
-	auto it = TileRules.find(tile);
-	if (it != TileRules.end())
+	auto it = TileRules.GetValue(tile);
+	if (it != TileRules.ForwardEnd())
 	{
 		return it->second;
 	}

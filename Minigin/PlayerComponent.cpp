@@ -10,7 +10,6 @@ namespace dae
 {
 	PlayerComponent::PlayerComponent(dae::GameObject* pParent, int level)
 		: Component(pParent),
-		m_Level(level),
 		m_StartPos(MapData::m_LevelStartPositions[level])
 	{
 	}
@@ -24,15 +23,6 @@ namespace dae
 	{
 		if (m_CanChangeDir ==false)
 		{
-			if (m_CurrentDigTime > m_DigTimer)
-			{
-				Dig();
-				m_CurrentDigTime = 0;
-			}
-			else
-			{
-				m_CurrentDigTime += GameData::GetInstance().GetDeltaTime();
-			}
 			glm::vec2 pos = GetParent()->GetTransform().GetLocalPosition();
 			glm::vec2 dir = glm::normalize(glm::vec2{ m_TargetPos.x - pos.x,m_TargetPos.y - pos.y });
 			GetParent()->GetTransform().SetLocalPosition(GetParent()->GetTransform().GetLocalPosition() + dir * m_Speed * GameData::GetInstance().GetDeltaTime());
@@ -69,6 +59,7 @@ namespace dae
 		{
 			m_CurrentDir = 3;
 		}
+		Dig();
 	}
 
 	void PlayerComponent::Dig()

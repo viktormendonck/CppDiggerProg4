@@ -17,7 +17,6 @@ namespace dae
 		glm::vec2 m_Dir;
 		void Execute() override
 		{
-
 			m_pGameObject->GetComponent<PlayerComponent>()->SetDir(m_Dir);
 		};
 	};

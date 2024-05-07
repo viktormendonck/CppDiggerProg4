@@ -32,10 +32,7 @@ namespace dae
 		int m_Score{};
 		int m_Lives{ 3 };
 		float m_Speed{ 32.f };
-		int m_Level{0};
 
-		const float m_DigTimer{1/(m_Speed/5)};
-		float m_CurrentDigTime{};
 		int m_CurrentDir{};
 
 		glm::ivec2 m_StartPos{ 0,22 };
@@ -47,7 +44,6 @@ namespace dae
 		}
 		void Dig();
 		
-		void DigDecision(int idx, int oldTile, int newTile, TileMapComponent* pTileMap);
 
 	};
 }

@@ -26,32 +26,17 @@
     <Filter Include="Engine\GameFiles\Components\Text">
       <UniqueIdentifier>{238fe3c0-0067-4879-92b4-cd45658c9a45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameFiles\Components\movement">
-      <UniqueIdentifier>{e8381e03-13a7-422c-a369-26993bc967ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Imgui">
       <UniqueIdentifier>{14496dc9-1148-4f96-83e1-552e4298761d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Imgui\backends">
       <UniqueIdentifier>{72627ae6-793d-48aa-8011-230284980fbe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameFiles\Components\Imgui">
-      <UniqueIdentifier>{84a824f9-f0a7-4494-ad5e-ff7fc083dbcf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GameFiles\Input">
       <UniqueIdentifier>{58263b36-121e-45c1-97ad-b0c71b784f5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameFiles\Input\Commands">
-      <UniqueIdentifier>{f4b8bae0-65c6-4412-bd79-3a7ca789928c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GameFiles\Input\Devices">
       <UniqueIdentifier>{bea8003a-496c-418e-9bda-94e86fef22b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GameFiles\Components\Player">
-      <UniqueIdentifier>{5cc91a83-757a-4b00-847e-bf7b5a332058}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GameFiles\Components\Sprite">
-      <UniqueIdentifier>{c3dd8996-17a3-4837-aaca-ea07684b5275}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\base engine\Tex">
       <UniqueIdentifier>{f8bd37ef-9b8c-4f60-aebe-548f7f53dd68}</UniqueIdentifier>
@@ -90,9 +75,6 @@
     </ClInclude>
     <ClInclude Include="GameData.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RotationComponent.h">
-      <Filter>Engine\GameFiles\Components\movement</Filter>
     </ClInclude>
     <ClInclude Include="..\3rdParty\imgui-1.90.4\imconfig.h">
       <Filter>Imgui</Filter>
@@ -139,26 +121,8 @@
     <ClInclude Include="KeyboardDevice.h">
       <Filter>Engine\GameFiles\Input\Devices</Filter>
     </ClInclude>
-    <ClInclude Include="TrashTheCache.h">
-      <Filter>Engine\GameFiles\Components\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerCommands.h">
-      <Filter>Engine\GameFiles\Input\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="Signal.h">
       <Filter>Engine\base engine</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerComponent.h">
-      <Filter>Engine\GameFiles\Components\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreDisplays.h">
-      <Filter>Engine\GameFiles\Components\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureComponent.h">
-      <Filter>Engine\GameFiles\Components\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteSheetComponent.h">
-      <Filter>Engine\GameFiles\Components\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Engine\base engine\Tex</Filter>
@@ -175,9 +139,6 @@
     <ClInclude Include="SpriteSheet2D.h">
       <Filter>Engine\base engine\Tex</Filter>
     </ClInclude>
-    <ClInclude Include="TileMapComponent.h">
-      <Filter>Engine\GameFiles\Components\Sprite</Filter>
-    </ClInclude>
     <ClInclude Include="ServiceLocator.h">
       <Filter>Engine\GameFiles</Filter>
     </ClInclude>
@@ -186,6 +147,9 @@
     </ClInclude>
     <ClInclude Include="SDLSoundSystem.h">
       <Filter>Engine\GameFiles\SoundSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="BiMap.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -213,14 +177,8 @@
     <ClCompile Include="PlainTextComponent.cpp">
       <Filter>Engine\GameFiles\Components\Text</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Engine\GameFiles</Filter>
-    </ClCompile>
     <ClCompile Include="GameData.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RotationComponent.cpp">
-      <Filter>Engine\GameFiles\Components\movement</Filter>
     </ClCompile>
     <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui.cpp">
       <Filter>Imgui</Filter>
@@ -243,9 +201,6 @@
     <ClCompile Include="..\3rdParty\imgui-1.90.4\backends\imgui_impl_sdl2.cpp">
       <Filter>Imgui\backends</Filter>
     </ClCompile>
-    <ClCompile Include="TrashTheCache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_plot.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
@@ -258,18 +213,6 @@
     <ClCompile Include="KeyboardDevice.cpp">
       <Filter>Engine\GameFiles\Input\Devices</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerComponent.cpp">
-      <Filter>Engine\GameFiles\Components\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreDisplays.cpp">
-      <Filter>Engine\GameFiles\Components\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureComponent.cpp">
-      <Filter>Engine\GameFiles\Components\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteSheetComponent.cpp">
-      <Filter>Engine\GameFiles\Components\Sprite</Filter>
-    </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>Engine\base engine\Tex</Filter>
     </ClCompile>
@@ -281,9 +224,6 @@
     </ClCompile>
     <ClCompile Include="Texture2D.cpp">
       <Filter>Engine\base engine\Tex</Filter>
-    </ClCompile>
-    <ClCompile Include="TileMapComponent.cpp">
-      <Filter>Engine\GameFiles\Components\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="ServiceLocator.cpp">
       <Filter>Engine\GameFiles</Filter>
