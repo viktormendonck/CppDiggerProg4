@@ -23,8 +23,8 @@ namespace dae
 	{
 		if (m_CanChangeDir ==false)
 		{
-			glm::vec2 pos = GetParent()->GetTransform().GetLocalPosition();
-			glm::vec2 dir = glm::normalize(glm::vec2{ m_TargetPos.x - pos.x,m_TargetPos.y - pos.y });
+			const glm::vec2 pos = GetParent()->GetTransform().GetLocalPosition();
+			const glm::vec2 dir = glm::normalize(glm::vec2{ m_TargetPos.x - pos.x,m_TargetPos.y - pos.y });
 			GetParent()->GetTransform().SetLocalPosition(GetParent()->GetTransform().GetLocalPosition() + dir * m_Speed * GameData::GetInstance().GetDeltaTime());
 			if (glm::distance(pos, m_TargetPos) < 0.1f)
 			{
@@ -43,6 +43,7 @@ namespace dae
 		const glm::ivec2 goalTile = tileMap->LocalToTile(GetParent()->GetTransform().GetLocalPosition()) + glm::ivec2(dir.x, dir.y);
 		m_TargetPos = tileMap->TileToLocal(goalTile);
 		m_CanChangeDir = false;
+		//TODO: FIX, can be done nicer
 		if (dir == glm::ivec2{ 0,-1 })
 		{
 			m_CurrentDir = 0;
@@ -59,10 +60,10 @@ namespace dae
 		{
 			m_CurrentDir = 3;
 		}
-		Dig();
+		Dig(dir);
 	}
 
-	void PlayerComponent::Dig()
+	void PlayerComponent::Dig(glm::ivec2 vecDir)
 	{
 		if (m_CurrentDir == -1) return;
 		int dir = m_CurrentDir;
@@ -71,33 +72,14 @@ namespace dae
 		{
 			for (int xIdx{ -1 }; xIdx <= 1; ++xIdx)
 			{
-				const glm::ivec2 currentTile = pTileMap->LocalToTile(GetParent()->GetTransform().GetLocalPosition());
+				const glm::ivec2 currentTile = pTileMap->LocalToTile(GetParent()->GetTransform().GetLocalPosition()) + vecDir;
 				
 				const int idx = (currentTile.y + yIdx) * pTileMap->GetWorldSize().x + currentTile.x + xIdx;
 				const int templateIdx = (yIdx + 1) * 3 + (xIdx + 1);
 				const int newTile = MapData::m_DigPatterns[dir][templateIdx];
 				const int oldTile = pTileMap->GetTileSprite(idx);
 				if (newTile == -1 || oldTile == 10) continue;
-				if (oldTile == 0)
-				{
-					pTileMap->SetTileSprite(idx, MapData::m_DigPatterns[dir][templateIdx]);
-
-				}
-				else
-				{
-					
-					if (newTile == 10)
-					{
-						pTileMap->SetTileSprite(idx, 10);
-						continue;
-					}
-					if (newTile == oldTile)
-					{
-						continue;
-					}
-
-					pTileMap->SetTileSprite(idx, MapData::CompareTiles(static_cast<TileType>(newTile), static_cast<TileType>(oldTile)));
-				}
+				pTileMap->SetTileSprite(idx, MapData::CompareTiles(static_cast<TileType>(newTile), static_cast<TileType>(oldTile)));
 			}
 		}
 		m_CurrentDir = -1;

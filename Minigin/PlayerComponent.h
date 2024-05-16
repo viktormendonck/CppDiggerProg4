@@ -42,7 +42,7 @@ namespace dae
 		{
 			return GetParent()->GetParent()->GetComponent<TileMapComponent>();
 		}
-		void Dig();
+		void Dig(glm::ivec2 dir);
 		
 
 	};

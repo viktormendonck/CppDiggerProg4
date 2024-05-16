@@ -151,6 +151,15 @@
     <ClInclude Include="BiMap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteSheetComponent.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FiniteStateMachine.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -233,6 +242,15 @@
     </ClCompile>
     <ClCompile Include="SDLSoundSystem.cpp">
       <Filter>Engine\GameFiles\SoundSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSheetComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FiniteStateMachine.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

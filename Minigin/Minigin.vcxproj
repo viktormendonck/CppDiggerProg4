@@ -246,6 +246,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     <ClInclude Include="Command.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ControllerDevice.h" />
+    <ClInclude Include="FiniteStateMachine.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSdisplay.h" />
     <ClInclude Include="GameObject.h" />
@@ -266,7 +267,9 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="SpriteSheet2D.h" />
+    <ClInclude Include="SpriteSheetComponent.h" />
     <ClInclude Include="Texture2D.h" />
+    <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +283,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_widgets.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ControllerDevice.cpp" />
+    <ClCompile Include="FiniteStateMachine.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSdisplay.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -295,7 +299,9 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     <ClCompile Include="SDLSoundSystem.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
+    <ClCompile Include="SpriteSheetComponent.cpp" />
     <ClCompile Include="Texture2D.cpp" />
+    <ClCompile Include="TextureComponent.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

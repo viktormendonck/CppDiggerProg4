@@ -15,7 +15,7 @@ dae::SpriteSheetComponent::SpriteSheetComponent(dae::GameObject* pParent, std::s
 	m_TimePerFrame(timePerFrame),
 	m_IsAnimated(animated)
 {
-		m_CurrentSprite = { 0,0 };
+	m_CurrentSprite = { 0,0 };
 }
 
 void dae::SpriteSheetComponent::Update()

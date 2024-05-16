@@ -6,6 +6,7 @@ class BiMap {
 public:
     BiMap(std::map<KeyType, ValueType> initMap)
     {
+
     	for (auto& [key, value] : initMap)
 		{
             Insert(key, value);
@@ -16,21 +17,20 @@ public:
         m_ReverseMap[value] = key;
     }
 
-    const auto& GetValue(const KeyType& key) const {
-        return m_ForwardMap.find(key);
+    const ValueType GetValue(const KeyType& key, const ValueType defaultValue) const {
+        auto it = m_ForwardMap.find(key);
+        if (it != m_ForwardMap.end())
+			return it->second;
+        return defaultValue;
     }
 
-    const auto& GetValue(const ValueType& value) const {
-        return m_ReverseMap.find(value);
+    const KeyType GetValue(const ValueType& value, const KeyType defaultKey) const {
+        auto it = m_ReverseMap.find(value);
+        if (it != m_ReverseMap.end())
+           	return it->second;
+        return defaultKey;
     }
 
-    typename std::map<KeyType, ValueType>::iterator ForwardEnd() const {
-		return  m_ForwardMap.end();
-	}
-    
-    typename std::map<ValueType, KeyType>::iterator ReverseEnd() const {
-        return m_ReverseMap.end();
-    }
 private:
     std::map<KeyType, ValueType> m_ForwardMap{};
     std::map<ValueType, KeyType> m_ReverseMap{};
