@@ -1,8 +1,13 @@
 #include "PlayerComponent.h"
 
 #include <glm/ext/quaternion_geometric.hpp>
-
+#include <glm/vec2.hpp>
 #include "GameData.h"
+#include "GemComponent.h"
+#include "MapData.h"
+#include "SpriteSheetComponent.h"
+#include "TileMapComponent.h"
+
 
 using dae::MapData::TileType;
 
@@ -16,7 +21,8 @@ namespace dae
 
 	void PlayerComponent::Init()
 	{
-		GetParent()->GetTransform().SetLocalPosition(GetTileMap()->TileToLocal(m_StartPos));
+		GameObject* pPlayer = GetParent();
+		pPlayer->GetTransform().SetLocalPosition(GetTileMap()->TileToLocal(m_StartPos));
 	}
 
 	void PlayerComponent::Update()
@@ -63,6 +69,7 @@ namespace dae
 		Dig(dir);
 	}
 
+
 	void PlayerComponent::Dig(glm::ivec2 vecDir)
 	{
 		if (m_CurrentDir == -1) return;
@@ -72,18 +79,21 @@ namespace dae
 		{
 			for (int xIdx{ -1 }; xIdx <= 1; ++xIdx)
 			{
-				const glm::ivec2 currentTile = pTileMap->LocalToTile(GetParent()->GetTransform().GetLocalPosition()) + vecDir;
-				
+				glm::vec2 spriteSize{ GetParent()->GetComponent<SpriteSheetComponent>()->GetSpriteSize() };
+				const glm::ivec2 currentTile = pTileMap->LocalToTile(GetParent()->GetTransform().GetLocalPosition() + glm::vec2{ spriteSize.x/2,spriteSize.y/2 }) + vecDir;
+				//if the tile you are trying to dig is outside the map, skip
+				if (currentTile.x + xIdx < 0 || currentTile.x + xIdx >= pTileMap->GetWorldSize().x ||
+					currentTile.y + yIdx < 0 || currentTile.y + yIdx >= pTileMap->GetWorldSize().y) continue;
+
 				const int idx = (currentTile.y + yIdx) * pTileMap->GetWorldSize().x + currentTile.x + xIdx;
 				const int templateIdx = (yIdx + 1) * 3 + (xIdx + 1);
+
 				const int newTile = MapData::m_DigPatterns[dir][templateIdx];
 				const int oldTile = pTileMap->GetTileSprite(idx);
 				if (newTile == -1 || oldTile == 10) continue;
-				pTileMap->SetTileSprite(idx, MapData::CompareTiles(static_cast<TileType>(newTile), static_cast<TileType>(oldTile)));
+				pTileMap->SetTileSprite(idx, static_cast<int>(MapData::CompareTiles(static_cast<TileType>(newTile), static_cast<TileType>(oldTile))));
 			}
 		}
 		m_CurrentDir = -1;
 	}
-	
-
 }

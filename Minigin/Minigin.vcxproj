@@ -243,15 +243,16 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     <ClInclude Include="..\3rdParty\imgui-1.90.4\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\imgui-1.90.4\imstb_truetype.h" />
     <ClInclude Include="BiMap.h" />
+    <ClInclude Include="CollisionRectComponent.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ControllerDevice.h" />
     <ClInclude Include="FiniteStateMachine.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSdisplay.h" />
+    <ClInclude Include="GameData.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectCommand.h" />
-    <ClInclude Include="GameData.h" />
     <ClInclude Include="SDLSoundSystem.h" />
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="Signal.h" />
@@ -270,6 +271,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     <ClInclude Include="SpriteSheetComponent.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureComponent.h" />
+    <ClInclude Include="TileMapComponent.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
@@ -281,13 +283,13 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_plot.cpp" />
     <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_widgets.cpp" />
+    <ClCompile Include="CollisionRectComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ControllerDevice.cpp" />
     <ClCompile Include="FiniteStateMachine.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSdisplay.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameData.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="KeyboardDevice.cpp" />
     <ClCompile Include="Minigin.cpp" />
@@ -302,6 +304,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\SDL2_mixer.dll" "
     <ClCompile Include="SpriteSheetComponent.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureComponent.cpp" />
+    <ClCompile Include="TileMapComponent.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

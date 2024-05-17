@@ -2,9 +2,9 @@
 #include "Component.h"
 #include <glm/vec2.hpp>
 
-#include "GameData.h"
 #include "memory"
 #include "vector"
+
 namespace dae
 {
 	class Texture2D;
@@ -16,11 +16,11 @@ namespace dae
 		void Render() const override;
 		void SetTileSprite(glm::ivec2 tileId, int tile) { m_TileMap[GetTileIdx(tileId)] = tile; }
 		void SetTileSprite(int idx, int tile) { m_TileMap[idx] = tile; }
-		void SetTileSprite(int idx, MapData::TileType tile) { m_TileMap[idx] = static_cast<int>(tile); }
-		void SetTileSprite(glm::ivec2 tileId, MapData::TileType tile) { m_TileMap[GetTileIdx(tileId)] = static_cast<int>(tile); }
 
 		int GetTileSprite(glm::ivec2 tileId) const { return m_TileMap[GetTileIdx(tileId)]; }
 		int GetTileSprite(int idx) const { return m_TileMap[idx]; }
+
+		void SetMap (const std::vector<int>& map) { m_TileMap = map; }
 		
 		glm::ivec2 GetWorldSize() const { return m_WorldSize; }
 		glm::ivec2 WorldToTile(const glm::vec2& worldPos) const;

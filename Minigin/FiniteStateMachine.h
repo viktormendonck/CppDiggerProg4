@@ -9,12 +9,14 @@ namespace dae
 	class FiniteStateMachine;
 	class State
 	{
-		public:
+	public:
 		virtual ~State() = default;
-		virtual void OnEnter() = 0;
-		virtual void Update() = 0;
-		virtual void OnExit() = 0;
+		virtual void OnEnter(){}
+		virtual void Init(){}
+		virtual void Update(){}
+		virtual void OnExit(){}
 		void SetStateMachine(FiniteStateMachine* pStateMachine) { m_pStateMachine = pStateMachine; }
+		FiniteStateMachine* GetStateMachine() const { return m_pStateMachine; }
 	private:
 		FiniteStateMachine* m_pStateMachine{};
 	};
@@ -25,7 +27,7 @@ namespace dae
 		FiniteStateMachine(GameObject* pParent) : m_pParent{ pParent } {};
 		void Update()
 		{
-			if (!m_States.empty() || m_CurrentStateIdx != -1)
+			if (!m_States.empty() && m_CurrentStateIdx != -1)
 			{
 				m_States[m_CurrentStateIdx]->Update();
 			}
@@ -46,6 +48,13 @@ namespace dae
 			const int id = static_cast<int>(m_States.size()) - 1;
 			m_States[id]->SetStateMachine(this);
 			return id;
+		}
+		void Init()
+		{
+			for (auto& state : m_States)
+			{
+				state->Init();
+			}
 		}
 		GameObject* GetParent() const { return m_pParent; }
 	private:

@@ -19,7 +19,6 @@ namespace dae
 		m_TileSize(pTexture->GetSize().x / m_TileMapSize.x, pTexture->GetSize().y / m_TileMapSize.y),
 		m_Level(level)
 	{
-		m_TileMap = MapData::m_Levels[level];
 	}
 
 	void TileMapComponent::Render() const

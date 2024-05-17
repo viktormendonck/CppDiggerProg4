@@ -17,8 +17,23 @@ namespace dae
 		glm::vec2 m_Dir;
 		void Execute() override
 		{
+			if (abs(m_Dir.x) > glm::epsilon<float>())
+			{
+				if (m_Dir.x > 0)
+				{
+					m_pGameObject->GetTransform().SetLocalRotation(0);
+				}
+				else
+				{
+					m_pGameObject->GetTransform().SetLocalRotation(glm::pi<float>());
+				}
+			}
+			else
+			{
+				m_pGameObject->GetTransform().SetLocalRotation(glm::pi<float>() / 2.f * m_Dir.y);
+			}
 			m_pGameObject->GetComponent<PlayerComponent>()->SetDir(m_Dir);
-		};
+		}
 	};
 
 	class AddScoreCommand : public GameObjectCommand

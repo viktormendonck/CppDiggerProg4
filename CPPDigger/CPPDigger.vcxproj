@@ -187,22 +187,16 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Minigin\PlayerComponent.cpp" />
-    <ClCompile Include="..\Minigin\RotationComponent.cpp" />
-    <ClCompile Include="..\Minigin\ScoreDisplays.cpp" />
-    <ClCompile Include="..\Minigin\SpriteSheetComponent.cpp" />
-    <ClCompile Include="..\Minigin\TextureComponent.cpp" />
-    <ClCompile Include="..\Minigin\TileMapComponent.cpp" />
     <ClCompile Include="CPPDigger.cpp" />
+    <ClCompile Include="GemComponent.cpp" />
+    <ClCompile Include="MapData.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Minigin\PlayerCommands.h" />
-    <ClInclude Include="..\Minigin\PlayerComponent.h" />
-    <ClInclude Include="..\Minigin\RotationComponent.h" />
-    <ClInclude Include="..\Minigin\ScoreDisplays.h" />
-    <ClInclude Include="..\Minigin\SpriteSheetComponent.h" />
-    <ClInclude Include="..\Minigin\TextureComponent.h" />
-    <ClInclude Include="..\Minigin\TileMapComponent.h" />
+    <ClInclude Include="GemComponent.h" />
+    <ClInclude Include="MapData.h" />
+    <ClInclude Include="PlayerCommands.h" />
+    <ClInclude Include="PlayerComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

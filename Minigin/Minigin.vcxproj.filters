@@ -44,6 +44,9 @@
     <Filter Include="Engine\GameFiles\SoundSystem">
       <UniqueIdentifier>{b425b272-7333-48c0-a288-7dd92dc01701}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Sprite">
+      <UniqueIdentifier>{a6d0da57-25ea-4b76-ac01-d986b150cead}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
@@ -71,9 +74,6 @@
       <Filter>Engine\GameFiles\Components\Text</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameData.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\3rdParty\imgui-1.90.4\imconfig.h">
@@ -151,14 +151,23 @@
     <ClInclude Include="BiMap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteSheetComponent.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureComponent.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="FiniteStateMachine.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionRectComponent.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameData.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMapComponent.h">
+      <Filter>Source Files\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSheetComponent.h">
+      <Filter>Source Files\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Source Files\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -185,9 +194,6 @@
     </ClCompile>
     <ClCompile Include="PlainTextComponent.cpp">
       <Filter>Engine\GameFiles\Components\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="GameData.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui.cpp">
       <Filter>Imgui</Filter>
@@ -243,14 +249,20 @@
     <ClCompile Include="SDLSoundSystem.cpp">
       <Filter>Engine\GameFiles\SoundSystem</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteSheetComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FiniteStateMachine.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionRectComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMapComponent.cpp">
+      <Filter>Source Files\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSheetComponent.cpp">
+      <Filter>Source Files\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComponent.cpp">
+      <Filter>Source Files\Sprite</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

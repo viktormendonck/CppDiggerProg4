@@ -130,5 +130,16 @@ void dae::Renderer::RenderSprite(const Texture2D& texture, glm::ivec2 spriteShee
 
 }
 
+void dae::Renderer::RenderRect(glm::vec2 pos, glm::vec2 size, SDL_Color color) const
+{
+	SDL_Rect rect{
+		static_cast<int>(pos.x),
+		static_cast<int>(pos.y),
+		static_cast<int>(size.x),
+		 static_cast<int>(size.y) };
+	SDL_SetRenderDrawColor(GetSDLRenderer(), color.r, color.b, color.g, color.a);
+	SDL_RenderDrawRect(GetSDLRenderer(), &rect);
+}
+
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_Renderer; }

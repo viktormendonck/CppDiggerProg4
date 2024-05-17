@@ -42,13 +42,30 @@ namespace dae
 		{
 			for (const auto& component : m_Components)
 			{
-				T* comp{ dynamic_cast<T*>(component.get()) };
-				if (comp)
+				if (T* comp{ dynamic_cast<T*>(component.get()) })
 				{
 					return comp;
 				}
 			}
 			return nullptr;
+		}
+		template<std::derived_from<dae::Component> T>
+		std::vector<T*> GetComponents() const
+		{
+			std::vector<T*> components{};
+			for (const auto& component : m_Components)
+			{
+				if (T* comp{ dynamic_cast<T*>(component.get()) })
+				{
+					components.push_back(comp);
+				}
+			}
+			for (const auto& child : m_Children)
+			{
+				std::vector<T*> childComponents{ child->GetComponents<T>() };
+				components.insert(components.end(), childComponents.begin(), childComponents.end());
+			}
+			return components;
 		}
 		
 	private:

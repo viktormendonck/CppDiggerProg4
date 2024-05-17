@@ -11,11 +11,14 @@ dae::TextureComponent::TextureComponent(GameObject* pParent, std::shared_ptr<Tex
 	: Component{ pParent }
 	, m_pTexture{ std::move(pTexture) }
 	, m_CanRotate{ canRotate }
+	, m_IsVisible{true}
 {
 }
 
 void dae::TextureComponent::Render() const
 {
+	if (!m_IsVisible)
+		return;
 	if (!m_pTexture)
 		throw (std::string("TextureRenderer::Render() > No texture found!"));
 	Transform& transform = GetParent()->GetTransform();

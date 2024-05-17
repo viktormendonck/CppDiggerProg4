@@ -27,9 +27,13 @@
 //commands
 #include "PlayerCommands.h"
 //sound
+#include "CollisionRectComponent.h"
+#include "GemComponent.h"
 #include "SDLSoundSystem.h"
 #include "ServiceLocator.h"
+#include "SpriteSheetComponent.h"
 
+#include "MapData.h"
 
 
 void load()
@@ -58,14 +62,27 @@ void load()
 	pWorldObject->GetTransform().SetLocalPosition({ 75, 200 });
 	pWorldObject->GetTransform().SetLocalScale({ 2,2 });
 	pWorldObject->AddComponent(std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 }, 0));
+	pWorldObject->GetComponent<dae::TileMapComponent>()->SetMap(dae::MapData::m_Levels[0]);
 	scene.Add(pWorldObject);
 
 	const auto pPlayerObject = std::make_shared<dae::GameObject>();
-	std::shared_ptr<dae::Texture2D> pPlayerTexture{ dae::ResourceManager::GetInstance().LoadTexture("temp.png") };
-	//pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), pPlayerTexture, glm::ivec2{ 1,4 }, true, 0.3f, true));
-	pPlayerObject->AddComponent(std::make_unique<dae::TextureComponent>(pPlayerObject.get(), pPlayerTexture));
+	pPlayerObject->GetTransform().SetLocalScale({ 2,2 });
+	std::shared_ptr<dae::Texture2D> pPlayerTexture{ dae::ResourceManager::GetInstance().LoadTexture("PlayerSprites.png") };
+	pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), pPlayerTexture, glm::ivec2{ 4,1 }, true, 0.3f, true,true));
+	//pPlayerObject->AddComponent(std::make_unique<dae::TextureComponent>(pPlayerObject.get(), pPlayerTexture));
 	pPlayerObject->AddComponent(std::make_unique<dae::PlayerComponent>(pPlayerObject.get(), 0));
+	pPlayerObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pPlayerObject.get(),glm::vec2{24,24},glm::vec2{0,15}));
 	pPlayerObject->SetParent(pWorldObject.get(), false);
+
+	const auto pGemObject = std::make_shared<dae::GameObject>();
+	std::shared_ptr<dae::Texture2D> pGemTexture{ dae::ResourceManager::GetInstance().LoadTexture("Gem.png") };
+	pGemObject->GetTransform().SetLocalScale({ 1,1 });
+	pGemObject->GetTransform().SetLocalPosition({ 200, 150 });
+	pGemObject->AddComponent(std::make_unique<dae::TextureComponent>(pGemObject.get(), pGemTexture,false));
+	pGemObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pGemObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,0 }));
+	pGemObject->AddComponent(std::make_unique<dae::GemComponent>(pGemObject.get()));
+
+	pGemObject->SetParent(pWorldObject.get(), false);
 
 	pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, -1 }),
