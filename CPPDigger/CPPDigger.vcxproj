@@ -189,11 +189,13 @@
   <ItemGroup>
     <ClCompile Include="CPPDigger.cpp" />
     <ClCompile Include="GemComponent.cpp" />
+    <ClCompile Include="GoldBagComponent.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GemComponent.h" />
+    <ClInclude Include="GoldBagComponent.h" />
     <ClInclude Include="MapData.h" />
     <ClInclude Include="PlayerCommands.h" />
     <ClInclude Include="PlayerComponent.h" />

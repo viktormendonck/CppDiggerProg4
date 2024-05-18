@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <glm/vec2.hpp>
 
 #include "Component.h"
 
@@ -13,11 +14,12 @@ namespace dae
 		
 		void Render() const override;
 		void SetVisibility(bool isVisible) { m_IsVisible = isVisible; }
-
+		void SetRenderScale(glm::vec2 scale) { m_RenderScale = scale ;}
 	private:
 		std::shared_ptr<Texture2D> m_pTexture;
 		bool m_CanRotate{};
 		bool m_IsVisible{true};
+		glm::vec2 m_RenderScale{1,1};
 	};
 }
 

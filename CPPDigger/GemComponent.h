@@ -9,12 +9,17 @@ namespace dae
 
 	namespace GemStates
 	{
+		enum class StateType
+		{
+			Gem,
+			Taken
+		};
+
 		class GemState final : public State
 		{
 		public:
 			GemState() = default;
 			void Init();
-			void OnEnter() override{}
 			void OnPlayerCollision(GameObject* pOther);
 		private:
 			int m_Score{100};

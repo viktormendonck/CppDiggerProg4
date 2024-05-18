@@ -20,6 +20,9 @@
     <Filter Include="Source Files\Data">
       <UniqueIdentifier>{88ea7122-3607-4442-9810-f4c46a0f65b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Components\Collectables">
+      <UniqueIdentifier>{d83cd76a-a85d-48c2-a0ac-703c7d8a3e01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPPDigger.cpp">
@@ -32,7 +35,10 @@
       <Filter>Source Files\Components\Player</Filter>
     </ClCompile>
     <ClCompile Include="GemComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Components\Collectables</Filter>
+    </ClCompile>
+    <ClCompile Include="GoldBagComponent.cpp">
+      <Filter>Source Files\Components\Collectables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +51,11 @@
     <ClInclude Include="PlayerComponent.h">
       <Filter>Source Files\Components\Player</Filter>
     </ClInclude>
-    <ClInclude Include="GemComponent.h" />
+    <ClInclude Include="GemComponent.h">
+      <Filter>Source Files\Components\Collectables</Filter>
+    </ClInclude>
+    <ClInclude Include="GoldBagComponent.h">
+      <Filter>Source Files\Components\Collectables</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

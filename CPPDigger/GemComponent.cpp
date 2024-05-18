@@ -11,10 +11,10 @@ void dae::GemStates::GemState::Init()
 
 void dae::GemStates::GemState::OnPlayerCollision(GameObject* pOther)
 {
-	if (pOther->GetComponent<PlayerComponent>() == nullptr)
+	if (pOther->GetComponent<PlayerComponent>() == nullptr) return;
 
 	//TODO: add score (currently don't have a score system)
-	GetStateMachine()->SetState(1);
+	GetStateMachine()->SetState(static_cast<int>(StateType::Taken));
 }
 
 void dae::GemStates::TakenState::OnEnter()

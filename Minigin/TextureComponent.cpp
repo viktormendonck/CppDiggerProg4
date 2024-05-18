@@ -26,11 +26,11 @@ void dae::TextureComponent::Render() const
 	glm::vec2 renderPos{transform.GetWorldPosition().x - texSize.x / 2, transform.GetWorldPosition().y - texSize.y / 2};
 	if (m_CanRotate)
 	{
-		Renderer::GetInstance().RenderTexture(*m_pTexture, renderPos, transform.GetWorldRotation(), transform.GetWorldScale());
+		Renderer::GetInstance().RenderTexture(*m_pTexture, renderPos, transform.GetLocalRotation(), m_RenderScale);
 	}
 	else
 	{
-		Renderer::GetInstance().RenderTexture(*m_pTexture, renderPos,0, transform.GetWorldScale());
+		Renderer::GetInstance().RenderTexture(*m_pTexture, renderPos,0, m_RenderScale);
 	}
 }
 

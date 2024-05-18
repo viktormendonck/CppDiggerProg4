@@ -17,6 +17,7 @@ namespace dae
 		virtual void OnExit(){}
 		void SetStateMachine(FiniteStateMachine* pStateMachine) { m_pStateMachine = pStateMachine; }
 		FiniteStateMachine* GetStateMachine() const { return m_pStateMachine; }
+		
 	private:
 		FiniteStateMachine* m_pStateMachine{};
 	};
@@ -57,6 +58,7 @@ namespace dae
 			}
 		}
 		GameObject* GetParent() const { return m_pParent; }
+		State* GetState() const { return m_States[m_CurrentStateIdx].get(); }
 	private:
 		GameObject* m_pParent;
 		std::vector<std::unique_ptr<State>> m_States;

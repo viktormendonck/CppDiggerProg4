@@ -67,6 +67,17 @@ namespace dae
 			}
 			return components;
 		}
+		const GameObject* GetPatriarch() const
+		{
+			if (m_pParent == nullptr)
+			{
+				return this;
+			}
+			else
+			{
+				return m_pParent->GetPatriarch();
+			}
+		}
 		
 	private:
 		void DetachChild(GameObject* go, bool keepWorldPosition);

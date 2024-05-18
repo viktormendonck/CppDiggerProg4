@@ -29,12 +29,36 @@
 //sound
 #include "CollisionRectComponent.h"
 #include "GemComponent.h"
+#include "GoldBagComponent.h"
 #include "SDLSoundSystem.h"
 #include "ServiceLocator.h"
 #include "SpriteSheetComponent.h"
 
 #include "MapData.h"
 
+void AddGem(dae::GameObject* pParent, std::shared_ptr<dae::Texture2D> pTexture, glm::vec2 pos)
+{
+	const auto pGemObject = std::make_shared<dae::GameObject>();
+	pGemObject->GetTransform().SetLocalPosition(pos);
+	pGemObject->AddComponent(std::make_unique<dae::TextureComponent>(pGemObject.get(), pTexture, false));
+	pGemObject->GetComponent<dae::TextureComponent>()->SetRenderScale(glm::vec2(2, 2));
+	pGemObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pGemObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,0 }));
+	pGemObject->AddComponent(std::make_unique<dae::GemComponent>(pGemObject.get()));
+
+	pGemObject->SetParent(pParent, false);
+}
+
+void AddGoldBag(dae::GameObject* pParent, std::shared_ptr<dae::Texture2D> pTexture, glm::vec2 pos)
+{
+	const auto pGoldBagObject = std::make_shared<dae::GameObject>();
+	pGoldBagObject->GetTransform().SetLocalPosition(pos);
+	pGoldBagObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pGoldBagObject.get(),pTexture,glm::ivec2{3,3},false,0.2f,true,false,glm::ivec2(2,1)));
+	pGoldBagObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pGoldBagObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,0 }));
+	pGoldBagObject->GetComponent<dae::SpriteSheetComponent>()->SetRenderScale(glm::vec2(2, 2));
+	pGoldBagObject->AddComponent(std::make_unique<dae::GoldBagComponent>(pGoldBagObject.get()));
+
+	pGoldBagObject->SetParent(pParent, false);
+}
 
 void load()
 {
@@ -61,28 +85,32 @@ void load()
 	std::shared_ptr<dae::Texture2D> pTileSet{ dae::ResourceManager::GetInstance().LoadTexture("tileset.png") };
 	pWorldObject->GetTransform().SetLocalPosition({ 75, 200 });
 	pWorldObject->GetTransform().SetLocalScale({ 2,2 });
-	pWorldObject->AddComponent(std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 }, 0));
+	std::unique_ptr<dae::TileMapComponent> pTileMap = std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 }, 0);
+	dae::TileMapComponent* pTileMapPtr = pTileMap.get();
+	pWorldObject->AddComponent(std::move(pTileMap));
 	pWorldObject->GetComponent<dae::TileMapComponent>()->SetMap(dae::MapData::m_Levels[0]);
 	scene.Add(pWorldObject);
+
 
 	const auto pPlayerObject = std::make_shared<dae::GameObject>();
 	pPlayerObject->GetTransform().SetLocalScale({ 2,2 });
 	std::shared_ptr<dae::Texture2D> pPlayerTexture{ dae::ResourceManager::GetInstance().LoadTexture("PlayerSprites.png") };
-	pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), pPlayerTexture, glm::ivec2{ 4,1 }, true, 0.3f, true,true));
+	pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), pPlayerTexture, glm::ivec2{ 4,2 }, true, 0.3f, true,true));
 	//pPlayerObject->AddComponent(std::make_unique<dae::TextureComponent>(pPlayerObject.get(), pPlayerTexture));
+	pPlayerObject->GetComponent<dae::SpriteSheetComponent>()->SetRenderScale(glm::vec2(2, 2));
 	pPlayerObject->AddComponent(std::make_unique<dae::PlayerComponent>(pPlayerObject.get(), 0));
 	pPlayerObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pPlayerObject.get(),glm::vec2{24,24},glm::vec2{0,15}));
 	pPlayerObject->SetParent(pWorldObject.get(), false);
 
-	const auto pGemObject = std::make_shared<dae::GameObject>();
+	
 	std::shared_ptr<dae::Texture2D> pGemTexture{ dae::ResourceManager::GetInstance().LoadTexture("Gem.png") };
-	pGemObject->GetTransform().SetLocalScale({ 1,1 });
-	pGemObject->GetTransform().SetLocalPosition({ 200, 150 });
-	pGemObject->AddComponent(std::make_unique<dae::TextureComponent>(pGemObject.get(), pGemTexture,false));
-	pGemObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pGemObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,0 }));
-	pGemObject->AddComponent(std::make_unique<dae::GemComponent>(pGemObject.get()));
+	AddGem(pWorldObject.get(), pGemTexture, pTileMapPtr->TileToLocal(glm::ivec2(10,10)));
 
-	pGemObject->SetParent(pWorldObject.get(), false);
+	std::shared_ptr<dae::Texture2D> pGoldBagTexture{ dae::ResourceManager::GetInstance().LoadTexture("GoldBagSprites.png") };
+	AddGoldBag(pWorldObject.get(), pGoldBagTexture, pTileMapPtr->TileToLocal(glm::ivec2(15,15)));
+
+
+	
 
 	pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, -1 }),

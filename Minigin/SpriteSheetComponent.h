@@ -7,23 +7,29 @@
 namespace dae
 {
 	class Texture2D;
-	class SpriteSheetComponent : public Component
+	class SpriteSheetComponent final : public Component
 	{
 	public:
 
-		explicit SpriteSheetComponent(dae::GameObject* pParent,std::shared_ptr<Texture2D> pTexture, glm::ivec2 size, bool canRotate,float timePerFrame, bool animated, bool repeating);
+		explicit SpriteSheetComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture, glm::ivec2 size, bool canRotate, float timePerFrame, bool animated, bool repeating,glm::ivec2 startPos = glm::ivec2(0,0));
 
 		void Update() override;
 		void Render() const override;
 		void SetSprite(glm::ivec2 sprite) { m_CurrentSprite = sprite; }
+		void SetRenderScale(glm::vec2 scale) { m_RenderScale = scale; }
 		glm::ivec2 GetSprite() const { return m_CurrentSprite;}
 		glm::ivec2 GetSheetSize() const { return m_SpriteSheetSize;}
-		glm::vec2 GetSpriteSize() const { return m_SpriteSize;}
+		glm::vec2 GetSpriteSize() const { return m_SpriteSize; }
+		glm::vec2 GetRenderScale() const { return m_RenderScale; }
+
+		
 		void ShouldRepeat(bool repeat) { m_IsRepeating = repeat; }
+		void SetVisible(bool isVisible) { m_IsVisible = isVisible; }
 	protected:
 		const std::shared_ptr<Texture2D> m_pTexture;
 		const glm::ivec2 m_SpriteSheetSize;
 		const glm::vec2 m_SpriteSize;
+		glm::vec2 m_RenderScale{ 1,1 };
 		glm::ivec2 m_CurrentSprite;
 		glm::ivec2 m_RenderOffset;
 		bool m_CanRotate{};
@@ -31,6 +37,7 @@ namespace dae
 		float m_CurrentTime{};
 		bool m_IsAnimated{};
 		bool m_IsRepeating{};
+		bool m_IsVisible{ true };
 		
 	};
 }

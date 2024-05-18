@@ -4,6 +4,7 @@
 #include "PlayerComponent.h"
 #include "ServiceLocator.h"
 #include "SoundSystem.h"
+#include "SpriteSheetComponent.h"
 
 namespace dae
 {
@@ -17,20 +18,18 @@ namespace dae
 		glm::vec2 m_Dir;
 		void Execute() override
 		{
+			m_pGameObject->GetComponent<SpriteSheetComponent>()->SetSprite({ 0,0 });
 			if (abs(m_Dir.x) > glm::epsilon<float>())
 			{
-				if (m_Dir.x > 0)
+				m_pGameObject->GetTransform().SetLocalRotation(0);
+				if (m_Dir.x < 0)
 				{
-					m_pGameObject->GetTransform().SetLocalRotation(0);
-				}
-				else
-				{
-					m_pGameObject->GetTransform().SetLocalRotation(glm::pi<float>());
+					m_pGameObject->GetComponent<SpriteSheetComponent>()->SetSprite({ 0,1 });
 				}
 			}
 			else
 			{
-				m_pGameObject->GetTransform().SetLocalRotation(glm::pi<float>() / 2.f * m_Dir.y);
+				m_pGameObject->GetTransform().SetLocalRotation(glm::pi<float>()/ 2.f * m_Dir.y);
 			}
 			m_pGameObject->GetComponent<PlayerComponent>()->SetDir(m_Dir);
 		}

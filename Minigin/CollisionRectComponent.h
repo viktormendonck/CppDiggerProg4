@@ -32,5 +32,6 @@ namespace dae
 		bool m_EnterSignalCalled{};
 		void CallOnExit();
 		void CallOnEnter();
+		GameObject* m_IntersectedObject{};
 	};
 }

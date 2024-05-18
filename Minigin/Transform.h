@@ -18,9 +18,9 @@ namespace dae
 		void SetLocalRotation(const float rotation);
 		void SetLocalScale(const glm::vec2& scale);
 
-		[[nodiscard]] glm::vec2 GetLocalPosition() const { return m_LocalPosition; }
-		[[nodiscard]] float GetLocalRotation() const { return m_LocalRotation; }
-		[[nodiscard]] glm::vec2 GetLocalScale() const { return m_LocalScale; }
+		glm::vec2 GetLocalPosition() const { return m_LocalPosition; }
+		float GetLocalRotation() const { return m_LocalRotation; }
+		glm::vec2 GetLocalScale() const { return m_LocalScale; }
 		
 		glm::vec2 GetWorldPosition();
 		float GetWorldRotation();

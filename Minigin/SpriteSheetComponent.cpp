@@ -6,7 +6,7 @@
 #include "Texture2D.h"
 
 
-dae::SpriteSheetComponent::SpriteSheetComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture, glm::ivec2 size, bool canRotate, float timePerFrame, bool animated,bool repeating)
+dae::SpriteSheetComponent::SpriteSheetComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture, glm::ivec2 size, bool canRotate, float timePerFrame, bool animated,bool repeating,glm::ivec2 startPos)
 	: Component(pParent),
 	m_pTexture(pTexture),
 	m_SpriteSheetSize(size),
@@ -17,7 +17,7 @@ dae::SpriteSheetComponent::SpriteSheetComponent(dae::GameObject* pParent, std::s
 	m_IsRepeating(repeating),
 	m_RenderOffset{ 0,0 }
 {
-	m_CurrentSprite = { 0,0 };
+	m_CurrentSprite = startPos;
 }
 
 void dae::SpriteSheetComponent::Update()
@@ -27,7 +27,7 @@ void dae::SpriteSheetComponent::Update()
 	if (m_CurrentTime >= m_TimePerFrame)
 	{
 		m_CurrentTime = 0;
-		if (!m_IsRepeating && (m_CurrentSprite == m_SpriteSheetSize))
+		if (!m_IsRepeating && (m_CurrentSprite.x == m_SpriteSheetSize.x-1))
 		{
 			return;
 		}
@@ -37,17 +37,18 @@ void dae::SpriteSheetComponent::Update()
 
 void dae::SpriteSheetComponent::Render() const
 {
-	if (m_pTexture)
+
+	if (m_pTexture && m_IsVisible)
 	{
 		dae::Transform& transform = GetParent()->GetTransform();
 		glm::vec2 renderPos{ transform.GetWorldPosition().x,transform.GetWorldPosition().y};
 		if (m_CanRotate)
 		{
-			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, renderPos, transform.GetLocalRotation(), m_SpriteSize,transform.GetLocalScale());
+			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, renderPos, transform.GetLocalRotation(), m_SpriteSize,m_RenderScale);
 		}
 		else
 		{
-			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, renderPos, 0, m_SpriteSize, transform.GetLocalScale());
+			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, renderPos, 0, m_SpriteSize, m_RenderScale);
 		}
 	}
 }

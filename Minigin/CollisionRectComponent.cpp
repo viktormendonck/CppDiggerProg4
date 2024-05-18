@@ -27,7 +27,13 @@ namespace dae
 		for (const auto& other : GameData::GetInstance().GetCollisionRects())
 		{
 			if (other == this)	continue;
-			intersect |= GetCollisionRect().Intersect(other->GetCollisionRect());
+			if (bool temp = GetCollisionRect().Intersect(other->GetCollisionRect()); temp)
+			{
+				intersect = temp;
+				m_IntersectedObject = other->GetParent();
+				break;
+			}
+
 		}
 
 		if (intersect)
@@ -37,7 +43,7 @@ namespace dae
 				CallOnEnter();
 			} else
 			{
-				m_OnInside.Emit(GetParent());
+				m_OnInside.Emit(m_IntersectedObject);
 			}
 		}
 		else
@@ -72,13 +78,13 @@ namespace dae
 	{
 		m_ExitSignalCalled = true;
 		m_EnterSignalCalled = false;
-		m_OnExit.Emit(GetParent());
+		m_OnExit.Emit(m_IntersectedObject);
 	}
 
 	void CollisionRectComponent::CallOnEnter()
 	{
 		m_EnterSignalCalled = true;
 		m_ExitSignalCalled = false;
-		m_OnEnter.Emit(GetParent());
+		m_OnEnter.Emit(m_IntersectedObject);
 	}
 }
