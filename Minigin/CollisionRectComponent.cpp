@@ -6,19 +6,27 @@
 
 namespace dae
 {
-	bool rect::Intersect(const rect& other) const
+	bool CollisionRectInfo::Intersect(const CollisionRectInfo& other) const
 	{
-		return (pos.x < other.pos.x + other.size.x &&
+		const bool isIntersecting (pos.x < other.pos.x + other.size.x &&
 			pos.x + size.x > other.pos.x &&
 			pos.y < other.pos.y + other.size.y &&
 			pos.y + size.y > other.pos.y);
+		const bool sharesCollisionLayer = (other.sendingCollisionLayers & receivingCollisionLayers) != 0;
+		return isIntersecting && sharesCollisionLayer;
 	}
 
-	CollisionRectComponent::CollisionRectComponent(GameObject* pParent,const glm::vec2 size, const glm::vec2 offset)
+	CollisionRectComponent::CollisionRectComponent(GameObject* pParent,const glm::vec2 size, const glm::vec2 offset,uint16_t receivingCollisionLayers,uint16_t sendingCollisionLayers)
 		: Component{ pParent },
-		m_Rect{ offset, size }
+		m_Rect{ offset, size,receivingCollisionLayers,sendingCollisionLayers }
 	{
 		GameData::GetInstance().AddCollisionRect(this);
+	}
+
+	CollisionRectComponent::~CollisionRectComponent()
+	{
+		GameData::GetInstance().RemoveCollisionRect(this);
+		Component::~Component();
 	}
 
 	void CollisionRectComponent::Update()
@@ -61,10 +69,10 @@ namespace dae
 		Renderer::GetInstance().RenderRect(pos, m_Rect.size,SDL_Color(255,0,0,255));
 	}
 
-	const rect CollisionRectComponent::GetCollisionRect() const
+	const CollisionRectInfo CollisionRectComponent::GetCollisionRect() const
 	{
 		glm::vec2 pos = m_Rect.pos + GetParent()->GetTransform().GetWorldPosition();
-		return { pos,m_Rect.size };
+		return { pos,m_Rect.size,m_Rect.receivingCollisionLayers,m_Rect.sendingCollisionLayers };
 	}
 
 	void CollisionRectComponent::Rotate()

@@ -21,6 +21,8 @@ namespace dae
 		glm::ivec2 GetSheetSize() const { return m_SpriteSheetSize;}
 		glm::vec2 GetSpriteSize() const { return m_SpriteSize; }
 		glm::vec2 GetRenderScale() const { return m_RenderScale; }
+		glm::vec2 GetRenderOffset() const { return m_RenderOffset; }
+		void SetRenderOffset(glm::vec2 offset) { m_RenderOffset = offset; }
 
 		
 		void ShouldRepeat(bool repeat) { m_IsRepeating = repeat; }
@@ -30,8 +32,8 @@ namespace dae
 		const glm::ivec2 m_SpriteSheetSize;
 		const glm::vec2 m_SpriteSize;
 		glm::vec2 m_RenderScale{ 1,1 };
+		glm::vec2 m_RenderOffset{0.f,0.f};
 		glm::ivec2 m_CurrentSprite;
-		glm::ivec2 m_RenderOffset;
 		bool m_CanRotate{};
 		float m_TimePerFrame{};
 		float m_CurrentTime{};

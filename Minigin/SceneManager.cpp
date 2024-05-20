@@ -49,12 +49,12 @@ void dae::SceneManager::ImGuiUpdate()
 	}
 }
 
-void dae::SceneManager::ObjectDestruction()
+void dae::SceneManager::HandleDestroy()
 {
-	//for (auto& scene : m_Scenes)
-	//{
-	//	//scene->ObjectDestruction();
-	//}
+	for (auto& scene : m_Scenes)
+	{
+		scene->HandleDestruction();
+	}
 }
 
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)

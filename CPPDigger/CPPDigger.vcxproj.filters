@@ -11,9 +11,6 @@
     <Filter Include="Source Files\Commands">
       <UniqueIdentifier>{d66edd3a-83bd-4e89-878e-7b48eecebe35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Player">
-      <UniqueIdentifier>{308a57c0-786e-45ce-aab8-544bcf820197}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Components\Objects">
       <UniqueIdentifier>{892663aa-c08c-470d-8aa0-b3865f8c1826}</UniqueIdentifier>
     </Filter>
@@ -22,6 +19,15 @@
     </Filter>
     <Filter Include="Source Files\Components\Collectables">
       <UniqueIdentifier>{d83cd76a-a85d-48c2-a0ac-703c7d8a3e01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Characters">
+      <UniqueIdentifier>{6c2a6706-4c1b-4206-a82c-b3840cd612e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Characters\Player">
+      <UniqueIdentifier>{308a57c0-786e-45ce-aab8-544bcf820197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Characters\enemy">
+      <UniqueIdentifier>{9029bd48-bf5c-4a77-8aa5-e8c0115f50ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,7 +38,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayerComponent.cpp">
-      <Filter>Source Files\Components\Player</Filter>
+      <Filter>Source Files\Characters\Player</Filter>
     </ClCompile>
     <ClCompile Include="GemComponent.cpp">
       <Filter>Source Files\Components\Collectables</Filter>
@@ -40,22 +46,34 @@
     <ClCompile Include="GoldBagComponent.cpp">
       <Filter>Source Files\Components\Collectables</Filter>
     </ClCompile>
+    <ClCompile Include="FireBallComponent.cpp">
+      <Filter>Source Files\Components\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="DiggingCharacterComponent.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapData.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerCommands.h">
-      <Filter>Source Files\Components\Player</Filter>
+      <Filter>Source Files\Characters\Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerComponent.h">
-      <Filter>Source Files\Components\Player</Filter>
+      <Filter>Source Files\Characters\Player</Filter>
     </ClInclude>
     <ClInclude Include="GemComponent.h">
       <Filter>Source Files\Components\Collectables</Filter>
     </ClInclude>
     <ClInclude Include="GoldBagComponent.h">
       <Filter>Source Files\Components\Collectables</Filter>
+    </ClInclude>
+    <ClInclude Include="FireBallComponent.h">
+      <Filter>Source Files\Components\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="DiggingCharacterComponent.h">
+      <Filter>Source Files\Characters</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

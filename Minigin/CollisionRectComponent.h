@@ -6,28 +6,36 @@
 
 namespace dae
 {
-	struct rect
+	
+	struct CollisionRectInfo
 	{
 		glm::vec2 pos;
 		glm::vec2 size;
-		bool Intersect(const rect& other) const;
+		uint16_t receivingCollisionLayers{};
+		uint16_t sendingCollisionLayers{};
+
+		bool Intersect(const CollisionRectInfo& other) const;
 	};
 
 
 	class CollisionRectComponent final : public Component
 	{
 	public:
-		CollisionRectComponent(GameObject* pParent,const glm::vec2 size, const glm::vec2 offset);
+		CollisionRectComponent(GameObject* pParent,const glm::vec2 size, const glm::vec2 offset, uint16_t receivingCollisionLayers, uint16_t sendingCollisionLayers);
+		~CollisionRectComponent() override;
 		void Update() override;
 		void Render() const override;
-		const rect GetCollisionRect() const;
-		
+		const CollisionRectInfo GetCollisionRect() const;
+
+		uint16_t& GetReceivingCollisionLayers()	{return m_Rect.receivingCollisionLayers;}
+		uint16_t& GetSendingCollisionLayers()	{return m_Rect.sendingCollisionLayers;}
+
 		void Rotate();
 		Signal<GameObject*> m_OnExit{};
 		Signal<GameObject*> m_OnEnter{};
 		Signal<GameObject*> m_OnInside{};
 	private:
-		rect m_Rect{};
+		CollisionRectInfo m_Rect{};
 		bool m_ExitSignalCalled{};
 		bool m_EnterSignalCalled{};
 		void CallOnExit();

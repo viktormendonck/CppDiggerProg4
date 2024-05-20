@@ -19,14 +19,18 @@ namespace dae
 		static constexpr float FIXED_TIMESTEP = 1.f / 50.f;
 		//tilemap
 		void AddCollisionRect(CollisionRectComponent* pRect) { m_CollisionRects.push_back(pRect); }
-		std::vector<CollisionRectComponent*> GetCollisionRects() const { return m_CollisionRects; }
+		void RemoveCollisionRect(CollisionRectComponent* pRect) {
+			if (m_CollisionRects.empty()) return;
+			std::erase(m_CollisionRects, pRect);
+		}
+		const std::vector<CollisionRectComponent*>& GetCollisionRects() const { return m_CollisionRects; }
+		
 
 	private:
 
 		std::vector<CollisionRectComponent*> m_CollisionRects{};
 		float m_DeltaTime = 1.f/60.f;
 
-		
 	};
 }
 

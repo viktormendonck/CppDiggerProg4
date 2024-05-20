@@ -18,6 +18,7 @@ namespace dae
 		void LateUpdate();
 		void Render();
 		void ImGuiUpdate();
+		void HandleDestroy();
 	private:
 		void ObjectDestruction();
 		friend class Singleton<SceneManager>;

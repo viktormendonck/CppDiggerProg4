@@ -34,3 +34,5 @@ void dae::TextureComponent::Render() const
 	}
 }
 
+
+

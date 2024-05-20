@@ -1,5 +1,7 @@
 #include "GoldBagComponent.h"
 
+#include <iostream>
+#include <SDL_syswm.h>
 #include <stdexcept>
 #include <glm/vec2.hpp>
 
@@ -24,15 +26,12 @@ namespace dae
 			m_pGoldBag = GetStateMachine()->GetParent();
 			m_pTileMap = m_pGoldBag->GetPatriarch()->GetComponent<TileMapComponent>();
 			m_pSpriteSheet = m_pGoldBag->GetComponent<SpriteSheetComponent>();
-			if (m_pTileMap == nullptr)
-			{
-				throw std::runtime_error("TileMapComponent not found");
-			}
+			
 		}
 
 		void IdleState::OnEnter()
 		{
-			//TODO change Sprite to idle
+			if (m_pSpriteSheet) m_pSpriteSheet->SetSprite(glm::ivec2{ 2, 1 }); //startSprite for idle
 		}
 
 		void IdleState::Update()
@@ -49,6 +48,7 @@ namespace dae
 		void WiggleState::OnEnter()
 		{
 			m_OriginalPos = GetStateMachine()->GetParent()->GetTransform().GetLocalPosition();
+			m_pSpriteSheet = GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>();
 			m_CurrentWiggleTime = 0;
 		}
 
@@ -58,7 +58,7 @@ namespace dae
 			if (m_CurrentWiggleTime <= m_MaxWiggleTime)
 			{
 				m_CurrentWiggleTime += dt;
-				//TODO: move object around a bit (use renderOffset withing spriteSheetComponent)
+				m_pSpriteSheet->SetRenderOffset(glm::vec2{ cosf(m_CurrentWiggleTime * 15) * 3,0 });
 			} else
 			{
 				GetStateMachine()->SetState(static_cast<int>(GoldBagStates::Falling));
@@ -67,7 +67,7 @@ namespace dae
 		}
 		void WiggleState::OnExit()
 		{
-			GetStateMachine()->GetParent()->GetTransform().SetLocalPosition(m_OriginalPos);
+			m_pSpriteSheet->SetRenderOffset(glm::vec2{ 0,0 });
 		}
 
 		void FallingState::Init()
@@ -75,15 +75,15 @@ namespace dae
 			m_pGoldBag = GetStateMachine()->GetParent();
 			m_pTileMap = m_pGoldBag->GetPatriarch()->GetComponent<TileMapComponent>();
 			m_pSpriteSheet = m_pGoldBag->GetComponent<SpriteSheetComponent>();
-			if (m_pTileMap == nullptr)
-			{
-				throw std::runtime_error("TileMapComponent not found");
-			}
 		}
 
 		void FallingState::OnEnter()
 		{
-
+			m_pSpriteSheet->SetSprite(glm::ivec2{ 0, 0 }); //startSprite for falling
+			//change the collision layers so that the goldbag can damage players and enemies
+			std::cout << m_pGoldBag->GetComponent<CollisionRectComponent>()->GetSendingCollisionLayers() << std::endl;
+			m_pGoldBag->GetComponent<CollisionRectComponent>()->GetSendingCollisionLayers() |= uint16_t{static_cast<uint16_t>(CollisionLayers::PlayerDamage) | static_cast<uint16_t>(CollisionLayers::EnemyDamage)};
+			std::cout << m_pGoldBag->GetComponent<CollisionRectComponent>()->GetSendingCollisionLayers() << std::endl;
 		}
 
 		void FallingState::Update()
@@ -92,7 +92,11 @@ namespace dae
 			glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition() + (m_pSpriteSheet->GetSpriteSize().x / 2, m_pSpriteSheet->GetSpriteSize().y/4));
 			MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite(pos));
 			//the tile underneath is BottomRightCorner, BottomLeftCorner, bottomMiddleRoundoff or BottomWall then stop falling and it if has fallen for more than 3 tiles then go to goldState
-			if (checkTile == MapData::TileType::BottomRightCorner || checkTile == MapData::TileType::BottomLeftCorner || checkTile == MapData::TileType::BottomMiddleRoundOff || checkTile == MapData::TileType::BottomWall)
+			if (m_FallDist > 1 &&
+				(checkTile == MapData::TileType::BottomRightCorner	|| 
+				checkTile == MapData::TileType::BottomLeftCorner	|| 
+				checkTile == MapData::TileType::BottomMiddleRoundOff|| 
+				checkTile == MapData::TileType::BottomWall))
 			{
 				if (m_FallDist >= m_MinBreakDist)
 				{
@@ -116,7 +120,7 @@ namespace dae
 
 		void FallingState::OnExit()
 		{
-			//reset all vals
+			m_LastTilePos= glm::ivec2{ 0,0 };
 			m_FallDist = 0;
 		}
 		void GoldState::Init()
@@ -126,7 +130,7 @@ namespace dae
 
 		void GoldState::OnEnter()
 		{
-			GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>()->SetSprite(glm::ivec2{0,2});
+			GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>()->SetSprite(glm::ivec2{0,2});//startSprite for gold
 		}
 
 		void GoldState::OnPlayerCollision(GameObject* pOther)
@@ -144,7 +148,7 @@ namespace dae
 
 		void TakenState::OnEnter()
 		{
-			GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>()->SetVisible(false);
+			GetStateMachine()->GetParent()->Destroy();
 		}
 	}
 

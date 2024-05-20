@@ -7,6 +7,13 @@
 
 namespace dae
 {
+	enum class CollisionLayers : uint16_t
+	{
+		Pickup = 1 << 0,
+		PlayerDamage = 1 << 1,
+		EnemyDamage = 1 << 2,
+		Push = 1 << 3,
+	};
 	namespace MapData
 	{
 		inline uint16_t boolVecToUInt16(const std::vector<bool>& vec) {
@@ -43,6 +50,8 @@ namespace dae
 		TileType GetTileType(uint16_t tile);
 
 		TileType CompareTiles(TileType newTile, TileType oldTile);
+
+
 		static BiMap<uint16_t, TileType> TileRules{
 		{
 			{boolVecToUInt16(
@@ -196,7 +205,7 @@ namespace dae
 			}
 		};
 		const static std::vector<glm::ivec2> m_LevelStartPositions{
-			{ 19, 22 },
+			{ 19, 21 },
 			{ 1, 1 },
 			{ 1, 1 },
 			{ 1, 1 }

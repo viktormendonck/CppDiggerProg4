@@ -29,8 +29,8 @@ namespace dae
 		GameObject* GetParent() const { return m_pParent; }
 
 		std::vector<std::shared_ptr<GameObject>> GetChildren() const { return m_Children; }
-		
 
+		void Erase(std::shared_ptr<GameObject> go);
 		void AddComponent(std::unique_ptr<Component> pComponent);
 		void RemoveComponent(const Component* pComponent);
 
@@ -78,7 +78,18 @@ namespace dae
 				return m_pParent->GetPatriarch();
 			}
 		}
-		
+		void Destroy()
+		{
+			m_IsDestroyed = true;
+			for (auto& child : m_Children)
+			{
+				child->Destroy();
+			}
+		}
+		bool IsMarkedForDestruction() const
+		{
+			return m_IsDestroyed;
+		}
 	private:
 		void DetachChild(GameObject* go, bool keepWorldPosition);
 		void AttachChild(std::shared_ptr<dae::GameObject> go, bool keepParentWorldPosition);
@@ -88,6 +99,7 @@ namespace dae
 		std::vector<std::unique_ptr<Component>> m_Components{};
 		std::vector<std::shared_ptr<GameObject>> m_Children{};
 		GameObject* m_pParent{};
+		bool m_IsDestroyed{false};
 	};
 }
 

@@ -11,13 +11,13 @@ namespace dae
 		void Add(std::shared_ptr<GameObject> object);
 		void Remove(const std::shared_ptr<GameObject>& object);
 		void RemoveAll();
+		void HandleDestruction();
 
 		void FixedUpdate();
 		void Update();
 		void Init();
 		void LateUpdate();
 		void Render() const;
-		void ObjectDestruction(const std::shared_ptr<GameObject>& object);
 		void ImGuiUpdate();
 
 		~Scene();
@@ -28,6 +28,7 @@ namespace dae
 
 	private: 
 		explicit Scene(const std::string& name);
+		void HandleObjectDestruction(const ::std::shared_ptr<GameObject>& object);
 
 		std::string m_Name;
 		std::vector < std::shared_ptr<GameObject>> m_Objects{};

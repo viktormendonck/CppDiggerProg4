@@ -3,6 +3,9 @@
 #include "Component.h"
 #include <stdexcept>
 
+#include "CollisionRectComponent.h"
+#include "GameData.h"
+
 
 dae::GameObject::GameObject()
 	:m_Transform{ Transform(this) }
@@ -83,6 +86,11 @@ void dae::GameObject::ImGuiUpdate()
 
 }
 
+void dae::GameObject::Erase(std::shared_ptr<GameObject> go)
+{
+	std::erase(m_Children, go);
+}
+
 void dae::GameObject::AddComponent(std::unique_ptr<Component> pComponent)
 {
 	if (!pComponent) 
@@ -130,7 +138,7 @@ void dae::GameObject::DetachChild(GameObject* go, bool keepWorldPosition)
 	{
 		return pChild.get() == go;
 	});
-
+	if (it == m_Children.end()) return;
 	const std::shared_ptr<GameObject> childDetached{ std::move(*it) };
 	if (keepWorldPosition)
 	{

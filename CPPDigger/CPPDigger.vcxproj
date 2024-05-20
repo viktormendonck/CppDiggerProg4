@@ -188,12 +188,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CPPDigger.cpp" />
+    <ClCompile Include="DiggingCharacterComponent.cpp" />
+    <ClCompile Include="FireBallComponent.cpp" />
     <ClCompile Include="GemComponent.cpp" />
     <ClCompile Include="GoldBagComponent.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DiggingCharacterComponent.h" />
+    <ClInclude Include="FireBallComponent.h" />
     <ClInclude Include="GemComponent.h" />
     <ClInclude Include="GoldBagComponent.h" />
     <ClInclude Include="MapData.h" />

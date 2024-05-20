@@ -19,7 +19,7 @@ void dae::GemStates::GemState::OnPlayerCollision(GameObject* pOther)
 
 void dae::GemStates::TakenState::OnEnter()
 {
-	GetStateMachine()->GetParent()->GetComponent<TextureComponent>()->SetVisibility(false);
+	GetStateMachine()->GetParent()->Destroy();
 }
 
 void dae::GemComponent::Update()

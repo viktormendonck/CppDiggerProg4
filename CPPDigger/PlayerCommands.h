@@ -1,4 +1,8 @@
 #pragma once
+#include <chrono>
+
+#include "CollisionRectComponent.h"
+#include "FireBallComponent.h"
 #include "GameObjectCommand.h"
 #include "GameObject.h"
 #include "PlayerComponent.h"
@@ -10,12 +14,12 @@ namespace dae
 {
 	class PlayerComponent;
 
-	class MoveCommand : public GameObjectCommand
+	class MoveCommand final : public GameObjectCommand
 	{
 	public:
 		explicit MoveCommand(GameObject* pGameObject, glm::ivec2 dir) : GameObjectCommand(pGameObject), m_Dir{ dir } {};
 	private:
-		glm::vec2 m_Dir;
+		glm::vec2 m_Dir{};
 		void Execute() override
 		{
 			m_pGameObject->GetComponent<SpriteSheetComponent>()->SetSprite({ 0,0 });
@@ -35,32 +39,45 @@ namespace dae
 		}
 	};
 
-	class AddScoreCommand : public GameObjectCommand
+	class ShootCommand final : public GameObjectCommand
 	{
-	public:
-		explicit AddScoreCommand(GameObject* pGameObject) : GameObjectCommand(pGameObject), m_pPlayerController(pGameObject->GetComponent<PlayerComponent>()) {};
-	private:
-		PlayerComponent* m_pPlayerController;
-		void Execute() override
-		{
-			if (m_pPlayerController)
-			{
-				m_pPlayerController->IncreaseScore(100);
-			}
-		};
-	};
+		public:
+		explicit ShootCommand(GameObject* pGameObject, const std::shared_ptr<Texture2D>& fireBallTex) : GameObjectCommand(pGameObject), m_pFireBallTex(fireBallTex){};
 
-	class KillCommand : public GameObjectCommand
-	{
-	public:
-		KillCommand(GameObject* pGameObject) : GameObjectCommand(pGameObject), m_pPlayerController(pGameObject->GetComponent<PlayerComponent>()) {};
-	private:
-		PlayerComponent* m_pPlayerController;
 		void Execute() override
 		{
-			auto& soundSystem = ServiceLocator::GetSoundSystem();
-			soundSystem.PlaySound(0, 0.5f, SoundSystem::SoundType::SoundEffect);
+			auto pPlayer = m_pGameObject->GetComponent<PlayerComponent>();
+			if (CanShoot())
+			{
+				SpawnFireBall(pPlayer->GetDir());
+				m_LastFireTime = std::chrono::high_resolution_clock::now();
+			}
 		}
+
+	private:
+		bool CanShoot() const
+		{
+			const std::chrono::time_point<std::chrono::steady_clock> now = std::chrono::high_resolution_clock::now();
+			const long long duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_LastFireTime).count();
+			return duration > m_TimeBetweenShotsInMs;
+		}
+		void SpawnFireBall(glm::ivec2 dir)
+		{
+			const std::shared_ptr<GameObject> pFireBall = std::make_shared<GameObject>();
+			pFireBall->GetTransform().SetLocalPosition(m_pGameObject->GetTransform().GetLocalPosition()); //TODO: set position to the front of the player
+			std::unique_ptr<SpriteSheetComponent> pSpriteSheet = std::make_unique<SpriteSheetComponent>(pFireBall.get(), m_pFireBallTex, glm::ivec2{1,3}, false, 0.2f, true, true);
+			pFireBall->AddComponent(std::make_unique<CollisionRectComponent>(pFireBall.get(), pSpriteSheet->GetSpriteSize(), glm::vec2{ 0,0 },
+				static_cast<uint16_t>(CollisionLayers::EnemyDamage),
+				static_cast<uint16_t>(CollisionLayers::EnemyDamage)));
+			pFireBall->AddComponent(std::move(pSpriteSheet));
+			pFireBall->AddComponent(std::make_unique<FireBallComponent>(pFireBall.get(), dir));
+			pFireBall->SetParent(m_pGameObject->GetParent(), true);
+
+		}
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_LastFireTime;
+		std::shared_ptr<Texture2D> m_pFireBallTex;
+		const int m_TimeBetweenShotsInMs{ 6000 };
+
 	};
 
 

@@ -109,11 +109,13 @@ void dae::Minigin::Run(const std::function<void()>& load)
 			sceneManager.FixedUpdate();
 			lag	-= GameData::FIXED_TIMESTEP;
 		}
-		sceneManager.Update();
+ 		sceneManager.Update();
 		sceneManager.LateUpdate();
 		
 		renderer.Render();
 
+		//destroy the objects that are marked for deletion
+		sceneManager.HandleDestroy();
 		const auto sleepTime = start + std::chrono::milliseconds(targetFrameTimeMS) - std::chrono::high_resolution_clock::now();
 		std::this_thread::sleep_for(sleepTime);
 	}

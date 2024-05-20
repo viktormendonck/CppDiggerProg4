@@ -46,6 +46,7 @@ namespace dae
 			const float m_MaxWiggleTime{1.5f};
 			float m_CurrentWiggleTime{};
 			glm::vec2 m_OriginalPos{};
+			SpriteSheetComponent* m_pSpriteSheet{};
 		};
 		class FallingState final : public State
 		{
@@ -59,7 +60,7 @@ namespace dae
 			SpriteSheetComponent* m_pSpriteSheet{};
 			TileMapComponent* m_pTileMap{};
 			glm::ivec2 m_LastTilePos{};
-			const int m_MinBreakDist{ 3 };
+			const int m_MinBreakDist{ 6 };
 			const float m_FallSpeed{ 50.f };
 			int m_FallDist{};
 		};
