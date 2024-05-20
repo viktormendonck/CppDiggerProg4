@@ -81,9 +81,7 @@ namespace dae
 		{
 			m_pSpriteSheet->SetSprite(glm::ivec2{ 0, 0 }); //startSprite for falling
 			//change the collision layers so that the goldbag can damage players and enemies
-			std::cout << m_pGoldBag->GetComponent<CollisionRectComponent>()->GetSendingCollisionLayers() << std::endl;
-			m_pGoldBag->GetComponent<CollisionRectComponent>()->GetSendingCollisionLayers() |= uint16_t{static_cast<uint16_t>(CollisionLayers::PlayerDamage) | static_cast<uint16_t>(CollisionLayers::EnemyDamage)};
-			std::cout << m_pGoldBag->GetComponent<CollisionRectComponent>()->GetSendingCollisionLayers() << std::endl;
+			m_pGoldBag->GetComponent<CollisionRectComponent>()->AddSendingLayer(uint16_t{ static_cast<uint16_t>(CollisionLayers::PlayerDamage) | static_cast<uint16_t>(CollisionLayers::EnemyDamage) });
 		}
 
 		void FallingState::Update()
@@ -121,6 +119,8 @@ namespace dae
 		void FallingState::OnExit()
 		{
 			m_LastTilePos= glm::ivec2{ 0,0 };
+
+			m_pGoldBag->GetComponent<CollisionRectComponent>()->RemoveSendingLayer(uint16_t{ static_cast<uint16_t>(CollisionLayers::PlayerDamage) | static_cast<uint16_t>(CollisionLayers::EnemyDamage) });
 			m_FallDist = 0;
 		}
 		void GoldState::Init()

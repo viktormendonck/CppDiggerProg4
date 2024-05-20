@@ -63,15 +63,18 @@ namespace dae
 		}
 		void SpawnFireBall(glm::ivec2 dir)
 		{
+			auto pTileMap = m_pGameObject->GetParent()->GetComponent<TileMapComponent>();
+
 			const std::shared_ptr<GameObject> pFireBall = std::make_shared<GameObject>();
-			pFireBall->GetTransform().SetLocalPosition(m_pGameObject->GetTransform().GetLocalPosition()); //TODO: set position to the front of the player
-			std::unique_ptr<SpriteSheetComponent> pSpriteSheet = std::make_unique<SpriteSheetComponent>(pFireBall.get(), m_pFireBallTex, glm::ivec2{1,3}, false, 0.2f, true, true);
+			pFireBall->GetTransform().SetLocalPosition(pTileMap->TileToLocal(pTileMap->LocalToTile(m_pGameObject->GetTransform().GetLocalPosition())+glm::ivec2{0,1}+ dir));
+			std::unique_ptr<SpriteSheetComponent> pSpriteSheet = std::make_unique<SpriteSheetComponent>(pFireBall.get(), m_pFireBallTex, glm::ivec2{3,1}, false, 0.2f, true, true);
+			pSpriteSheet->SetRenderScale(glm::vec2(2, 2));
 			pFireBall->AddComponent(std::make_unique<CollisionRectComponent>(pFireBall.get(), pSpriteSheet->GetSpriteSize(), glm::vec2{ 0,0 },
 				static_cast<uint16_t>(CollisionLayers::EnemyDamage),
 				static_cast<uint16_t>(CollisionLayers::EnemyDamage)));
 			pFireBall->AddComponent(std::move(pSpriteSheet));
 			pFireBall->AddComponent(std::make_unique<FireBallComponent>(pFireBall.get(), dir));
-			pFireBall->SetParent(m_pGameObject->GetParent(), true);
+			pFireBall->SetParent(m_pGameObject->GetParent(), false);
 
 		}
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_LastFireTime;

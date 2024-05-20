@@ -29,6 +29,10 @@ namespace dae
 
 		uint16_t& GetReceivingCollisionLayers()	{return m_Rect.receivingCollisionLayers;}
 		uint16_t& GetSendingCollisionLayers()	{return m_Rect.sendingCollisionLayers;}
+		void AddReceivingLayer(uint16_t layers)	{m_Rect.receivingCollisionLayers |= layers;}
+		void AddSendingLayer(uint16_t layers)	{m_Rect.sendingCollisionLayers |= layers;}
+		void RemoveReceivingLayer(uint16_t layers)	{m_Rect.receivingCollisionLayers &= ~layers;}
+		void RemoveSendingLayer(uint16_t layers)	{m_Rect.sendingCollisionLayers &= ~layers;}
 
 		void Rotate();
 		Signal<GameObject*> m_OnExit{};

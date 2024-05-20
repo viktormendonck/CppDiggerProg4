@@ -28,7 +28,7 @@ namespace dae
 
 		if (tile != MapData::TileType::Empty)
 		{
-			//OnHit();
+			OnHit();
 			return;
 		}
 
