@@ -65,8 +65,10 @@ namespace dae
 
 	void CollisionRectComponent::Render() const
 	{
+#ifdef _DEBUG
 		glm::vec2 pos = m_Rect.pos + GetParent()->GetTransform().GetWorldPosition();
 		Renderer::GetInstance().RenderRect(pos, m_Rect.size,SDL_Color(255,0,0,255));
+#endif
 	}
 
 	const CollisionRectInfo CollisionRectComponent::GetCollisionRect() const

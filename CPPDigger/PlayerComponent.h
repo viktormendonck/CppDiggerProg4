@@ -13,7 +13,7 @@ namespace dae
 	class PlayerComponent final : public DiggingCharacterComponent
 	{
 	public:
-		explicit PlayerComponent(dae::GameObject* pParent, int level);
+		explicit PlayerComponent(dae::GameObject* pParent);
 
 		//add needed signals
 		Signal<> OnDeath;
@@ -27,7 +27,6 @@ namespace dae
 		void Kill() { --m_Lives; OnDeath.Emit(); }
 
 		void Update() override;
-		void Init() override;
 		void SetDir(glm::ivec2 dir);
 		glm::ivec2 GetDir() const { return m_CurrentDir; }
 
@@ -38,7 +37,6 @@ namespace dae
 
 		glm::ivec2 m_CurrentDir{};
 
-		glm::ivec2 m_StartPos{ 0,22 };
 		glm::vec2 m_TargetPos{ 0,0 };
 		bool m_CanChangeDir{ true };
 		TileMapComponent* GetTileMap() const

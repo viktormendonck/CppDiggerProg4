@@ -34,6 +34,9 @@
 #include "ServiceLocator.h"
 #include "SpriteSheetComponent.h"
 
+#include "json.hpp"
+#include <fstream>
+
 #include "MapData.h"
 
 using dae::CollisionLayers;
@@ -59,9 +62,8 @@ void AddGoldBag(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>&
 	pGoldBagObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pGoldBagObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,0 },
 		static_cast<uint16_t>(CollisionLayers::Push) , 
 		uint16_t{ 0 }));
-	pGoldBagObject->GetComponent<dae::SpriteSheetComponent>()->SetRenderScale(glm::vec2(2, 2));
+	pGoldBagObject->GetComponent<dae::SpriteSheetComponent>()->SetRenderScale(glm::vec2(2.2f, 2.2f));
 	pGoldBagObject->AddComponent(std::make_unique<dae::GoldBagComponent>(pGoldBagObject.get()));
-
 	pGoldBagObject->SetParent(pParent, false);
 }
 void AddPlayer(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& pPlayerTexture, const std::shared_ptr<dae::Texture2D>& pFireBallTex, glm::vec2 pos, dae::KeyboardDevice* pKeyboard, SDL_Scancode upButton, SDL_Scancode downButton,SDL_Scancode leftButton,SDL_Scancode rightButton,SDL_Scancode attackButton)
@@ -71,7 +73,7 @@ void AddPlayer(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& 
 	pPlayerObject->GetTransform().SetLocalPosition(pos);
 	pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), pPlayerTexture, glm::ivec2{ 4,4 }, true, 0.3f, true, true));
 	pPlayerObject->GetComponent<dae::SpriteSheetComponent>()->SetRenderScale(glm::vec2(2, 2));
-	pPlayerObject->AddComponent(std::make_unique<dae::PlayerComponent>(pPlayerObject.get(), 0));
+	pPlayerObject->AddComponent(std::make_unique<dae::PlayerComponent>(pPlayerObject.get()));
 	pPlayerObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pPlayerObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,15 },
 		uint16_t{ static_cast<uint16_t>(CollisionLayers::PlayerDamage) },
 		uint16_t{ static_cast<uint16_t>(CollisionLayers::Pickup) | static_cast<uint16_t>(CollisionLayers::Push) }
@@ -106,6 +108,49 @@ void AddPlayer(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& 
 	
 }
 
+void LoadLevelFromJson(dae::KeyboardDevice* pKeyboard, dae::ControllerDevice*, const std::shared_ptr<dae::GameObject>& pWorldObject, const std::string& filePath)
+{
+	const std::ifstream file(filePath);
+	if (!file.is_open())
+	{
+		throw std::runtime_error("Could not open file: " + filePath);
+	}
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	const nlohmann::json json = nlohmann::json::parse(buffer.str());
+	std::vector<int> playerPos{ json["playerPos"].get<std::vector<int>>() };
+	std::vector<int> map{json["tiles"].get<std::vector<int>>()};
+ 	glm::ivec2 playerSpawnPos{ playerPos[0] ,playerPos[1] }; 
+
+	std::shared_ptr<dae::Texture2D> pPlayerTexture{ dae::ResourceManager::GetInstance().LoadTexture("PlayerSprites.png") };
+	std::shared_ptr<dae::Texture2D> pFireBallTexture{ dae::ResourceManager::GetInstance().LoadTexture("Fireball.png") };
+	std::shared_ptr<dae::Texture2D> pGemTexture{ dae::ResourceManager::GetInstance().LoadTexture("Gem.png") };
+	std::shared_ptr<dae::Texture2D> pGoldBagTexture{ dae::ResourceManager::GetInstance().LoadTexture("GoldBagSprites.png") };
+
+	dae::TileMapComponent* pTileMap = pWorldObject->GetComponent<dae::TileMapComponent>();
+	if (!pTileMap)
+	{
+		std::shared_ptr<dae::Texture2D> pTileSet{ dae::ResourceManager::GetInstance().LoadTexture("tileset.png") };
+		std::unique_ptr<dae::TileMapComponent> tileMap{ std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{6,3}, glm::ivec2{40,25}, 0) };
+		pTileMap = tileMap.get();
+		pWorldObject->AddComponent(std::move(tileMap));
+	}
+
+	pTileMap->SetMap(map);
+
+	AddPlayer(pWorldObject.get(), pPlayerTexture, pFireBallTexture, pTileMap->TileToLocal(playerSpawnPos), pKeyboard, SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D, SDL_SCANCODE_SPACE);
+
+	for (const std::vector<int>& bagPos : json["moneyBagPositions"].get<std::vector<std::vector<int>>>())
+	{
+		AddGoldBag(pWorldObject.get(), pGoldBagTexture, pTileMap->TileToLocal(glm::ivec2{bagPos[0], bagPos[1]}));
+	}
+
+	for (const std::vector<int>& gemPos : json["gemPositions"].get<std::vector<std::vector<int>>>())
+	{
+		AddGem(pWorldObject.get(), pGemTexture, pTileMap->TileToLocal(glm::ivec2{ gemPos[0], gemPos[1] }));
+	}
+	
+}
 void load()
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene("Fps");
@@ -132,22 +177,9 @@ void load()
 	pWorldObject->GetTransform().SetLocalPosition({ 75, 200 });
 	pWorldObject->GetTransform().SetLocalScale({ 2,2 });
 	std::unique_ptr<dae::TileMapComponent> pTileMap = std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 }, 0);
-	dae::TileMapComponent* pTileMapPtr = pTileMap.get();
 	pWorldObject->AddComponent(std::move(pTileMap));
-	pWorldObject->GetComponent<dae::TileMapComponent>()->SetMap(dae::MapData::m_Levels[0]);
+	LoadLevelFromJson(pKeyboard.get(), pController.get(), pWorldObject, "Data/level1.json");
 	scene.Add(pWorldObject);
-
-
-	std::shared_ptr<dae::Texture2D> pPlayerTexture{ dae::ResourceManager::GetInstance().LoadTexture("PlayerSprites.png") };
-	std::shared_ptr<dae::Texture2D> pFireBallTexture{ dae::ResourceManager::GetInstance().LoadTexture("Fireball.png") };
-
-	AddPlayer(pWorldObject.get(), pPlayerTexture,pFireBallTexture, {0,0}, pKeyboard.get(), SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D,SDL_SCANCODE_SPACE);
-	
-	std::shared_ptr<dae::Texture2D> pGemTexture{ dae::ResourceManager::GetInstance().LoadTexture("Gem.png") };
-	AddGem(pWorldObject.get(), pGemTexture, pTileMapPtr->TileToLocal(glm::ivec2(10,10)));
-
-	std::shared_ptr<dae::Texture2D> pGoldBagTexture{ dae::ResourceManager::GetInstance().LoadTexture("GoldBagSprites.png") };
-	AddGoldBag(pWorldObject.get(), pGoldBagTexture, pTileMapPtr->TileToLocal(glm::ivec2(15,10)));
 
 	dae::InputManager::GetInstance().AddInputDevice(std::move(pController));
 	dae::InputManager::GetInstance().AddInputDevice(std::move(pKeyboard));

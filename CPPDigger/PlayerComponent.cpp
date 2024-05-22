@@ -11,17 +11,11 @@
 
 namespace dae
 {
-	PlayerComponent::PlayerComponent(dae::GameObject* pParent, int level)
-		: DiggingCharacterComponent(pParent),
-		m_StartPos(MapData::m_LevelStartPositions[level])
+	PlayerComponent::PlayerComponent(dae::GameObject* pParent)
+		: DiggingCharacterComponent(pParent)
 	{
 	}
 
-	void PlayerComponent::Init()
-	{
-		GameObject* pPlayer = GetParent();
-		pPlayer->GetTransform().SetLocalPosition(GetTileMap()->TileToLocal(m_StartPos));
-	}
 
 	void PlayerComponent::Update()
 	{
