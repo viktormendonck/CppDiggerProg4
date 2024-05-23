@@ -45,11 +45,11 @@ void dae::SceneManager::HandleDestroy()
 
 bool dae::SceneManager::SetActiveScene(const std::string& name)
 {
-	for (int i = 0; i < m_Scenes.size(); i++)
+	for (size_t i = 0; i < m_Scenes.size(); i++)
 	{
 		if (m_Scenes[i]->GetName() == name)
 		{
-			m_ActiveSceneIndex = i;
+			m_ActiveSceneIndex = static_cast<int>(i);
 			return true;
 		}
 	}
