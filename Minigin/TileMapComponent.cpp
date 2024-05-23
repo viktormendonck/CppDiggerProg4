@@ -11,13 +11,12 @@
 
 namespace dae
 {
-	TileMapComponent::TileMapComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture,glm::ivec2 tileMapSize,glm::ivec2 mapSize,int level)
+	TileMapComponent::TileMapComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture,glm::ivec2 tileMapSize,glm::ivec2 mapSize)
 		: Component(pParent),
 		m_pTexture(pTexture),
 		m_TileMapSize(tileMapSize),
 		m_WorldSize(mapSize),
-		m_TileSize(pTexture->GetSize().x / m_TileMapSize.x, pTexture->GetSize().y / m_TileMapSize.y),
-		m_Level(level)
+		m_TileSize(pTexture->GetSize().x / m_TileMapSize.x, pTexture->GetSize().y / m_TileMapSize.y)
 	{
 	}
 

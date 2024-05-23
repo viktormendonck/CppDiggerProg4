@@ -11,7 +11,7 @@ namespace dae
 	class TileMapComponent final : public Component
 	{
 	public:
-		explicit TileMapComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture, glm::ivec2 tileMapSize, glm::ivec2 mapSize, int level);
+		explicit TileMapComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture, glm::ivec2 tileMapSize, glm::ivec2 mapSize);
 
 		void Render() const override;
 		void SetTileSprite(glm::ivec2 tileId, int tile) { m_TileMap[GetTileIdx(tileId)] = tile; }
@@ -37,8 +37,6 @@ namespace dae
 		glm::ivec2 m_TileMapSize{ 6,5 };
 		glm::ivec2 m_WorldSize{ 40,25 };
 		glm::ivec2 m_TileSize;
-
-		int m_Level;
 
 		std::vector<int> m_TileMap{m_WorldSize.x*m_WorldSize.y};
 

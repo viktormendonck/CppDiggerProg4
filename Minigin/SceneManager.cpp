@@ -3,10 +3,7 @@
 
 void dae::SceneManager::Update()
 {
-	for(auto& scene : m_Scenes)
-	{
-		scene->Update();
-	}
+	m_Scenes[m_ActiveSceneIndex]->Update();
 }
 
 void dae::SceneManager::Init()
@@ -19,34 +16,22 @@ void dae::SceneManager::Init()
 
 void dae::SceneManager::FixedUpdate()
 {
-	for (auto& scene : m_Scenes)
-	{
-		scene->FixedUpdate();
-	}
+	m_Scenes[m_ActiveSceneIndex]->FixedUpdate();
 }
 
 void dae::SceneManager::LateUpdate()
 {
-	for (auto& scene : m_Scenes)
-	{
-		scene->LateUpdate();
-	}
+	m_Scenes[m_ActiveSceneIndex]->LateUpdate();
 }
 
 void dae::SceneManager::Render()
 {
-	for (const auto& scene : m_Scenes)
-	{
-		scene->Render();
-	}
+	m_Scenes[m_ActiveSceneIndex]->Render();
 }
 
 void dae::SceneManager::ImGuiUpdate()
 {
-	for (const auto& scene : m_Scenes)
-	{
-		scene->ImGuiUpdate();
-	}
+	m_Scenes[m_ActiveSceneIndex]->ImGuiUpdate();
 }
 
 void dae::SceneManager::HandleDestroy()
@@ -55,6 +40,32 @@ void dae::SceneManager::HandleDestroy()
 	{
 		scene->HandleDestruction();
 	}
+
+}
+
+bool dae::SceneManager::SetActiveScene(const std::string& name)
+{
+	for (int i = 0; i < m_Scenes.size(); i++)
+	{
+		if (m_Scenes[i]->GetName() == name)
+		{
+			m_ActiveSceneIndex = i;
+			return true;
+		}
+	}
+	return false;
+}
+
+dae::Scene* dae::SceneManager::GetScene(const std::string& name)
+{
+	for (const auto& scene : m_Scenes)
+	{
+		if (scene->GetName() == name)
+		{
+			return scene.get();
+		}
+	}
+	return nullptr;
 }
 
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)

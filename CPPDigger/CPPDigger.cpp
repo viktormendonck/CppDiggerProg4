@@ -53,7 +53,6 @@ void AddGem(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& pTe
 
 	pGemObject->SetParent(pParent, false);
 }
-
 void AddGoldBag(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& pTexture, glm::vec2 pos)
 {
 	const auto pGoldBagObject = std::make_shared<dae::GameObject>();
@@ -131,7 +130,7 @@ void LoadLevelFromJson(dae::KeyboardDevice* pKeyboard, dae::ControllerDevice*, c
 	if (!pTileMap)
 	{
 		std::shared_ptr<dae::Texture2D> pTileSet{ dae::ResourceManager::GetInstance().LoadTexture("tileset.png") };
-		std::unique_ptr<dae::TileMapComponent> tileMap{ std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{6,3}, glm::ivec2{40,25}, 0) };
+		std::unique_ptr<dae::TileMapComponent> tileMap{ std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{6,3}, glm::ivec2{40,25}) };
 		pTileMap = tileMap.get();
 		pWorldObject->AddComponent(std::move(tileMap));
 	}
@@ -176,7 +175,7 @@ void load()
 	std::shared_ptr<dae::Texture2D> pTileSet{ dae::ResourceManager::GetInstance().LoadTexture("tileset.png") };
 	pWorldObject->GetTransform().SetLocalPosition({ 75, 200 });
 	pWorldObject->GetTransform().SetLocalScale({ 2,2 });
-	std::unique_ptr<dae::TileMapComponent> pTileMap = std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 }, 0);
+	std::unique_ptr<dae::TileMapComponent> pTileMap = std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 });
 	pWorldObject->AddComponent(std::move(pTileMap));
 	LoadLevelFromJson(pKeyboard.get(), pController.get(), pWorldObject, "Data/level1.json");
 	scene.Add(pWorldObject);
