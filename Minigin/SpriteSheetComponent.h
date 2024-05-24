@@ -7,7 +7,7 @@
 namespace dae
 {
 	class Texture2D;
-	class SpriteSheetComponent final : public Component
+	class SpriteSheetComponent : public Component
 	{
 	public:
 

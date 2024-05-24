@@ -42,7 +42,7 @@ void dae::SpriteSheetComponent::Render() const
 	if (m_pTexture && m_IsVisible)
 	{
 		dae::Transform& transform = GetParent()->GetTransform();
-		glm::vec2 renderPos{ transform.GetWorldPosition().x+static_cast<float>(m_RenderOffset.x),transform.GetWorldPosition().y+static_cast<float>(m_RenderOffset.y)};
+		const glm::vec2 renderPos{ transform.GetWorldPosition().x+static_cast<float>(m_RenderOffset.x),transform.GetWorldPosition().y+static_cast<float>(m_RenderOffset.y)};
 		if (m_CanRotate)
 		{
 			Renderer::GetInstance().RenderSprite(*m_pTexture, m_CurrentSprite, renderPos, transform.GetLocalRotation(), m_SpriteSize,m_RenderScale);

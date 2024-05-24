@@ -11,14 +11,8 @@
     <Filter Include="Source Files\Commands">
       <UniqueIdentifier>{d66edd3a-83bd-4e89-878e-7b48eecebe35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Objects">
-      <UniqueIdentifier>{892663aa-c08c-470d-8aa0-b3865f8c1826}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Data">
       <UniqueIdentifier>{88ea7122-3607-4442-9810-f4c46a0f65b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Components\Collectables">
-      <UniqueIdentifier>{d83cd76a-a85d-48c2-a0ac-703c7d8a3e01}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Characters">
       <UniqueIdentifier>{6c2a6706-4c1b-4206-a82c-b3840cd612e5}</UniqueIdentifier>
@@ -28,6 +22,21 @@
     </Filter>
     <Filter Include="Source Files\Characters\enemy">
       <UniqueIdentifier>{9029bd48-bf5c-4a77-8aa5-e8c0115f50ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\UI">
+      <UniqueIdentifier>{9f2f35eb-6e76-4dcf-bd80-43a11ca50f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Game">
+      <UniqueIdentifier>{44bf5996-650f-4921-aad1-81d7a07e67d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Game\Collectables">
+      <UniqueIdentifier>{d83cd76a-a85d-48c2-a0ac-703c7d8a3e01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Game\score">
+      <UniqueIdentifier>{36d882e2-a63c-430a-9ab5-b802172f3c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Game\Objects">
+      <UniqueIdentifier>{892663aa-c08c-470d-8aa0-b3865f8c1826}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,16 +50,22 @@
       <Filter>Source Files\Characters\Player</Filter>
     </ClCompile>
     <ClCompile Include="GemComponent.cpp">
-      <Filter>Source Files\Components\Collectables</Filter>
+      <Filter>Source Files\Components\Game\Collectables</Filter>
     </ClCompile>
     <ClCompile Include="GoldBagComponent.cpp">
-      <Filter>Source Files\Components\Collectables</Filter>
+      <Filter>Source Files\Components\Game\Collectables</Filter>
     </ClCompile>
     <ClCompile Include="FireBallComponent.cpp">
-      <Filter>Source Files\Components\Objects</Filter>
+      <Filter>Source Files\Components\Game\Objects</Filter>
     </ClCompile>
     <ClCompile Include="DiggingCharacterComponent.cpp">
       <Filter>Source Files\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreComponent.cpp">
+      <Filter>Source Files\Components\Game\score</Filter>
+    </ClCompile>
+    <ClCompile Include="NumberDisplay.cpp">
+      <Filter>Source Files\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -64,16 +79,22 @@
       <Filter>Source Files\Characters\Player</Filter>
     </ClInclude>
     <ClInclude Include="GemComponent.h">
-      <Filter>Source Files\Components\Collectables</Filter>
+      <Filter>Source Files\Components\Game\Collectables</Filter>
     </ClInclude>
     <ClInclude Include="GoldBagComponent.h">
-      <Filter>Source Files\Components\Collectables</Filter>
+      <Filter>Source Files\Components\Game\Collectables</Filter>
     </ClInclude>
     <ClInclude Include="FireBallComponent.h">
-      <Filter>Source Files\Components\Objects</Filter>
+      <Filter>Source Files\Components\Game\Objects</Filter>
     </ClInclude>
     <ClInclude Include="DiggingCharacterComponent.h">
       <Filter>Source Files\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreComponent.h">
+      <Filter>Source Files\Components\Game\score</Filter>
+    </ClInclude>
+    <ClInclude Include="NumberDisplay.h">
+      <Filter>Source Files\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

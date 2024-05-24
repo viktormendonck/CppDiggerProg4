@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "FiniteStateMachine.h"
+#include "Signal.h"
 #include "TileMapComponent.h"
 
 namespace dae
@@ -67,26 +68,26 @@ namespace dae
 		class GoldState final : public State
 		{
 		public:
-			GoldState() = default;
+			explicit GoldState(std::shared_ptr<Signal<GameObject*>> pAnyGoldPickedUpSignal)
+				: pAnyGoldPickedUpSignal(std::move(pAnyGoldPickedUpSignal))
+			{}
 			void Init() override;
 			void OnEnter() override;
 			void OnPlayerCollision(GameObject* pOther);
 		private:
-			int m_Score{ 100 };
+			std::shared_ptr<Signal<GameObject*>> pAnyGoldPickedUpSignal{};
 		};
 		class TakenState final : public State
 		{
 		public:
 			void OnEnter() override;
-		private:
-
 		};
 	}
 
 	class GoldBagComponent final : public Component
 	{
 	public:
-		GoldBagComponent(GameObject* pParent);
+		GoldBagComponent(GameObject* pParent,std::shared_ptr<Signal<GameObject*>> pAnyGoldPickedUpSignal);
 		void Init() override;
 		void Update() override;
 		

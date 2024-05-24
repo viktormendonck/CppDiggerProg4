@@ -221,7 +221,9 @@
     <ClCompile Include="GemComponent.cpp" />
     <ClCompile Include="GoldBagComponent.cpp" />
     <ClCompile Include="MapData.cpp" />
+    <ClCompile Include="NumberDisplay.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
+    <ClCompile Include="ScoreComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DiggingCharacterComponent.h" />
@@ -229,8 +231,10 @@
     <ClInclude Include="GemComponent.h" />
     <ClInclude Include="GoldBagComponent.h" />
     <ClInclude Include="MapData.h" />
+    <ClInclude Include="NumberDisplay.h" />
     <ClInclude Include="PlayerCommands.h" />
     <ClInclude Include="PlayerComponent.h" />
+    <ClInclude Include="ScoreComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,25 +4,21 @@
 #include "PlayerComponent.h"
 #include "TextureComponent.h"
 
-void dae::GemStates::GemState::Init()
+
+dae::GemComponent::GemComponent(GameObject* pParent,std::shared_ptr<Signal<GameObject*>> pAnyGemPickedUpSignal)
+	: Component(pParent),
+m_pAnyGemPickedUpSignal{std::move(pAnyGemPickedUpSignal)}
 {
-	GetStateMachine()->GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](GameObject* other) {OnPlayerCollision(other); });
 }
 
-void dae::GemStates::GemState::OnPlayerCollision(GameObject* pOther)
+void dae::GemComponent::Init()
+{
+	GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](GameObject* other) {OnPlayerInteraction(other); });
+}
+
+void dae::GemComponent::OnPlayerInteraction(GameObject* pOther)
 {
 	if (pOther->GetComponent<PlayerComponent>() == nullptr) return;
-
-	//TODO: add score (currently don't have a score system)
-	GetStateMachine()->SetState(static_cast<int>(StateType::Taken));
-}
-
-void dae::GemStates::TakenState::OnEnter()
-{
-	GetStateMachine()->GetParent()->Destroy();
-}
-
-void dae::GemComponent::Update()
-{
-	m_FSM->Update();
+	m_pAnyGemPickedUpSignal->Emit(pOther);
+	GetParent()->Destroy();
 }

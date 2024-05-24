@@ -19,6 +19,7 @@
 #include "TextureComponent.h"
 #include "PlainTextComponent.h"
 #include "PlayerComponent.h"
+#include "ScoreComponent.h"
 #include "TileMapComponent.h"
 //devices
 #include "InputDevice.h"
@@ -38,9 +39,10 @@
 #include <fstream>
 
 #include "MapData.h"
+#include "NumberDisplay.h"
 
 using dae::CollisionLayers;
-void AddGem(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& pTexture, glm::vec2 pos)
+void AddGem(dae::GameObject* pParent, std::shared_ptr<dae::Signal<dae::GameObject*>> pAnyGemPickedUpSignal, const std::shared_ptr<dae::Texture2D>& pTexture, glm::vec2 pos)
 {
 	const auto pGemObject = std::make_shared<dae::GameObject>();
 	pGemObject->GetTransform().SetLocalPosition(pos + glm::vec2(4, 0)); // add half a tile to center the object
@@ -49,11 +51,11 @@ void AddGem(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& pTe
 	pGemObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pGemObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,0 },
 		static_cast<uint16_t>(CollisionLayers::Pickup), 
 		uint16_t{ 0 }));
-	pGemObject->AddComponent(std::make_unique<dae::GemComponent>(pGemObject.get()));
+	pGemObject->AddComponent(std::make_unique<dae::GemComponent>(pGemObject.get(),std::move(pAnyGemPickedUpSignal)));
 
 	pGemObject->SetParent(pParent, false);
 }
-void AddGoldBag(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& pTexture, glm::vec2 pos)
+void AddGoldBag(dae::GameObject* pParent,std::shared_ptr<dae::Signal<dae::GameObject*>> pAnyGoldPickedUpSignal, const std::shared_ptr<dae::Texture2D>& pTexture, glm::vec2 pos)
 {
 	const auto pGoldBagObject = std::make_shared<dae::GameObject>();
 	pGoldBagObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pGoldBagObject.get(), pTexture, glm::ivec2{ 3,3 }, false, 0.2f, true, false, glm::ivec2{ 2,1 }));
@@ -62,52 +64,72 @@ void AddGoldBag(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>&
 		static_cast<uint16_t>(CollisionLayers::Push) , 
 		uint16_t{ 0 }));
 	pGoldBagObject->GetComponent<dae::SpriteSheetComponent>()->SetRenderScale(glm::vec2(2.2f, 2.2f));
-	pGoldBagObject->AddComponent(std::make_unique<dae::GoldBagComponent>(pGoldBagObject.get()));
+	pGoldBagObject->AddComponent(std::make_unique<dae::GoldBagComponent>(pGoldBagObject.get(), std::move(pAnyGoldPickedUpSignal)));
 	pGoldBagObject->SetParent(pParent, false);
 }
-void AddPlayer(dae::GameObject* pParent, const std::shared_ptr<dae::Texture2D>& pPlayerTexture, const std::shared_ptr<dae::Texture2D>& pFireBallTex, glm::vec2 pos, dae::KeyboardDevice* pKeyboard, SDL_Scancode upButton, SDL_Scancode downButton,SDL_Scancode leftButton,SDL_Scancode rightButton,SDL_Scancode attackButton)
+
+struct PlayerRequirements
+{
+	dae::GameObject* pParent;
+	std::shared_ptr<dae::Texture2D> pPlayerTexture;
+	std::shared_ptr<dae::Texture2D> pFireBallTex;
+	glm::vec2 pos;
+	dae::KeyboardDevice* pKeyboard;
+	dae::Signal<dae::GameObject*>* pGemPickedUpSignal;
+	dae::Signal<dae::GameObject*>* pGoldPickedUpSignal;
+	dae::Signal<dae::GameObject*>* pEnemyKilledUpSignal;
+	std::unique_ptr<dae::Signal<int>> pScoreChangedSignal;
+	SDL_Scancode upButton;
+	SDL_Scancode downButton;
+	SDL_Scancode leftButton;
+	SDL_Scancode rightButton;
+	SDL_Scancode attackButton;
+};
+
+void AddPlayer(PlayerRequirements& requirements)
 {
 
 	const auto pPlayerObject = std::make_shared<dae::GameObject>();
-	pPlayerObject->GetTransform().SetLocalPosition(pos);
-	pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), pPlayerTexture, glm::ivec2{ 4,4 }, true, 0.3f, true, true));
+	pPlayerObject->GetTransform().SetLocalPosition(requirements.pos);
+	pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), requirements.pPlayerTexture, glm::ivec2{ 4,4 }, true, 0.3f, true, true));
 	pPlayerObject->GetComponent<dae::SpriteSheetComponent>()->SetRenderScale(glm::vec2(2, 2));
 	pPlayerObject->AddComponent(std::make_unique<dae::PlayerComponent>(pPlayerObject.get()));
 	pPlayerObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pPlayerObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,15 },
 		uint16_t{ static_cast<uint16_t>(CollisionLayers::PlayerDamage) },
 		uint16_t{ static_cast<uint16_t>(CollisionLayers::Pickup) | static_cast<uint16_t>(CollisionLayers::Push) }
 		));
-	pPlayerObject->SetParent(pParent, false);
+	pPlayerObject->AddComponent(std::make_unique<dae::ScoreComponent>(pPlayerObject.get(), requirements.pGemPickedUpSignal, requirements.pGoldPickedUpSignal, requirements.pEnemyKilledUpSignal,std::move(requirements.pScoreChangedSignal)));
+	pPlayerObject->SetParent(requirements.pParent, false);
 
-	pKeyboard->BindCommand(
+	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, -1 }),
-		upButton,
+		requirements.upButton,
 		dae::InputState::Pressed
 	);
-	pKeyboard->BindCommand(
+	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, 1 }),
-		downButton,
+		requirements.downButton,
 		dae::InputState::Pressed
 	);
-	pKeyboard->BindCommand(
+	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ 1, 0 }),
-		rightButton,
+		requirements.rightButton,
 		dae::InputState::Pressed
 	);
-	pKeyboard->BindCommand(
+	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ -1, 0 }),
-		leftButton,
+		requirements.leftButton,
 		dae::InputState::Pressed
 	);
-	pKeyboard->BindCommand(
-		std::make_unique<dae::ShootCommand>(pPlayerObject.get(),pFireBallTex),
-		attackButton,
+	requirements.pKeyboard->BindCommand(
+		std::make_unique<dae::ShootCommand>(pPlayerObject.get(), requirements.pFireBallTex),
+		requirements.attackButton,
 		dae::InputState::Pressed
 	);
 	
 }
 
-void LoadLevelFromJson(dae::KeyboardDevice* pKeyboard, dae::ControllerDevice*, const std::shared_ptr<dae::GameObject>& pWorldObject, const std::string& filePath)
+void LoadLevelFromJson(dae::KeyboardDevice* pKeyboard, dae::ControllerDevice*, const std::shared_ptr<dae::GameObject>& pWorldObject, std::unique_ptr<dae::Signal<int>> pScoreChangedSignal, const std::string& filePath)
 {
 	const std::ifstream file(filePath);
 	if (!file.is_open())
@@ -136,17 +158,38 @@ void LoadLevelFromJson(dae::KeyboardDevice* pKeyboard, dae::ControllerDevice*, c
 	}
 
 	pTileMap->SetMap(map);
+	std::shared_ptr pAnyGoldPickedUpSignal = std::make_shared<dae::Signal<dae::GameObject*>>();
+	std::shared_ptr pAnyGemPickedUpSignal = std::make_shared<dae::Signal<dae::GameObject*>>();
+	std::shared_ptr pAnyEnemyKilledSignal = std::make_shared<dae::Signal<dae::GameObject*>>();
 
-	AddPlayer(pWorldObject.get(), pPlayerTexture, pFireBallTexture, pTileMap->TileToLocal(playerSpawnPos), pKeyboard, SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D, SDL_SCANCODE_SPACE);
+	PlayerRequirements playerRequirements
+	{
+		pWorldObject.get(),
+		pPlayerTexture,
+		pFireBallTexture,
+		pTileMap->TileToLocal(playerSpawnPos),
+		pKeyboard,
+		pAnyGemPickedUpSignal.get(),
+		pAnyGoldPickedUpSignal.get(),
+		pAnyEnemyKilledSignal.get(),
+		std::move(pScoreChangedSignal),
+		SDL_SCANCODE_W,
+		SDL_SCANCODE_S,
+		SDL_SCANCODE_A,
+		SDL_SCANCODE_D,
+		SDL_SCANCODE_SPACE
+	};
+
+	AddPlayer(playerRequirements);
 
 	for (const std::vector<int>& bagPos : json["moneyBagPositions"].get<std::vector<std::vector<int>>>())
 	{
-		AddGoldBag(pWorldObject.get(), pGoldBagTexture, pTileMap->TileToLocal(glm::ivec2{bagPos[0], bagPos[1]}));
+		AddGoldBag(pWorldObject.get(),pAnyGoldPickedUpSignal, pGoldBagTexture, pTileMap->TileToLocal(glm::ivec2{bagPos[0], bagPos[1]}));
 	}
 
 	for (const std::vector<int>& gemPos : json["gemPositions"].get<std::vector<std::vector<int>>>())
 	{
-		AddGem(pWorldObject.get(), pGemTexture, pTileMap->TileToLocal(glm::ivec2{ gemPos[0], gemPos[1] }));
+		AddGem(pWorldObject.get(), pAnyGemPickedUpSignal, pGemTexture, pTileMap->TileToLocal(glm::ivec2{ gemPos[0], gemPos[1] }));
 	}
 	
 }
@@ -164,21 +207,29 @@ void load()
 	std::unique_ptr<dae::KeyboardDevice> pKeyboard = std::make_unique<dae::KeyboardDevice>();
 	std::unique_ptr<dae::ControllerDevice> pController = std::make_unique<dae::ControllerDevice>(0);
 
-	//add the title text
-	const auto pTitleObject = std::make_shared<dae::GameObject>();
-	pTitleObject->GetTransform().SetLocalPosition({ 80, 20 });
-	pTitleObject->AddComponent(std::make_unique<dae::PlainTextComponent>(pTitleObject.get(), "Press space for sound", font, SDL_Color{ 255,255,255,255 }));
-	scene.Add(pTitleObject);
-
-	//test map
 	const auto pWorldObject = std::make_shared<dae::GameObject>();
 	std::shared_ptr<dae::Texture2D> pTileSet{ dae::ResourceManager::GetInstance().LoadTexture("tileset.png") };
 	pWorldObject->GetTransform().SetLocalPosition({ 75, 200 });
 	pWorldObject->GetTransform().SetLocalScale({ 2,2 });
 	std::unique_ptr<dae::TileMapComponent> pTileMap = std::make_unique<dae::TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 });
 	pWorldObject->AddComponent(std::move(pTileMap));
-	LoadLevelFromJson(pKeyboard.get(), pController.get(), pWorldObject, "Data/level1.json");
+	std::unique_ptr<dae::Signal<int>> pScoreChangedSignal = std::make_unique<dae::Signal<int>>();
+	dae::Signal<int>* pScoreChangedSignalPtr = pScoreChangedSignal.get();
+	LoadLevelFromJson(pKeyboard.get(), pController.get(), pWorldObject, std::move(pScoreChangedSignal), "Data/level1.json");
 	scene.Add(pWorldObject);
+
+	const auto pUiObject = std::make_shared<dae::GameObject>();
+	std::shared_ptr<dae::Texture2D> pNumbers{ dae::ResourceManager::GetInstance().LoadTexture("nums.png") };
+
+
+	const auto pScoreObject = std::make_shared<dae::GameObject>();
+	pScoreObject->AddComponent(std::make_unique<dae::NumberDisplay>(pScoreObject.get(),pScoreChangedSignalPtr,pNumbers,glm::vec2(2,2)));
+	pScoreObject->GetTransform().SetLocalPosition(glm::vec2(20, 20));
+
+	pScoreObject->SetParent(pUiObject.get(), true);
+
+	scene.Add(pUiObject);
+
 
 	dae::InputManager::GetInstance().AddInputDevice(std::move(pController));
 	dae::InputManager::GetInstance().AddInputDevice(std::move(pKeyboard));

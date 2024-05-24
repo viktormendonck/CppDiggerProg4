@@ -139,11 +139,10 @@ namespace dae
 			{
 				if (GetStateMachine()->GetState() ==this)
 				{
+					pAnyGoldPickedUpSignal->Emit(pOther);
 					GetStateMachine()->SetState(static_cast<int>(GoldBagStates::Taken));
 				}
 			}
-
-			//TODO: add score (currently don't have a score system)
 		}
 
 		void TakenState::OnEnter()
@@ -153,25 +152,25 @@ namespace dae
 	}
 
 
-	GoldBagComponent::GoldBagComponent(GameObject* pParent)
+	GoldBagComponent::GoldBagComponent(GameObject* pParent, std::shared_ptr<Signal<GameObject*>> pAnyGoldPickedUpSignal)
 		: Component(pParent)
 	{
 		m_pFSM = std::make_unique<FiniteStateMachine>(pParent);
-	}
-
-	void GoldBagComponent::Init()
-	{
 		std::unique_ptr<goldBagInfo::IdleState> pIdleState = std::make_unique<goldBagInfo::IdleState>();
 		m_pFSM->AddState(std::move(pIdleState));
 		std::unique_ptr<goldBagInfo::WiggleState> pWiggleState = std::make_unique<goldBagInfo::WiggleState>();
 		m_pFSM->AddState(std::move(pWiggleState));
 		std::unique_ptr<goldBagInfo::FallingState> pFallingState = std::make_unique<goldBagInfo::FallingState>();
 		m_pFSM->AddState(std::move(pFallingState));
-		std::unique_ptr<goldBagInfo::GoldState> pGoldState = std::make_unique<goldBagInfo::GoldState>();
+		std::unique_ptr<goldBagInfo::GoldState> pGoldState = std::make_unique<goldBagInfo::GoldState>(std::move(pAnyGoldPickedUpSignal));
 		m_pFSM->AddState(std::move(pGoldState));
 		std::unique_ptr<goldBagInfo::TakenState> pTakenState = std::make_unique<goldBagInfo::TakenState>();
 		m_pFSM->AddState(std::move(pTakenState));
 		m_pFSM->SetState(static_cast<int>(goldBagInfo::GoldBagStates::Idle));
+	}
+
+	void GoldBagComponent::Init()
+	{
 		m_pFSM->Init();
 	}
 
