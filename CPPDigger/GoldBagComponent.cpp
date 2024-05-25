@@ -125,7 +125,7 @@ namespace dae
 		}
 		void GoldState::Init()
 		{
-			GetStateMachine()->GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](GameObject* other) {OnPlayerCollision(other); });
+			GetStateMachine()->GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](CollisionRectComponent* other) {OnPlayerCollision(other); });
 		}
 
 		void GoldState::OnEnter()
@@ -133,22 +133,16 @@ namespace dae
 			GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>()->SetSprite(glm::ivec2{0,2});//startSprite for gold
 		}
 
-		void GoldState::OnPlayerCollision(GameObject* pOther)
+		void GoldState::OnPlayerCollision(CollisionRectComponent* pOther)
 		{
-			if (pOther->GetComponent<PlayerComponent>() != nullptr )
+			if (GetStateMachine()->GetState() != this) return;
+			if (pOther->GetSendingCollisionLayers() & static_cast<uint16_t>(CollisionLayers::Pickup))
 			{
-				if (GetStateMachine()->GetState() ==this)
-				{
-					pAnyGoldPickedUpSignal->Emit(pOther);
-					GetStateMachine()->SetState(static_cast<int>(GoldBagStates::Taken));
-				}
+				pAnyGoldPickedUpSignal->Emit(pOther->GetParent());
+				GetStateMachine()->GetParent()->Destroy();
 			}
 		}
 
-		void TakenState::OnEnter()
-		{
-			GetStateMachine()->GetParent()->Destroy();
-		}
 	}
 
 
@@ -164,8 +158,6 @@ namespace dae
 		m_pFSM->AddState(std::move(pFallingState));
 		std::unique_ptr<goldBagInfo::GoldState> pGoldState = std::make_unique<goldBagInfo::GoldState>(std::move(pAnyGoldPickedUpSignal));
 		m_pFSM->AddState(std::move(pGoldState));
-		std::unique_ptr<goldBagInfo::TakenState> pTakenState = std::make_unique<goldBagInfo::TakenState>();
-		m_pFSM->AddState(std::move(pTakenState));
 		m_pFSM->SetState(static_cast<int>(goldBagInfo::GoldBagStates::Idle));
 	}
 

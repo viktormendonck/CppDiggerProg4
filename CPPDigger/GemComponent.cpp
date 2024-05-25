@@ -13,12 +13,14 @@ m_pAnyGemPickedUpSignal{std::move(pAnyGemPickedUpSignal)}
 
 void dae::GemComponent::Init()
 {
-	GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](GameObject* other) {OnPlayerInteraction(other); });
+	GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](CollisionRectComponent* other) {OnPlayerInteraction(other); });
 }
 
-void dae::GemComponent::OnPlayerInteraction(GameObject* pOther)
+void dae::GemComponent::OnPlayerInteraction(CollisionRectComponent* pOther)
 {
-	if (pOther->GetComponent<PlayerComponent>() == nullptr) return;
-	m_pAnyGemPickedUpSignal->Emit(pOther);
-	GetParent()->Destroy();
+	if (pOther->GetSendingCollisionLayers() & static_cast<uint16_t>(CollisionLayers::Pickup))
+	{
+		m_pAnyGemPickedUpSignal->Emit(pOther->GetParent());
+		GetParent()->Destroy();
+	}
 }

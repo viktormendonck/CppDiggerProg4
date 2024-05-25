@@ -27,23 +27,23 @@ namespace dae
 		void Render() const override;
 		const CollisionRectInfo GetCollisionRect() const;
 
-		uint16_t& GetReceivingCollisionLayers()	{return m_Rect.receivingCollisionLayers;}
-		uint16_t& GetSendingCollisionLayers()	{return m_Rect.sendingCollisionLayers;}
+		uint16_t GetReceivingCollisionLayers() const {return m_Rect.receivingCollisionLayers;}
+		uint16_t GetSendingCollisionLayers() const {return m_Rect.sendingCollisionLayers;}
 		void AddReceivingLayer(uint16_t layers)	{m_Rect.receivingCollisionLayers |= layers;}
 		void AddSendingLayer(uint16_t layers)	{m_Rect.sendingCollisionLayers |= layers;}
 		void RemoveReceivingLayer(uint16_t layers)	{m_Rect.receivingCollisionLayers &= ~layers;}
 		void RemoveSendingLayer(uint16_t layers)	{m_Rect.sendingCollisionLayers &= ~layers;}
 
 		void Rotate();
-		Signal<GameObject*> m_OnExit{};
-		Signal<GameObject*> m_OnEnter{};
-		Signal<GameObject*> m_OnInside{};
+		Signal<CollisionRectComponent*> m_OnExit{};
+		Signal<CollisionRectComponent*> m_OnEnter{};
+		Signal<CollisionRectComponent*> m_OnInside{};
 	private:
 		CollisionRectInfo m_Rect{};
 		bool m_ExitSignalCalled{};
 		bool m_EnterSignalCalled{};
 		void CallOnExit();
 		void CallOnEnter();
-		GameObject* m_IntersectedObject{};
+		CollisionRectComponent* m_IntersectedObject{};
 	};
 }

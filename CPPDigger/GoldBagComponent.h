@@ -6,6 +6,7 @@
 
 namespace dae
 {
+	class CollisionRectComponent;
 	class SpriteSheetComponent;
 
 	namespace goldBagInfo
@@ -22,7 +23,6 @@ namespace dae
 			Wiggle,
 			Falling,
 			Gold,
-			Taken
 		};
 
 		class IdleState final : public State
@@ -73,14 +73,9 @@ namespace dae
 			{}
 			void Init() override;
 			void OnEnter() override;
-			void OnPlayerCollision(GameObject* pOther);
+			void OnPlayerCollision(CollisionRectComponent* pOther);
 		private:
 			std::shared_ptr<Signal<GameObject*>> pAnyGoldPickedUpSignal{};
-		};
-		class TakenState final : public State
-		{
-		public:
-			void OnEnter() override;
 		};
 	}
 

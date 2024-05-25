@@ -15,7 +15,7 @@ namespace dae
 		: Component(pParent),
 			m_Dir(dir)
 	{
-		GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](GameObject*) {OnHit();});
+		GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](CollisionRectComponent*) {OnHit();});
 	}
 
 	void FireBallComponent::Update()

@@ -1,6 +1,7 @@
 #pragma once
 #include <Component.h>
 
+#include "CollisionRectComponent.h"
 #include "FiniteStateMachine.h"
 #include "Signal.h"
 
@@ -12,7 +13,7 @@ namespace dae
 		GemComponent(GameObject* pParent, std::shared_ptr<Signal<GameObject*>> pAnyGemPickedUpSignal);
 		void Init() override;
 	private:
-		void OnPlayerInteraction(GameObject* pOther);
+		void OnPlayerInteraction(CollisionRectComponent* pOther);
 		std::shared_ptr<Signal<GameObject*>> m_pAnyGemPickedUpSignal{};
 	};
 
