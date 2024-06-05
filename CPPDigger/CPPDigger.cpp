@@ -50,7 +50,7 @@ void AddGem(dae::GameObject* pParent, std::shared_ptr<dae::Signal<dae::GameObjec
 	pGemObject->GetComponent<dae::TextureComponent>()->SetRenderScale(glm::vec2(2, 2));
 	pGemObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pGemObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,0 },
 		static_cast<uint16_t>(CollisionLayers::Pickup), 
-		uint16_t{ 0 }));
+		uint16_t{ 0}));
 	pGemObject->AddComponent(std::make_unique<dae::GemComponent>(pGemObject.get(),std::move(pAnyGemPickedUpSignal)));
 
 	pGemObject->SetParent(pParent, false);
@@ -91,9 +91,10 @@ void AddPlayer(PlayerRequirements& requirements)
 
 	const auto pPlayerObject = std::make_shared<dae::GameObject>();
 	pPlayerObject->GetTransform().SetLocalPosition(requirements.pos);
-	pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), requirements.pPlayerTexture, glm::ivec2{ 4,4 }, true, 0.3f, true, true));
+	pPlayerObject->AddComponent(std::make_unique<dae::SpriteSheetComponent>(pPlayerObject.get(), requirements.pPlayerTexture, glm::ivec2{ 4,5 }, true, 0.3f, true, true));
 	pPlayerObject->GetComponent<dae::SpriteSheetComponent>()->SetRenderScale(glm::vec2(2, 2));
 	pPlayerObject->AddComponent(std::make_unique<dae::PlayerComponent>(pPlayerObject.get()));
+	pPlayerObject->GetComponent<dae::PlayerComponent>()->SetRespawnPos(requirements.pos);
 	pPlayerObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pPlayerObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,15 },
 		uint16_t{ static_cast<uint16_t>(CollisionLayers::PlayerDamage) },
 		uint16_t{ static_cast<uint16_t>(CollisionLayers::Pickup) | static_cast<uint16_t>(CollisionLayers::Push) }

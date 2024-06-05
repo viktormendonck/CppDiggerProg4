@@ -1,5 +1,10 @@
 ﻿#include "DiggingCharacterComponent.h"
 
+#include "MapData.h"
+#include "SpriteSheetComponent.h"
+#include "TextureComponent.h"
+#include "TileMapComponent.h"
+
 dae::DiggingCharacterComponent::DiggingCharacterComponent(GameObject* pParent): Component(pParent)
 {}
 

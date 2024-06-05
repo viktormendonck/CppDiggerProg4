@@ -42,10 +42,6 @@ namespace dae
 
 	glm::ivec2 TileMapComponent::LocalToTile(const glm::vec2& localPos) const
 	{
-		if (localPos.x < 0 || localPos.y < 0 || localPos.x >= (m_WorldSize.x - 1) * m_TileSize.x || localPos.y >= (m_WorldSize.y - 1) * m_TileSize.y)
-		{
-			throw std::runtime_error("not inside of the tilemap");
-		}
 		const glm::ivec2 tilePos{ static_cast<int>(localPos.x / m_TileSize.x), static_cast<int>(localPos.y / m_TileSize.y) };
 
 		return tilePos;

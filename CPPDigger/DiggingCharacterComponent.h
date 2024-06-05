@@ -3,15 +3,9 @@
 
 #include "Component.h"
 #include "GameObject.h"
-#include "MapData.h"
-#include "SpriteSheetComponent.h"
-#include "TextureComponent.h"
-#include "TileMapComponent.h"
 
 namespace dae
 {
-	
-
 
 	class DiggingCharacterComponent : public Component
 	{

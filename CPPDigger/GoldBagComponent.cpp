@@ -1,8 +1,5 @@
 #include "GoldBagComponent.h"
 
-#include <iostream>
-#include <SDL_syswm.h>
-#include <stdexcept>
 #include <glm/vec2.hpp>
 
 #include "GameData.h"
@@ -26,22 +23,62 @@ namespace dae
 			m_pGoldBag = GetStateMachine()->GetParent();
 			m_pTileMap = m_pGoldBag->GetPatriarch()->GetComponent<TileMapComponent>();
 			m_pSpriteSheet = m_pGoldBag->GetComponent<SpriteSheetComponent>();
-			
+			GetStateMachine()->GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](CollisionRectComponent* pOther) {OnPlayerCollision(pOther); });
 		}
 
 		void IdleState::OnEnter()
 		{
 			if (m_pSpriteSheet) m_pSpriteSheet->SetSprite(glm::ivec2{ 2, 1 }); //startSprite for idle
+
 		}
 
 		void IdleState::Update()
 		{
-			glm::vec2 OriginalSpriteSize{ m_pSpriteSheet->GetSpriteSize()};
-			glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition()+glm::vec2(OriginalSpriteSize.x/2, OriginalSpriteSize.y/2));
-			MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite({ pos.x, pos.y + 1 }));
-			if (checkTile == MapData::TileType::TopWall || checkTile == MapData::TileType::Empty || checkTile == MapData::TileType::TopMiddleRoundOff)
+			if (m_IsPushed)
 			{
-				GetStateMachine()->SetState(static_cast<int>(GoldBagStates::Wiggle));
+				const Transform transform = m_pGoldBag->GetTransform();
+				const glm::vec2 pos = transform.GetLocalPosition();
+				const glm::vec2 dir = glm::normalize(glm::vec2{ m_TargetPos.x - pos.x,m_TargetPos.y - pos.y });
+				m_pGoldBag->GetTransform().SetLocalPosition(m_pGoldBag->GetTransform().GetLocalPosition() + dir * m_Speed * GameData::GetInstance().GetDeltaTime());
+				if (glm::distance(pos, m_TargetPos) < 0.1f)
+				{
+					m_pGoldBag->GetTransform().SetLocalPosition(m_TargetPos);
+					m_IsPushed = false;
+				}
+
+			}
+			else
+			{
+				glm::vec2 OriginalSpriteSize{ m_pSpriteSheet->GetSpriteSize()};
+				glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition()+glm::vec2(OriginalSpriteSize.x/2, OriginalSpriteSize.y/2));
+				MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite({ pos.x, pos.y + 1 }));
+				if (checkTile == MapData::TileType::TopWall || checkTile == MapData::TileType::Empty || checkTile == MapData::TileType::TopMiddleRoundOff)
+				{
+					GetStateMachine()->SetState(static_cast<int>(GoldBagStates::Wiggle));
+					m_pGoldBag->GetComponent<CollisionRectComponent>()->RemoveSendingLayer(uint16_t{ static_cast<uint16_t>(CollisionLayers::Push) });
+				}
+			}
+		}
+
+		void IdleState::OnPlayerCollision(const CollisionRectComponent* pOther)
+		{
+			if (pOther->ExistsOn(static_cast<uint16_t>(CollisionLayers::Push)))
+			{
+				if (GetStateMachine()->GetState() != this) return;
+				PlayerComponent* pPlayer = pOther->GetParent()->GetComponent<PlayerComponent>();
+				m_Speed	= pPlayer->GetSpeed()*1.1f; // make it a little faster than the player so the push looks nice
+				glm::ivec2 pushDir{};
+				const glm::vec2 deltaPos = m_pGoldBag->GetTransform().GetLocalPosition() - pPlayer->GetParent()->GetTransform().GetLocalPosition();
+				if (abs(deltaPos.x) > abs(deltaPos.y))
+				{
+					pushDir.x = deltaPos.x > 0 ? 1 : -1;
+					m_IsPushed = true;
+				}
+				else
+				{
+					pPlayer->HitWall();
+				}
+				m_TargetPos = m_pTileMap->TileToLocal(m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition()) + pushDir);
 			}
 		}
 
@@ -87,9 +124,9 @@ namespace dae
 		void FallingState::Update()
 		{
 			const float dt = GameData::GetInstance().GetDeltaTime();
-			glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition() + (m_pSpriteSheet->GetSpriteSize().x / 2, m_pSpriteSheet->GetSpriteSize().y/4));
-			MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite(pos));
-			//the tile underneath is BottomRightCorner, BottomLeftCorner, bottomMiddleRoundoff or BottomWall then stop falling and it if has fallen for more than 3 tiles then go to goldState
+			const glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition() + (m_pSpriteSheet->GetSpriteSize().x / 2, m_pSpriteSheet->GetSpriteSize().y/4));
+			const MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite(pos));
+			//the tile underneath is BottomRightCorner, BottomLeftCorner, bottomMiddleRoundoff or BottomWall then stop falling and if it has fallen far enough then go to goldState
 			if (m_FallDist > 1 &&
 				(checkTile == MapData::TileType::BottomRightCorner	|| 
 				checkTile == MapData::TileType::BottomLeftCorner	|| 
@@ -136,7 +173,7 @@ namespace dae
 		void GoldState::OnPlayerCollision(CollisionRectComponent* pOther)
 		{
 			if (GetStateMachine()->GetState() != this) return;
-			if (pOther->GetSendingCollisionLayers() & static_cast<uint16_t>(CollisionLayers::Pickup))
+			if (pOther->ExistsOn(static_cast<uint16_t>(CollisionLayers::Pickup)))
 			{
 				pAnyGoldPickedUpSignal->Emit(pOther->GetParent());
 				GetStateMachine()->GetParent()->Destroy();

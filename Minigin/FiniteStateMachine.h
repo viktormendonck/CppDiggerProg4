@@ -59,6 +59,7 @@ namespace dae
 		}
 		GameObject* GetParent() const { return m_pParent; }
 		State* GetState() const { return m_States[m_CurrentStateIdx].get(); }
+		int GetCurrentStateIdx() const { return m_CurrentStateIdx; }
 	private:
 		GameObject* m_pParent;
 		std::vector<std::unique_ptr<State>> m_States;

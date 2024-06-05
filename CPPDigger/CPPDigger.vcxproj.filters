@@ -67,6 +67,9 @@
     <ClCompile Include="NumberDisplay.cpp">
       <Filter>Source Files\Components\UI</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyComponent.cpp">
+      <Filter>Source Files\Characters\enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapData.h">
@@ -95,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="NumberDisplay.h">
       <Filter>Source Files\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyComponent.h">
+      <Filter>Source Files\Characters\enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

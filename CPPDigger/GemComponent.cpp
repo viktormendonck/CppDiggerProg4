@@ -18,7 +18,7 @@ void dae::GemComponent::Init()
 
 void dae::GemComponent::OnPlayerInteraction(CollisionRectComponent* pOther)
 {
-	if (pOther->GetSendingCollisionLayers() & static_cast<uint16_t>(CollisionLayers::Pickup))
+	if (pOther->ExistsOn(static_cast<uint16_t>(CollisionLayers::Pickup)))
 	{
 		m_pAnyGemPickedUpSignal->Emit(pOther->GetParent());
 		GetParent()->Destroy();

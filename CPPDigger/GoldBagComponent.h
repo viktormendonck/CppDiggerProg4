@@ -31,11 +31,15 @@ namespace dae
 			void Init() override;
 			void OnEnter() override;
 			void Update() override;
-
+			void OnPlayerCollision(const CollisionRectComponent* pOther);
 		private:
 			SpriteSheetComponent* m_pSpriteSheet{};
 			TileMapComponent* m_pTileMap{};
 			GameObject* m_pGoldBag{};
+
+			bool m_IsPushed{};
+			glm::vec2 m_TargetPos{};
+			float m_Speed{ 50.f };
 		};
 		class WiggleState final : public State
 		{
