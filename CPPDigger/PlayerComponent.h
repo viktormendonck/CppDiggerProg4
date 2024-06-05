@@ -24,13 +24,13 @@ namespace dae
 			Reloading,
 			Dead,
 		};
-		class IdleState : public State
+		class IdleState final : public State
 		{
 			void OnEnter() override;
 			void Update() override;
 			void OnExit() override;
 		};
-		class ReloadingState : public State
+		class ReloadingState final : public State
 		{
 			//change the movement sprite on entry, wait 5 seconds, then change back to idle
 		public:
@@ -42,7 +42,7 @@ namespace dae
 			float m_CurrentTime{};
 		};
 
-		class DeadState : public State
+		class DeadState final : public State
 		{
 			//change the sprite on entry, fall down until you hit anything, wait half a second, then respawn
 		public:

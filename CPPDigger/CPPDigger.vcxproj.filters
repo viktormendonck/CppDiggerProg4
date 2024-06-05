@@ -70,6 +70,9 @@
     <ClCompile Include="EnemyComponent.cpp">
       <Filter>Source Files\Characters\enemy</Filter>
     </ClCompile>
+    <ClCompile Include="EnemySpawnerComponent.cpp">
+      <Filter>Source Files\Characters\enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapData.h">
@@ -100,6 +103,9 @@
       <Filter>Source Files\Components\UI</Filter>
     </ClInclude>
     <ClInclude Include="EnemyComponent.h">
+      <Filter>Source Files\Characters\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySpawnerComponent.h">
       <Filter>Source Files\Characters\enemy</Filter>
     </ClInclude>
   </ItemGroup>

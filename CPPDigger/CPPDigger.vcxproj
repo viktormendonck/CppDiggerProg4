@@ -218,6 +218,7 @@
     <ClCompile Include="CPPDigger.cpp" />
     <ClCompile Include="DiggingCharacterComponent.cpp" />
     <ClCompile Include="EnemyComponent.cpp" />
+    <ClCompile Include="EnemySpawnerComponent.cpp" />
     <ClCompile Include="FireBallComponent.cpp" />
     <ClCompile Include="GemComponent.cpp" />
     <ClCompile Include="GoldBagComponent.cpp" />
@@ -229,6 +230,7 @@
   <ItemGroup>
     <ClInclude Include="DiggingCharacterComponent.h" />
     <ClInclude Include="EnemyComponent.h" />
+    <ClInclude Include="EnemySpawnerComponent.h" />
     <ClInclude Include="FireBallComponent.h" />
     <ClInclude Include="GemComponent.h" />
     <ClInclude Include="GoldBagComponent.h" />

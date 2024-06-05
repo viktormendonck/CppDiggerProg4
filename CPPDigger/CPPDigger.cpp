@@ -38,6 +38,7 @@
 #include "json.hpp"
 #include <fstream>
 
+#include "EnemySpawnerComponent.h"
 #include "MapData.h"
 #include "NumberDisplay.h"
 
@@ -77,7 +78,7 @@ struct PlayerRequirements
 	dae::KeyboardDevice* pKeyboard;
 	dae::Signal<dae::GameObject*>* pGemPickedUpSignal;
 	dae::Signal<dae::GameObject*>* pGoldPickedUpSignal;
-	dae::Signal<dae::GameObject*>* pEnemyKilledUpSignal;
+	dae::Signal<dae::GameObject*>* pEnemyKilledSignal;
 	std::unique_ptr<dae::Signal<int>> pScoreChangedSignal;
 	SDL_Scancode upButton;
 	SDL_Scancode downButton;
@@ -99,7 +100,7 @@ void AddPlayer(PlayerRequirements& requirements)
 		uint16_t{ static_cast<uint16_t>(CollisionLayers::PlayerDamage) },
 		uint16_t{ static_cast<uint16_t>(CollisionLayers::Pickup) | static_cast<uint16_t>(CollisionLayers::Push) }
 		));
-	pPlayerObject->AddComponent(std::make_unique<dae::ScoreComponent>(pPlayerObject.get(), requirements.pGemPickedUpSignal, requirements.pGoldPickedUpSignal, requirements.pEnemyKilledUpSignal,std::move(requirements.pScoreChangedSignal)));
+	pPlayerObject->AddComponent(std::make_unique<dae::ScoreComponent>(pPlayerObject.get(), requirements.pGemPickedUpSignal, requirements.pGoldPickedUpSignal, requirements.pEnemyKilledSignal,std::move(requirements.pScoreChangedSignal)));
 	pPlayerObject->SetParent(requirements.pParent, false);
 
 	requirements.pKeyboard->BindCommand(
@@ -129,6 +130,16 @@ void AddPlayer(PlayerRequirements& requirements)
 	);
 	
 }
+void AddEnemySpawner(dae::GameObject* pParent, glm::vec2 pos, std::shared_ptr<dae::Signal<dae::GameObject*>> pAnyEnemyKilledSignal, std::shared_ptr<dae::Texture2D> pEnemyTex, int charges, float timeBetweenSpawns)
+{
+	const auto pSpawnerObject = std::make_shared<dae::GameObject>();
+	pSpawnerObject->AddComponent(std::make_unique<dae::EnemySpawnerComponent>(pSpawnerObject.get(), pAnyEnemyKilledSignal, pEnemyTex, charges, timeBetweenSpawns));
+
+	pSpawnerObject->AddComponent(std::make_unique<dae::CollisionRectComponent>(pSpawnerObject.get(), glm::vec2{ 24,24 }, glm::vec2{ 0,0 }, uint16_t{ 0}, uint16_t{0}));
+	pSpawnerObject->GetTransform().SetLocalPosition(pos);
+	pSpawnerObject->SetParent(pParent, false);
+	
+}
 
 void LoadLevelFromJson(dae::KeyboardDevice* pKeyboard, dae::ControllerDevice*, const std::shared_ptr<dae::GameObject>& pWorldObject, std::unique_ptr<dae::Signal<int>> pScoreChangedSignal, const std::string& filePath)
 {
@@ -145,6 +156,7 @@ void LoadLevelFromJson(dae::KeyboardDevice* pKeyboard, dae::ControllerDevice*, c
  	glm::ivec2 playerSpawnPos{ playerPos[0] ,playerPos[1] }; 
 
 	std::shared_ptr<dae::Texture2D> pPlayerTexture{ dae::ResourceManager::GetInstance().LoadTexture("PlayerSprites.png") };
+	std::shared_ptr<dae::Texture2D> pEnemyTexture{ dae::ResourceManager::GetInstance().LoadTexture("NobbinSprites.png") };
 	std::shared_ptr<dae::Texture2D> pFireBallTexture{ dae::ResourceManager::GetInstance().LoadTexture("Fireball.png") };
 	std::shared_ptr<dae::Texture2D> pGemTexture{ dae::ResourceManager::GetInstance().LoadTexture("Gem.png") };
 	std::shared_ptr<dae::Texture2D> pGoldBagTexture{ dae::ResourceManager::GetInstance().LoadTexture("GoldBagSprites.png") };
@@ -191,6 +203,11 @@ void LoadLevelFromJson(dae::KeyboardDevice* pKeyboard, dae::ControllerDevice*, c
 	for (const std::vector<int>& gemPos : json["gemPositions"].get<std::vector<std::vector<int>>>())
 	{
 		AddGem(pWorldObject.get(), pAnyGemPickedUpSignal, pGemTexture, pTileMap->TileToLocal(glm::ivec2{ gemPos[0], gemPos[1] }));
+	}
+
+	for (const std::vector<int>& spawnerInfo : json["spawnerPositions"].get<std::vector<std::vector<int>>>())
+	{
+		AddEnemySpawner(pWorldObject.get(), pTileMap->TileToLocal(glm::ivec2{ spawnerInfo[0], spawnerInfo[1] }), pAnyEnemyKilledSignal, pEnemyTexture, spawnerInfo[2], static_cast<float>(spawnerInfo[3]));
 	}
 	
 }

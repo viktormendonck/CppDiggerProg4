@@ -20,9 +20,9 @@ void Scene::Add(std::shared_ptr<GameObject> object)
 
 void Scene::ImGuiUpdate()
 {
-	for (auto& object : m_Objects)
+	for (int i{}; i < m_Objects.size(); ++i)
 	{
-		object->ImGuiUpdate();
+		m_Objects[i]->ImGuiUpdate();
 	}
 }
 
@@ -68,41 +68,41 @@ void Scene::HandleObjectDestruction(const std::shared_ptr<GameObject>& object)
 
 void dae::Scene::FixedUpdate()
 {
-	for (auto& object : m_Objects)
+	for (int i{}; i < m_Objects.size(); ++i)
 	{
-		object->FixedUpdate();
+		m_Objects[i]->FixedUpdate();
 	}
 }
 
 void Scene::Update()
 {
-	for (auto& object : m_Objects)
+	for (int i{}; i < m_Objects.size(); ++i)
 	{
-		object->Update();
+		m_Objects[i]->Update();
 	}
 }
 
 void Scene::Init()
 {
-	for (auto& object : m_Objects)
+	for (int i{}; i < m_Objects.size(); ++i)
 	{
-		object->Init();
+		m_Objects[i]->Init();
 	}
 }
 
 void dae::Scene::LateUpdate()
 {
-	for (auto& object : m_Objects)
+	for (int i{}; i < m_Objects.size(); ++i)
 	{
-		object->LateUpdate();
+		m_Objects[i]->LateUpdate();
 	}
 }
 
 void Scene::Render() const
 {
-	for (const auto& object : m_Objects)
+	for (int i{}; i < m_Objects.size(); ++i)
 	{
-		object->Render();
+		m_Objects[i]->Render();
 	}
 }
 

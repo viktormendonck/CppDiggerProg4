@@ -12,127 +12,111 @@
 namespace dae
 {
 	namespace playerStates
-	{	
-		//if (abs(m_Dir.x) > glm::epsilon<float>())
-		//{
-		//	m_pGameObject->GetTransform().SetLocalRotation(0);
-		//	if (m_Dir.x < 0)
-		//	{
-		//		m_pGameObject->GetComponent<SpriteSheetComponent>()->SetSprite({ 0,1 });
-		//	}
-		//}
-		//else
-		//{
-		//	m_pGameObject->GetTransform().SetLocalRotation(glm::pi<float>() / 2.f * m_Dir.y);
-		//}
-
-
-
-		
-	}
-
-	void playerStates::IdleState::OnEnter()
 	{
-		SpriteSheetComponent* pSpriteSheet = GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>();
-		pSpriteSheet->SetSprite({0,0});
-		GetStateMachine()->GetParent()->GetTransform().SetLocalRotation(0);
-	}
 
-	void playerStates::IdleState::Update()
-	{
-		if (GetStateMachine()->GetParent()->GetComponent<PlayerComponent>()->IsReloading())
+		void IdleState::OnEnter()
 		{
-			GetStateMachine()->SetState(static_cast<int>(playerStates::PlayerState::Reloading));
-		}
-	}
-
-	void playerStates::IdleState::OnExit()
-	{
-		SpriteSheetComponent* pSpriteSheet = GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>();
-		glm::ivec2 currentSprite = pSpriteSheet->GetSprite();
-		pSpriteSheet->SetSprite({ currentSprite.x,currentSprite.y + 2 });
-	}
-
-	void playerStates::ReloadingState::Update()
-	{
-		if (m_CurrentTime >= m_ReloadTime)
-		{
-			GetStateMachine()->SetState(static_cast<int>(playerStates::PlayerState::Idle));
-			m_CurrentTime = 0;
-			GetStateMachine()->GetParent()->GetComponent<PlayerComponent>()->SetReloading(false);
-		}
-		else
-		{
-			m_CurrentTime += GameData::GetInstance().GetDeltaTime();
-		}
-	}
-
-	void playerStates::ReloadingState::OnExit()
-	{
-		SpriteSheetComponent* pSpriteSheet = GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>();
-		glm::ivec2 currentSprite = pSpriteSheet->GetSprite();
-		pSpriteSheet->SetSprite({ currentSprite.x,currentSprite.y-2 });
-	}
-
-
-	void playerStates::DeadState::Init()
-	{
-		m_pPlayer = GetStateMachine()->GetParent();
-		m_pTileMap = m_pPlayer->GetPatriarch()->GetComponent<TileMapComponent>();
-		m_pSpriteSheet = m_pPlayer->GetComponent<SpriteSheetComponent>();
-	}
-
-	void playerStates::DeadState::OnEnter()
-	{
-		GetStateMachine()->GetParent()->GetTransform().SetLocalRotation(0);
-		const glm::ivec2 deathSprite{3,4};
-		m_pSpriteSheet->SetSprite(deathSprite);
-		m_pSpriteSheet->ShouldRepeat(false);
-	}
-
-	void playerStates::DeadState::Update()
-	{
-		const float dt = GameData::GetInstance().GetDeltaTime();
-		const glm::ivec2 checkPos = m_pTileMap->LocalToTile(m_pPlayer->GetTransform().GetLocalPosition() + glm::vec2(m_pSpriteSheet->GetSpriteSize().x / 2, 0));
-		MapData::TileType checkTile{};
-		//check for validity of the position
-		bool shouldLand{ false };
-		if (checkPos.x < 0 || checkPos.x >= m_pTileMap->GetWorldSize().x-1 || checkPos.y < 0 || checkPos.y >= m_pTileMap->GetWorldSize().y-1) 
-		{
-			shouldLand = true;
-		}
-		else
-		{
-			checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite(checkPos));
+			SpriteSheetComponent* pSpriteSheet = GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>();
+			pSpriteSheet->SetSprite({ 0,0 });
+			GetStateMachine()->GetParent()->GetTransform().SetLocalRotation(0);
 		}
 
-		for (MapData::TileType tile : m_LandingTiles)
+		void IdleState::Update()
 		{
-			if (checkTile == tile)
+			if (GetStateMachine()->GetParent()->GetComponent<PlayerComponent>()->IsReloading())
+			{
+				GetStateMachine()->SetState(static_cast<int>(PlayerState::Reloading));
+			}
+		}
+
+		void IdleState::OnExit()
+		{
+			SpriteSheetComponent* pSpriteSheet = GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>();
+			glm::ivec2 currentSprite = pSpriteSheet->GetSprite();
+			pSpriteSheet->SetSprite({ currentSprite.x,currentSprite.y + 2 });
+		}
+
+		void ReloadingState::Update()
+		{
+			if (m_CurrentTime >= m_ReloadTime)
+			{
+				GetStateMachine()->SetState(static_cast<int>(PlayerState::Idle));
+				m_CurrentTime = 0;
+				GetStateMachine()->GetParent()->GetComponent<PlayerComponent>()->SetReloading(false);
+			}
+			else
+			{
+				m_CurrentTime += GameData::GetInstance().GetDeltaTime();
+			}
+		}
+
+		void ReloadingState::OnExit()
+		{
+			SpriteSheetComponent* pSpriteSheet = GetStateMachine()->GetParent()->GetComponent<SpriteSheetComponent>();
+			glm::ivec2 currentSprite = pSpriteSheet->GetSprite();
+			pSpriteSheet->SetSprite({ currentSprite.x,currentSprite.y - 2 });
+		}
+
+
+		void DeadState::Init()
+		{
+			m_pPlayer = GetStateMachine()->GetParent();
+			m_pTileMap = m_pPlayer->GetPatriarch()->GetComponent<TileMapComponent>();
+			m_pSpriteSheet = m_pPlayer->GetComponent<SpriteSheetComponent>();
+		}
+
+		void DeadState::OnEnter()
+		{
+			GetStateMachine()->GetParent()->GetTransform().SetLocalRotation(0);
+			const glm::ivec2 deathSprite{ 3,4 };
+			m_pSpriteSheet->SetSprite(deathSprite);
+			m_pSpriteSheet->ShouldRepeat(false);
+		}
+
+		void DeadState::Update()
+		{
+			const float dt = GameData::GetInstance().GetDeltaTime();
+			const glm::ivec2 checkPos = m_pTileMap->LocalToTile(m_pPlayer->GetTransform().GetLocalPosition() + glm::vec2(m_pSpriteSheet->GetSpriteSize().x / 2, 0));
+			MapData::TileType checkTile{};
+			//check for validity of the position
+			bool shouldLand{ false };
+			if (checkPos.x < 0 || checkPos.x >= m_pTileMap->GetWorldSize().x - 1 || checkPos.y < 0 || checkPos.y >= m_pTileMap->GetWorldSize().y - 1)
 			{
 				shouldLand = true;
 			}
-		}
-		if (shouldLand)
-		{
-			m_pPlayer->GetTransform().SetLocalPosition(m_pPlayer->GetComponent<PlayerComponent>()->GetRespawnPos());
-			GetStateMachine()->SetState(static_cast<int>(playerStates::PlayerState::Idle));
+			else
+			{
+				checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite(checkPos));
+			}
+
+			for (MapData::TileType tile : m_LandingTiles)
+			{
+				if (checkTile == tile)
+				{
+					shouldLand = true;
+				}
+			}
+			if (shouldLand)
+			{
+				m_pPlayer->GetTransform().SetLocalPosition(m_pPlayer->GetComponent<PlayerComponent>()->GetRespawnPos());
+				GetStateMachine()->SetState(static_cast<int>(PlayerState::Idle));
+
+			}
+			else
+			{
+				m_pPlayer->GetTransform().SetLocalPosition(m_pPlayer->GetTransform().GetLocalPosition() + glm::vec2{ 0, m_FallSpeed * dt });
+			}
 
 		}
-		else
+
+		void DeadState::OnExit()
 		{
-			m_pPlayer->GetTransform().SetLocalPosition(m_pPlayer->GetTransform().GetLocalPosition() + glm::vec2{ 0, m_FallSpeed * dt });
+			const glm::ivec2 defaultSprite{ 0,0 };
+			m_pSpriteSheet->SetSprite(defaultSprite);
+			m_pSpriteSheet->ShouldRepeat(true);
 		}
 
 	}
-
-	void playerStates::DeadState::OnExit()
-	{
-		const glm::ivec2 defaultSprite{ 0,0 };
-		m_pSpriteSheet->SetSprite(defaultSprite);
-		m_pSpriteSheet->ShouldRepeat(true);
-	}
-
 	PlayerComponent::PlayerComponent(dae::GameObject* pParent)
 		: DiggingCharacterComponent(pParent)
 	{
@@ -155,7 +139,7 @@ namespace dae
 	{
 		m_pStateMachine->Update();
 		if (m_pStateMachine->GetCurrentStateIdx() == static_cast<int>(playerStates::PlayerState::Dead)) return;
-		if (m_CanMove ==false)
+		if (m_CanMove == false)
 		{
 			const glm::vec2 pos = GetParent()->GetTransform().GetLocalPosition();
 			const glm::vec2 dir = glm::normalize(glm::vec2{ m_TargetPos.x - pos.x,m_TargetPos.y - pos.y });
@@ -179,7 +163,7 @@ namespace dae
 			GetParent()->GetTransform().SetLocalRotation(0);
 			if (dir.x < 0)
 			{
-				GetParent()->GetComponent<SpriteSheetComponent>()->SetSprite({ currentSpriteX,1 + shootYOffset});
+				GetParent()->GetComponent<SpriteSheetComponent>()->SetSprite({ currentSpriteX,1 + shootYOffset });
 			}
 		}
 		else
@@ -190,11 +174,11 @@ namespace dae
 
 		if (m_pStateMachine->GetCurrentStateIdx() == static_cast<int>(playerStates::PlayerState::Dead)) return;
 		TileMapComponent* pTileMap = GetTileMap();
-		dir = glm::normalize(glm::vec2(dir.x,dir.y));
+		dir = glm::normalize(glm::vec2(dir.x, dir.y));
 		const glm::vec2 currentTile = pTileMap->LocalToTile(GetParent()->GetTransform().GetLocalPosition());
 		const glm::ivec2 goalTile = dir + glm::ivec2(static_cast<int>(currentTile.x), static_cast<int>(currentTile.y));
 		const glm::ivec2 worldSize{ pTileMap->GetWorldSize() };
-		if (goalTile.x < 1 || goalTile.x >= worldSize.x-2 || goalTile.y < 1 || goalTile.y >= worldSize.y-2) return;
+		if (goalTile.x < 1 || goalTile.x >= worldSize.x - 2 || goalTile.y < 1 || goalTile.y >= worldSize.y - 2) return;
 		m_TargetPos = pTileMap->TileToLocal(goalTile);
 		m_CanMove = false;
 		m_CurrentDir = dir;
@@ -219,7 +203,7 @@ namespace dae
 				return;
 			}
 			GetParent()->Destroy();
-			
+
 		}
 	}
 

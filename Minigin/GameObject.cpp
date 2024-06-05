@@ -16,72 +16,72 @@ dae::GameObject::~GameObject() = default;
 
 void dae::GameObject::Update()
 {
-	for (const auto& component : m_Components)
+	for (int i{}; i < m_Components.size(); ++i)
 	{
-		component->Update();
+		m_Components[i]->Update();
 	}
-	for (const auto& child : m_Children)
+	for (int i{}; i < m_Children.size(); ++i)
 	{
-		child->Update();
+		m_Children[i]->Update();
 	}
 	
 }
 
 void dae::GameObject::Init()
 {
-	for (const auto& component : m_Components)
+	for (int i{}; i < m_Components.size(); ++i)
 	{
-		component->Init();
+		m_Components[i]->Init();
 	}
-	for (const auto& child : m_Children)
+	for (int i{}; i < m_Children.size(); ++i)
 	{
-		child->Init();
+		m_Children[i]->Init();
 	}
 }
 
 void dae::GameObject::FixedUpdate()
 {
-	for (const auto& component : m_Components)
+	for (int i{}; i < m_Components.size(); ++i)
 	{
-		component->FixedUpdate();
+		m_Components[i]->FixedUpdate();
 	}
-	for (const auto& child : m_Children)
+	for (int i{}; i < m_Children.size(); ++i)
 	{
-		child->FixedUpdate();
+		m_Children[i]->FixedUpdate();
 	}
 }
 void dae::GameObject::LateUpdate()
 {
-	for (const auto& component : m_Components)
+	for (int i{}; i < m_Components.size(); ++i)
 	{
-		component->LateUpdate();
+		m_Components[i]->LateUpdate();
 	}
-	for (const auto& child : m_Children)
+	for (int i{}; i < m_Children.size(); ++i)
 	{
-		child->LateUpdate();
+		m_Children[i]->LateUpdate();
 	}
 }
 void dae::GameObject::Render() const
 {
-	for (const auto& component : m_Components)
+	for (int i{}; i < m_Components.size(); ++i)
 	{
-		component->Render();
+		m_Components[i]->Render();
 	}
-	for (const auto& child : m_Children)
+	for (int i{}; i < m_Children.size(); ++i)
 	{
-		child->Render();
+		m_Children[i]->Render();
 	}
 }
 
 void dae::GameObject::ImGuiUpdate()
 {
-	for (const auto& component : m_Components)
+	for (int i{}; i < m_Components.size(); ++i)
 	{
-		component->ImGuiUpdate();
+		m_Components[i]->ImGuiUpdate();
 	}
-	for (const auto& child : m_Children)
+	for (int i{}; i < m_Children.size(); ++i)
 	{
-		child->ImGuiUpdate();
+		m_Children[i]->ImGuiUpdate();
 	}
 
 }

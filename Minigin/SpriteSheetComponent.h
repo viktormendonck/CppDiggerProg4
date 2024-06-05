@@ -11,7 +11,7 @@ namespace dae
 	{
 	public:
 
-		explicit SpriteSheetComponent(dae::GameObject* pParent, std::shared_ptr<Texture2D> pTexture, glm::ivec2 size, bool canRotate, float timePerFrame, bool animated, bool repeating,glm::ivec2 startPos = glm::ivec2(0,0));
+		explicit SpriteSheetComponent(GameObject* pParent, std::shared_ptr<Texture2D> pTexture, glm::ivec2 size, bool canRotate, float timePerFrame, bool animated= true, bool repeating= true ,glm::ivec2 startPos = glm::ivec2(0,0));
 
 		void Update() override;
 		void Render() const override;
