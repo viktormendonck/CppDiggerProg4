@@ -16,11 +16,11 @@ dae::GameObject::~GameObject() = default;
 
 void dae::GameObject::Update()
 {
-	for (int i{}; i < m_Components.size(); ++i)
+	for (size_t i{}; i < m_Components.size(); ++i)
 	{
 		m_Components[i]->Update();
 	}
-	for (int i{}; i < m_Children.size(); ++i)
+	for (size_t i{}; i < m_Children.size(); ++i)
 	{
 		m_Children[i]->Update();
 	}
@@ -29,11 +29,11 @@ void dae::GameObject::Update()
 
 void dae::GameObject::Init()
 {
-	for (int i{}; i < m_Components.size(); ++i)
+	for (size_t i{}; i < m_Components.size(); ++i)
 	{
 		m_Components[i]->Init();
 	}
-	for (int i{}; i < m_Children.size(); ++i)
+	for (size_t i{}; i < m_Children.size(); ++i)
 	{
 		m_Children[i]->Init();
 	}
@@ -41,33 +41,33 @@ void dae::GameObject::Init()
 
 void dae::GameObject::FixedUpdate()
 {
-	for (int i{}; i < m_Components.size(); ++i)
+	for (size_t i{}; i < m_Components.size(); ++i)
 	{
 		m_Components[i]->FixedUpdate();
 	}
-	for (int i{}; i < m_Children.size(); ++i)
+	for (size_t i{}; i < m_Children.size(); ++i)
 	{
 		m_Children[i]->FixedUpdate();
 	}
 }
 void dae::GameObject::LateUpdate()
 {
-	for (int i{}; i < m_Components.size(); ++i)
+	for (size_t i{}; i < m_Components.size(); ++i)
 	{
 		m_Components[i]->LateUpdate();
 	}
-	for (int i{}; i < m_Children.size(); ++i)
+	for (size_t i{}; i < m_Children.size(); ++i)
 	{
 		m_Children[i]->LateUpdate();
 	}
 }
 void dae::GameObject::Render() const
 {
-	for (int i{}; i < m_Components.size(); ++i)
+	for (size_t i{}; i < m_Components.size(); ++i)
 	{
 		m_Components[i]->Render();
 	}
-	for (int i{}; i < m_Children.size(); ++i)
+	for (size_t i{}; i < m_Children.size(); ++i)
 	{
 		m_Children[i]->Render();
 	}
@@ -75,11 +75,11 @@ void dae::GameObject::Render() const
 
 void dae::GameObject::ImGuiUpdate()
 {
-	for (int i{}; i < m_Components.size(); ++i)
+	for (size_t i{}; i < m_Components.size(); ++i)
 	{
 		m_Components[i]->ImGuiUpdate();
 	}
-	for (int i{}; i < m_Children.size(); ++i)
+	for (size_t i{}; i < m_Children.size(); ++i)
 	{
 		m_Children[i]->ImGuiUpdate();
 	}
@@ -164,7 +164,7 @@ void dae::GameObject::AttachChild(std::shared_ptr<dae::GameObject> go, bool keep
 bool dae::GameObject::IsInChildTree(dae::GameObject* go) const
 {
 
-	for (const auto& child : m_Children)
+	for (const std::shared_ptr<GameObject>& child : m_Children)
 	{
 		if (child.get() == go) return true;
 		if (child->m_Children.empty())

@@ -16,9 +16,9 @@ namespace dae
 		return isIntersecting && sharesCollisionLayer;
 	}
 
-	CollisionRectComponent::CollisionRectComponent(GameObject* pParent,const glm::vec2 size, const glm::vec2 offset,uint16_t existsOnLayers,uint16_t scansForLayers)
+	CollisionRectComponent::CollisionRectComponent(GameObject* pParent,const glm::vec2 size, const glm::vec2 offset,uint16_t scansForLayers,uint16_t existsOnLayers)
 		: Component{ pParent },
-		m_Rect{ offset, size,existsOnLayers,scansForLayers }
+		m_Rect{ offset, size,scansForLayers,existsOnLayers }
 	{
 		GameData::GetInstance().AddCollisionRect(this);
 	}

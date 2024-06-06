@@ -20,7 +20,7 @@ void Scene::Add(std::shared_ptr<GameObject> object)
 
 void Scene::ImGuiUpdate()
 {
-	for (int i{}; i < m_Objects.size(); ++i)
+	for (size_t i{}; i < m_Objects.size(); ++i)
 	{
 		m_Objects[i]->ImGuiUpdate();
 	}
@@ -53,9 +53,9 @@ void Scene::HandleDestruction()
 
 void Scene::HandleObjectDestruction(const std::shared_ptr<GameObject>& object)
 {
-	auto children = object->GetChildren();
+	std::vector<std::shared_ptr<GameObject>> children = object->GetChildren();
 	if (children.empty()) return;
-	for (int i = static_cast<int>(children.size()) - 1; i >= 0; --i)
+	for (int i = static_cast<int>(children.size()) -1 ; i >= 0; --i)
 	{
 		if (!children[i]->GetChildren().empty())
 		{
@@ -63,12 +63,13 @@ void Scene::HandleObjectDestruction(const std::shared_ptr<GameObject>& object)
 		}
 		if (!children[i]->IsMarkedForDestruction()) continue;
 		object->Erase(children[i]);
+		//TODO: THIS IS SO FUCKED LIKE SOMETHING DIED IN HERE
 	}
 }
 
 void dae::Scene::FixedUpdate()
 {
-	for (int i{}; i < m_Objects.size(); ++i)
+	for (size_t i{}; i < m_Objects.size(); ++i)
 	{
 		m_Objects[i]->FixedUpdate();
 	}
@@ -76,7 +77,7 @@ void dae::Scene::FixedUpdate()
 
 void Scene::Update()
 {
-	for (int i{}; i < m_Objects.size(); ++i)
+	for (size_t i{}; i < m_Objects.size(); ++i)
 	{
 		m_Objects[i]->Update();
 	}
@@ -84,7 +85,7 @@ void Scene::Update()
 
 void Scene::Init()
 {
-	for (int i{}; i < m_Objects.size(); ++i)
+	for (size_t i{}; i < m_Objects.size(); ++i)
 	{
 		m_Objects[i]->Init();
 	}
@@ -92,7 +93,7 @@ void Scene::Init()
 
 void dae::Scene::LateUpdate()
 {
-	for (int i{}; i < m_Objects.size(); ++i)
+	for (size_t i{}; i < m_Objects.size(); ++i)
 	{
 		m_Objects[i]->LateUpdate();
 	}
@@ -100,7 +101,7 @@ void dae::Scene::LateUpdate()
 
 void Scene::Render() const
 {
-	for (int i{}; i < m_Objects.size(); ++i)
+	for (size_t i{}; i < m_Objects.size(); ++i)
 	{
 		m_Objects[i]->Render();
 	}

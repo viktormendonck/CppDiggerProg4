@@ -11,12 +11,13 @@ namespace dae
 
 {
 
-	FireBallComponent::FireBallComponent(GameObject* pParent, glm::ivec2 dir)
+	FireBallComponent::FireBallComponent(GameObject* pParent, glm::ivec2 dir, GameObject* pPlayerObject)
 		: Component(pParent),
+			m_pPlayerObject(pPlayerObject),
 			m_Dir(dir)
 	{
-		GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](CollisionRectComponent*) {OnHit();});
 	}
+
 
 	void FireBallComponent::Update()
 	{

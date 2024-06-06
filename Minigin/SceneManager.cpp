@@ -8,7 +8,7 @@ void dae::SceneManager::Update()
 
 void dae::SceneManager::Init()
 {
-	for (auto& scene : m_Scenes)
+	for (std::shared_ptr<Scene>& scene : m_Scenes)
 	{
 		scene->Init();
 	}

@@ -2,6 +2,7 @@
 
 #include "EnemyComponent.h"
 #include "GameData.h"
+#include "MapData.h"
 #include "ServiceLocator.h"
 
 namespace dae
@@ -36,12 +37,17 @@ namespace dae
 		}
 		m_RemainingCharges--;
 		m_CurrentTime = 0.f;
-		auto pEnemy = std::make_shared<GameObject>();
-		auto pEnemyComp = std::make_unique<EnemyComponent>(pEnemy.get(), m_pAnyEnemyKilledSignal);
+		std::shared_ptr<GameObject> pEnemy = std::make_shared<GameObject>();
+		std::unique_ptr<EnemyComponent> pEnemyComp = std::make_unique<EnemyComponent>(
+			pEnemy.get(), m_pAnyEnemyKilledSignal);
 		pEnemy->AddComponent(std::move(pEnemyComp));
-		auto pSpriteSheet = std::make_unique<SpriteSheetComponent>(pEnemy.get(), std::shared_ptr(m_pEnemyTexture), glm::ivec2{ 4,3 }, false, 0.2f);
-		pSpriteSheet->SetRenderScale(glm::vec2(2, 2));
-		pSpriteSheet->SetRenderOffset(glm::vec2(-5, 5));
+		std::unique_ptr<SpriteSheetComponent>pSpriteSheet = std::make_unique<SpriteSheetComponent>(
+			pEnemy.get(), std::shared_ptr(m_pEnemyTexture), glm::ivec2{4, 3}, false, 0.2f);
+		pSpriteSheet->SetRenderScale(glm::vec2(1.5f, 1.5f));
+		pEnemy->AddComponent(std::make_unique<CollisionRectComponent>(pEnemy.get(), pSpriteSheet->GetSpriteSize(), glm::vec2(0, 2), 
+			uint16_t{ static_cast<uint16_t>(CollisionLayers::EnemyDamage)},
+			uint16_t{ static_cast<uint16_t>(CollisionLayers::Pickup) | static_cast<uint16_t>(CollisionLayers::PlayerDamage)}
+		));
 
 		pEnemy->AddComponent(std::move(pSpriteSheet));
 		pEnemy->GetTransform().SetLocalPosition((GetParent()->GetTransform().GetLocalPosition()));

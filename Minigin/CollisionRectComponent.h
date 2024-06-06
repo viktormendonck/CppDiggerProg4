@@ -21,7 +21,7 @@ namespace dae
 	class CollisionRectComponent final : public Component
 	{
 	public:
-		CollisionRectComponent(GameObject* pParent,const glm::vec2 size, const glm::vec2 offset, uint16_t existsOnLayers, uint16_t scansForLayers);
+		CollisionRectComponent(GameObject* pParent,const glm::vec2 size, const glm::vec2 offset, uint16_t scansForLayers, uint16_t existsOnLayers);
 		~CollisionRectComponent() override;
 		void Update() override;
 		void Render() const override;

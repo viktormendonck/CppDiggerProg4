@@ -14,6 +14,7 @@ namespace dae
 		virtual void OnEnter(){}
 		virtual void Init(){}
 		virtual void Update(){}
+		virtual void Render(){}
 		virtual void OnExit(){}
 		void SetStateMachine(FiniteStateMachine* pStateMachine) { m_pStateMachine = pStateMachine; }
 		FiniteStateMachine* GetStateMachine() const { return m_pStateMachine; }
@@ -31,6 +32,13 @@ namespace dae
 			if (!m_States.empty() && m_CurrentStateIdx != -1)
 			{
 				m_States[m_CurrentStateIdx]->Update();
+			}
+		}
+		void Render()
+		{
+			if (!m_States.empty() && m_CurrentStateIdx != -1)
+			{
+				m_States[m_CurrentStateIdx]->Render();
 			}
 		}
 		void SetState(int stateIdx)

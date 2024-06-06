@@ -9,9 +9,9 @@ namespace dae
 		explicit Component(GameObject* pParent);
 		virtual ~Component() = default;
 		Component(const Component& other) = delete;
-		Component(Component&& other) = delete;
+		Component(Component&& other) noexcept = delete;
 		Component& operator=(const Component& other) = delete;
-		Component& operator=(Component&& other) = delete;
+		Component& operator=(Component&& other) noexcept = delete;
 		
 		virtual void Update() {}
 		virtual void FixedUpdate() {}

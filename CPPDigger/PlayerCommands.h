@@ -53,10 +53,11 @@ namespace dae
 			std::unique_ptr<SpriteSheetComponent> pSpriteSheet = std::make_unique<SpriteSheetComponent>(pFireBall.get(), m_pFireBallTex, glm::ivec2{3,1}, false, 0.2f, true, true);
 			pSpriteSheet->SetRenderScale(glm::vec2(2, 2));
 			pFireBall->AddComponent(std::make_unique<CollisionRectComponent>(pFireBall.get(), pSpriteSheet->GetSpriteSize(), glm::vec2{ 0,0 },
-				static_cast<uint16_t>(CollisionLayers::EnemyDamage),
-				static_cast<uint16_t>(CollisionLayers::EnemyDamage)));
+				static_cast<uint16_t>(0),
+				static_cast<uint16_t>(CollisionLayers::EnemyDamage)
+			));
 			pFireBall->AddComponent(std::move(pSpriteSheet));
-			pFireBall->AddComponent(std::make_unique<FireBallComponent>(pFireBall.get(), dir));
+			pFireBall->AddComponent(std::make_unique<FireBallComponent>(pFireBall.get(), dir,m_pGameObject));
 			pFireBall->SetParent(m_pGameObject->GetParent(), false);
 
 		}

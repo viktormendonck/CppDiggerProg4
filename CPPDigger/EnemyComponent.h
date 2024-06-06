@@ -32,7 +32,12 @@ namespace dae
 
 			glm::vec2 m_Dir{};
 
+			glm::vec2 m_CurrentCheckingPos{};
 			float m_Speed = 30.f;
+
+			bool m_ShouldCheckTile{false};
+			const float m_DecisionTime{0.15f};
+			float m_CurrentDecisionTime{};
 
 			void GetNextDir();
 		};
@@ -52,11 +57,14 @@ namespace dae
 	class EnemyComponent final : public DiggingCharacterComponent
 	{
 	public:
+		friend class enemyStates::AngeredState;
 		EnemyComponent(GameObject* pParent,std::shared_ptr<Signal<GameObject*>> pAnyEnemyKilledSignal);;
 
 		void Init() override;
 		void Update() override;
-
+		void Render() const override;
+	protected:
+		void Dig(glm::vec2 dir);
 	private:
 		std::unique_ptr<FiniteStateMachine> m_pStateMachine;
 		std::shared_ptr<Signal<GameObject*>> m_pAnyEnemyKilledSignal{};

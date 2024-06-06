@@ -130,7 +130,10 @@ namespace dae
 
 	void PlayerComponent::Init()
 	{
-		GetParent()->GetComponent<CollisionRectComponent>()->m_OnEnter.AddListener([this](CollisionRectComponent* pOther) {OnCollision(pOther); });
+		if (CollisionRectComponent* pCollision = GetParent()->GetComponent<CollisionRectComponent>())
+		{
+			pCollision->m_OnEnter.AddListener([this](CollisionRectComponent* pOther) {OnCollision(pOther); });
+		}
 		m_pStateMachine->Init();
 		m_RespawnPos = GetParent()->GetTransform().GetLocalPosition();
 	}

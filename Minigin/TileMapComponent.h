@@ -17,8 +17,8 @@ namespace dae
 		void SetTileSprite(glm::ivec2 tileId, int tile) { m_TileMap[GetTileIdx(tileId)] = tile; }
 		void SetTileSprite(int idx, int tile) { m_TileMap[idx] = tile; }
 
-		int GetTileSprite(glm::ivec2 tileId) const { return m_TileMap[GetTileIdx(tileId)]; }
-		int GetTileSprite(int idx) const { return m_TileMap[idx]; }
+		int GetTileSprite(glm::ivec2 tileId) const;
+		int GetTileSprite(int idx) const;
 
 		void SetMap (const std::vector<int>& map) { m_TileMap = map; }
 		

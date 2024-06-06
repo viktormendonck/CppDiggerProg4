@@ -34,6 +34,25 @@ namespace dae
 		}
 	}
 
+	int TileMapComponent::GetTileSprite(glm::ivec2 tileId) const
+	{
+		if (tileId.x < 0 || tileId.y < 0 || tileId.x >= m_WorldSize.x || tileId.y >= m_WorldSize.y)
+		{
+			return -1;
+		}
+
+		return m_TileMap[GetTileIdx(tileId)];
+	}
+
+	int TileMapComponent::GetTileSprite(int idx) const
+	{
+		if (idx < 0 || idx >= m_TileMap.size())
+		{
+			return -1;
+		}
+		return m_TileMap[idx];
+	}
+
 	glm::ivec2 TileMapComponent::WorldToTile(const glm::vec2& worldPos) const
 	{
 		const glm::vec2 localPos = worldPos - GetParent()->GetTransform().GetWorldPosition();
