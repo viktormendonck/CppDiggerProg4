@@ -73,15 +73,12 @@ namespace dae
 			{
 				return this;
 			}
-			else
-			{
-				return m_pParent->GetPatriarch();
-			}
+			return m_pParent->GetPatriarch();
 		}
 		void Destroy()
 		{
 			m_IsDestroyed = true;
-			for (auto& child : m_Children)
+			for (const std::shared_ptr<GameObject>& child : m_Children)
 			{
 				child->Destroy();
 			}

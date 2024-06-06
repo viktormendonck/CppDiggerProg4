@@ -73,6 +73,9 @@
     <ClCompile Include="EnemySpawnerComponent.cpp">
       <Filter>Source Files\Characters\enemy</Filter>
     </ClCompile>
+    <ClCompile Include="LevelManagerComponent.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapData.h">
@@ -107,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="EnemySpawnerComponent.h">
       <Filter>Source Files\Characters\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManagerComponent.h">
+      <Filter>Source Files\Characters</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

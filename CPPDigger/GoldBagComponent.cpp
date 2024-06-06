@@ -49,6 +49,7 @@ namespace dae
 			}
 			else
 			{
+				
 				glm::vec2 OriginalSpriteSize{ m_pSpriteSheet->GetSpriteSize()};
 				glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition()+glm::vec2(OriginalSpriteSize.x/2, OriginalSpriteSize.y/2));
 				MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite({ pos.x, pos.y + 1 }));
@@ -124,13 +125,15 @@ namespace dae
 		void FallingState::Update()
 		{
 			const float dt = GameData::GetInstance().GetDeltaTime();
-			const glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition() + (m_pSpriteSheet->GetSpriteSize().x / 2, m_pSpriteSheet->GetSpriteSize().y/4));
+			const glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition() + glm::vec2{ m_pSpriteSheet->GetSpriteSize().x / 2, m_pSpriteSheet->GetSpriteSize().y / 4 });
 			const MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite(pos));
 			//the tile underneath is BottomRightCorner, BottomLeftCorner, bottomMiddleRoundoff or BottomWall then stop falling and if it has fallen far enough then go to goldState
 			if (m_FallDist > 1 &&
 				(checkTile == MapData::TileType::BottomRightCorner	|| 
 				checkTile == MapData::TileType::BottomLeftCorner	|| 
 				checkTile == MapData::TileType::BottomMiddleRoundOff|| 
+				checkTile == MapData::TileType::BottomLeftRoundOff||
+				checkTile == MapData::TileType::BottomRightRoundOff||
 				checkTile == MapData::TileType::BottomWall))
 			{
 				if (m_FallDist >= m_MinBreakDist)

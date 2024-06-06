@@ -206,5 +206,13 @@ namespace dae
 		};
 
 	}
+
+	namespace levelLoader
+	{
+		void StartGame(){
+			//make player and root gameobject
+
+		}
+	}
 }
 

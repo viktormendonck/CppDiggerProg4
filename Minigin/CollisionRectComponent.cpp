@@ -89,6 +89,11 @@ namespace dae
 		return (m_Rect.existsOnLayers & layers) != 0;
 	}
 
+	bool CollisionRectComponent::ScansFor(uint16_t layers) const
+	{
+		return (m_Rect.scansForLayers & layers) != 0;
+	}
+
 	void CollisionRectComponent::CallOnExit()
 	{
 		m_ExitSignalCalled = true;

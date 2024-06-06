@@ -36,6 +36,7 @@ namespace dae
 
 		void Rotate();
 		bool ExistsOn(uint16_t layers) const;
+		bool ScansFor(uint16_t layers) const;
 
 		Signal<CollisionRectComponent*> m_OnExit{};
 		Signal<CollisionRectComponent*> m_OnEnter{};

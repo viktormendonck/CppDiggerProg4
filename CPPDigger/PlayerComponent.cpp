@@ -158,6 +158,7 @@ namespace dae
 
 	void PlayerComponent::SetDir(glm::ivec2 dir)
 	{
+		if (!m_CanMove) return;
 		int shootYOffset{ static_cast<int>(m_IsReloading) * 2 };
 		int currentSpriteX = GetParent()->GetComponent<SpriteSheetComponent>()->GetSprite().x;
 		GetParent()->GetComponent<SpriteSheetComponent>()->SetSprite({ currentSpriteX,0 + shootYOffset });
@@ -203,9 +204,9 @@ namespace dae
 			if (m_Lives > 0)
 			{
 				StartRespawn();
-				return;
 			}
-			GetParent()->Destroy();
+
+			//GetParent()->Destroy();
 
 		}
 	}

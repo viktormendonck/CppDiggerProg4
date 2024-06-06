@@ -3,6 +3,7 @@
 #include "EnemyComponent.h"
 #include "GameData.h"
 #include "MapData.h"
+#include "PlayerComponent.h"
 #include "ServiceLocator.h"
 
 namespace dae
@@ -30,6 +31,14 @@ namespace dae
 
 	void EnemySpawnerComponent::SpawnEnemy()
 	{
+		Signal<>* pPlayerDeathSignal{};
+		for (const std::shared_ptr<GameObject>& child : GetParent()->GetPatriarch()->GetChildren())
+		{
+			if (PlayerComponent* player = child->GetComponent<PlayerComponent>())
+			{
+				pPlayerDeathSignal = &player->onDeath;
+			}
+		}
 		if (m_RemainingCharges <= 0)
 		{
 			GetParent()->Destroy();
@@ -39,7 +48,7 @@ namespace dae
 		m_CurrentTime = 0.f;
 		std::shared_ptr<GameObject> pEnemy = std::make_shared<GameObject>();
 		std::unique_ptr<EnemyComponent> pEnemyComp = std::make_unique<EnemyComponent>(
-			pEnemy.get(), m_pAnyEnemyKilledSignal);
+			pEnemy.get(), m_pAnyEnemyKilledSignal,pPlayerDeathSignal);
 		pEnemy->AddComponent(std::move(pEnemyComp));
 		std::unique_ptr<SpriteSheetComponent>pSpriteSheet = std::make_unique<SpriteSheetComponent>(
 			pEnemy.get(), std::shared_ptr(m_pEnemyTexture), glm::ivec2{4, 3}, false, 0.2f);

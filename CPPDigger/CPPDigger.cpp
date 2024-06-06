@@ -106,22 +106,22 @@ void AddPlayer(PlayerRequirements& requirements)
 	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, -1 }),
 		requirements.upButton,
-		dae::InputState::Pressed
+		dae::InputState::Held
 	);
 	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, 1 }),
 		requirements.downButton,
-		dae::InputState::Pressed
+		dae::InputState::Held
 	);
 	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ 1, 0 }),
 		requirements.rightButton,
-		dae::InputState::Pressed
+		dae::InputState::Held
 	);
 	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::MoveCommand>(pPlayerObject.get(), glm::ivec2{ -1, 0 }),
 		requirements.leftButton,
-		dae::InputState::Pressed
+		dae::InputState::Held
 	);
 	requirements.pKeyboard->BindCommand(
 		std::make_unique<dae::ShootCommand>(pPlayerObject.get(), requirements.pFireBallTex),

@@ -222,6 +222,7 @@
     <ClCompile Include="FireBallComponent.cpp" />
     <ClCompile Include="GemComponent.cpp" />
     <ClCompile Include="GoldBagComponent.cpp" />
+    <ClCompile Include="LevelManagerComponent.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="NumberDisplay.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="FireBallComponent.h" />
     <ClInclude Include="GemComponent.h" />
     <ClInclude Include="GoldBagComponent.h" />
+    <ClInclude Include="LevelManagerComponent.h" />
     <ClInclude Include="MapData.h" />
     <ClInclude Include="NumberDisplay.h" />
     <ClInclude Include="PlayerCommands.h" />
