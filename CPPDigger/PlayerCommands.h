@@ -29,7 +29,7 @@ namespace dae
 	class ShootCommand final : public GameObjectCommand
 	{
 		public:
-		explicit ShootCommand(GameObject* pGameObject, const std::shared_ptr<Texture2D>& fireBallTex) : GameObjectCommand(pGameObject), m_pFireBallTex(fireBallTex){};
+		explicit ShootCommand(GameObject* pGameObject, const std::shared_ptr<Texture2D>& fireBallTex, uint16_t damageLayers) : GameObjectCommand(pGameObject), m_pFireBallTex(fireBallTex), m_DamageLayers(damageLayers){};
 
 		void Execute() override
 		{
@@ -43,18 +43,18 @@ namespace dae
 		}
 
 	private:
-		
+		uint16_t m_DamageLayers;
 		void SpawnFireBall(glm::ivec2 dir)
 		{
 			auto pTileMap = m_pGameObject->GetParent()->GetComponent<TileMapComponent>();
 
 			const std::shared_ptr<GameObject> pFireBall = std::make_shared<GameObject>();
-			pFireBall->GetTransform().SetLocalPosition(pTileMap->TileToLocal(pTileMap->LocalToTile(m_pGameObject->GetTransform().GetLocalPosition()) + glm::ivec2{ 0,1 } + dir) + glm::vec2{ abs(dir.y) * 5,0 });
+			pFireBall->GetTransform().SetLocalPosition(pTileMap->TileToLocal(pTileMap->LocalToTile(m_pGameObject->GetTransform().GetLocalPosition()) + glm::ivec2{ 0,1 } + dir) + glm::vec2{ abs(dir.y) * 5,0 } + glm::vec2(dir * 5));
 			std::unique_ptr<SpriteSheetComponent> pSpriteSheet = std::make_unique<SpriteSheetComponent>(pFireBall.get(), m_pFireBallTex, glm::ivec2{3,1}, false, 0.2f, true, true);
 			pSpriteSheet->SetRenderScale(glm::vec2(2, 2));
 			pFireBall->AddComponent(std::make_unique<CollisionRectComponent>(pFireBall.get(), pSpriteSheet->GetSpriteSize(), glm::vec2{ 0,0 },
 				static_cast<uint16_t>(0),
-				static_cast<uint16_t>(CollisionLayers::EnemyDamage)
+				m_DamageLayers
 			));
 			pFireBall->AddComponent(std::move(pSpriteSheet));
 			pFireBall->AddComponent(std::make_unique<FireBallComponent>(pFireBall.get(), dir,m_pGameObject));

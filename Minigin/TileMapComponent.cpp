@@ -46,7 +46,7 @@ namespace dae
 
 	int TileMapComponent::GetTileSprite(int idx) const
 	{
-		if (idx < 0 || idx >= m_TileMap.size())
+		if (idx < 0 || idx >= static_cast<int>(m_TileMap.size()))
 		{
 			return -1;
 		}

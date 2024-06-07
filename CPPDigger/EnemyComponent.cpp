@@ -180,6 +180,7 @@ namespace dae
 		m_pStateMachine->AddState(std::make_unique < enemyStates::AngeredState>());
 
 		m_ListenerId = onPLayerDeath->AddListener([this]() {OnPlayerDeath();});
+		m_pOnPlayerDeath = onPLayerDeath;
 	}
 
 	auto EnemyComponent::Init() -> void
@@ -243,7 +244,10 @@ namespace dae
 			}
 
 			m_pAnyEnemyKilledSignal->Emit(pOther->GetParent());
-			m_pOnPlayerDeath->RemoveListener(m_ListenerId);
+			if (m_pOnPlayerDeath)
+			{
+				m_pOnPlayerDeath->RemoveListener(m_ListenerId);
+			}
 		}
 	}
 

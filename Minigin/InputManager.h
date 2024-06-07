@@ -1,8 +1,11 @@
 #pragma once
+#include <string>
+
 #include "ControllerDevice.h"
 #include "KeyboardDevice.h"
 #include "Singleton.h"
 #include "GameObject.h"
+#include "Signal.h"
 
 namespace dae
 {
@@ -17,8 +20,10 @@ namespace dae
 		KeyboardDevice* GetKeyboardDevice() const { return m_pKeyboardDevice.get(); }
 		ControllerDevice* GetControllerDevice(int index) const { return m_pDevices[index].get(); }
 		void ClearCommands();
+		Signal<std::string> textInput{};
 	private:
 		std::vector<std::unique_ptr<ControllerDevice>> m_pDevices;
 		std::unique_ptr<KeyboardDevice> m_pKeyboardDevice;
+
 	};
 }

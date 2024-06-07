@@ -19,6 +19,7 @@ namespace dae
 		void LateUpdate();
 		void Render() const;
 		void ImGuiUpdate();
+		std::vector<std::shared_ptr<GameObject>> GetObjects() { return m_Objects; }
 
 		~Scene();
 		Scene(const Scene& other) = delete;

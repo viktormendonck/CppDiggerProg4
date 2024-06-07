@@ -12,6 +12,10 @@ bool dae::InputManager::ProcessInput()
 		if (e.type == SDL_QUIT) {
 			return false;
 		}
+		if (e.type == SDL_TEXTINPUT)
+		{
+			textInput.Emit(e.text.text);
+		}
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
 		{
 			return false;

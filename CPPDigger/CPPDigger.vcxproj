@@ -232,6 +232,7 @@
     <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="SingleScoreDisplay.cpp" />
+    <ClCompile Include="TextInputField.cpp" />
     <ClCompile Include="UIButtonComponent.cpp" />
     <ClCompile Include="UITagComponent.cpp" />
   </ItemGroup>
@@ -253,6 +254,7 @@
     <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="SingleScoreDisplay.h" />
+    <ClInclude Include="TextInputField.h" />
     <ClInclude Include="UIButtonComponent.h" />
     <ClInclude Include="UITagComponent.h" />
   </ItemGroup>

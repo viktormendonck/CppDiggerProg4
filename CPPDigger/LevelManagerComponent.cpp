@@ -12,7 +12,7 @@
 dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, levelLoader::GameMode gameMode,
 	std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal,
 	std::unique_ptr<Signal<int>> pPlayerTwoLivesChangedSignal, KeyboardDevice* pKeyboard, ControllerDevice* pController,
-	ControllerDevice* pControllerTwo)
+	ControllerDevice* pControllerTwo, const std::string& name)
 	: Component(pParent)
 	, m_pKeyboard(pKeyboard)
 	, m_pController(pController)
@@ -21,6 +21,7 @@ dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, levelLoad
 	, m_pLivesChangedSignal(std::move(pLivesChangedSignal))
 	, m_pPlayerTwoLivesChangedSignal(std::move(pPlayerTwoLivesChangedSignal))
 	, m_GameMode(gameMode)
+	, m_PlayerName(name)
 
 {
 	ResourceManager& resourceManager = ResourceManager::GetInstance();
@@ -78,15 +79,28 @@ void dae::LevelManagerComponent::Update()
 			}
 		}
 
-		if (allPlayersDead || m_Level == m_Levels.size())
+		//check end conditions
+		switch (m_GameMode)
 		{
-			if (m_GameMode == levelLoader::GameMode::SinglePlayer)
+		case levelLoader::GameMode::SinglePlayer:
+			if (allPlayersDead || static_cast<size_t>(m_Level) == m_Levels.size())
 			{
 				levelLoader::OpenMenu(m_PlayerName, players[0]->GetParent()->GetComponent<ScoreComponent>()->GetScore());
 			}
-			else
+			break;
+		case levelLoader::GameMode::CoOp:
+			if (allPlayersDead || static_cast<size_t>(m_Level) == m_Levels.size())
 			{
 				levelLoader::OpenMenu();
+			}
+			break;
+		case levelLoader::GameMode::Versus:
+			for (PlayerComponent* pPlayer : players)
+			{
+				if (pPlayer->GetLives() == 0)
+				{
+					levelLoader::OpenMenu();
+				}
 			}
 		}
 	}
@@ -95,7 +109,7 @@ void dae::LevelManagerComponent::Update()
 void dae::LevelManagerComponent::NextLevel()
 {
 	CloseLevel();
-	if (m_Level == m_Levels.size()) return;
+	if (static_cast<size_t>(m_Level) == m_Levels.size()) return;
 	m_ShouldLoadNextLevel = true;
 }
 
@@ -127,42 +141,42 @@ void dae::LevelManagerComponent::LoadNextLevel()
 	pTileMap->SetMap(map);
 
 	if (!m_pPlayer)
+	{
+		levelLoader::PlayerRequirements playerRequirements
 		{
-			levelLoader::PlayerRequirements playerRequirements
-			{
-				GetParent(),
-				m_pPlayerTexture,
-				m_pFireBallTexture,
-				pTileMap->TileToLocal(playerSpawnPos),
-				m_pKeyboard,
-				m_pController,
-				m_pControllerTwo,
-				m_pAnyGemPickedUpSignal.get(),
-				m_pAnyGoldPickedUpSignal.get(),
-				m_pAnyEnemyKilledSignal.get(),
-				std::move(m_pScoreChangedSignal),
-				std::move(m_pLivesChangedSignal),
-				std::move(m_pPlayerTwoLivesChangedSignal),
-				m_GameMode,
-				0
-			};
+			GetParent(),
+			m_pPlayerTexture,
+			m_pFireBallTexture,
+			pTileMap->TileToLocal(playerSpawnPos),
+			m_pKeyboard,
+			m_pController,
+			m_pControllerTwo,
+			m_pAnyGemPickedUpSignal.get(),
+			m_pAnyGoldPickedUpSignal.get(),
+			m_pAnyEnemyKilledSignal.get(),
+			std::move(m_pScoreChangedSignal),
+			std::move(m_pLivesChangedSignal),
+			std::move(m_pPlayerTwoLivesChangedSignal),
+			m_GameMode,
+			0
+		};
 
-			AddPlayer(playerRequirements);
-			for (const auto& child : GetParent()->GetChildren())
+		AddPlayer(playerRequirements);
+		for (const auto& child : GetParent()->GetChildren())
+		{
+			if (child->GetComponent<PlayerComponent>())
 			{
-				if (child->GetComponent<PlayerComponent>())
-				{
-					m_pPlayer = child;
-					break;
-				}
+				m_pPlayer = child;
+				break;
 			}
-			if (m_GameMode != levelLoader::GameMode::SinglePlayer)
-			{
-				playerRequirements.playerIndex = 1;
-				AddPlayer(playerRequirements);
-			}
-
 		}
+		if (m_GameMode != levelLoader::GameMode::SinglePlayer)
+		{
+			playerRequirements.playerIndex = 1;
+			AddPlayer(playerRequirements);
+		}
+
+	}
 	m_pPlayer->GetComponent<PlayerComponent>()->SetRespawnPos(pTileMap->TileToLocal(playerSpawnPos));
 
 

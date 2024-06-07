@@ -109,6 +109,9 @@
     <ClCompile Include="UIButtonComponent.cpp">
       <Filter>Source Files\Components\UI\MenuUi\Button</Filter>
     </ClCompile>
+    <ClCompile Include="TextInputField.cpp">
+      <Filter>Source Files\Components\UI\MenuUi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PlayerCommands.h">
@@ -167,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="UIButtonComponent.h">
       <Filter>Source Files\Components\UI\MenuUi\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInputField.h">
+      <Filter>Source Files\Components\UI\MenuUi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

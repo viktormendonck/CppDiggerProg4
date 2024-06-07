@@ -36,7 +36,7 @@ void dae::HighScoreDisplayComponent::Init()
 	nlohmann::json write;
 	for (int i = 0; i < 5;++i)
 	{
-		if (i >= scores.size())
+		if (i >= static_cast<int>(scores.size()))
 		{
 			return;
 		}
@@ -55,7 +55,7 @@ void dae::HighScoreDisplayComponent::Init()
 
 void dae::HighScoreDisplayComponent::Render() const
 {
-	for (int i{}; i< m_SingleScoreDisplays.size();++i)
+	for (size_t i{}; i < m_SingleScoreDisplays.size();++i)
 	{
 		m_SingleScoreDisplays[i]->Render();
 	}

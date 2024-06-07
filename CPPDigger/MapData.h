@@ -252,7 +252,7 @@ namespace dae
 
 		void AddEnemySpawner(dae::GameObject* pParent, glm::vec2 pos, std::shared_ptr<dae::Signal<dae::GameObject*>> pAnyEnemyKilledSignal, std::shared_ptr<dae::Texture2D> pEnemyTex, int charges, float timeBetweenSpawns);
 
-		void StartGame(GameMode gameMode);
+		void StartGame(GameMode gameMode, const std::string& playerName);
 
 		void OpenMenu();
 		void OpenMenu(const std::string& name, int score);

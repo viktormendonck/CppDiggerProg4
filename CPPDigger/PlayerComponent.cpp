@@ -5,6 +5,7 @@
 #include "GameData.h"
 #include "GemComponent.h"
 #include "MapData.h"
+#include "SpriteSheet2D.h"
 #include "SpriteSheetComponent.h"
 #include "TileMapComponent.h"
 
@@ -140,6 +141,7 @@ namespace dae
 
 	void PlayerComponent::Update()
 	{
+		if (m_Lives == 0) return;
 		m_pStateMachine->Update();
 		if (m_pStateMachine->GetCurrentStateIdx() == static_cast<int>(playerStates::PlayerState::Dead)) return;
 		if (m_CanMove == false)
@@ -158,7 +160,7 @@ namespace dae
 
 	void PlayerComponent::SetDir(glm::ivec2 dir)
 	{
-		if (!m_CanMove) return;
+		if (!m_CanMove || m_Lives == 0) return;
 		int shootYOffset{ static_cast<int>(m_IsReloading) * 2 };
 		int currentSpriteX = GetParent()->GetComponent<SpriteSheetComponent>()->GetSprite().x;
 		GetParent()->GetComponent<SpriteSheetComponent>()->SetSprite({ currentSpriteX,0 + shootYOffset });
@@ -212,9 +214,9 @@ namespace dae
 			{
 				StartRespawn();
 			}
-
-			//GetParent()->Destroy();
-
+			else {
+				GetParent()->GetComponent<SpriteSheetComponent>()->SetVisible(false);
+			}
 		}
 	}
 
