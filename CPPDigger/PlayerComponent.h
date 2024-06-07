@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
 #include <glm/vec2.hpp>
 
 #include "Component.h"
@@ -7,15 +6,13 @@
 #include "FiniteStateMachine.h"
 #include "Signal.h"
 #include "GameObject.h"
-#include "MapData.h"
 #include "TileMapComponent.h"
+#include "MapData.h"
 
 //Player should be refactored to use its state machine more but hey, you can't have everything, there are more pressing matters
 namespace dae
 {
 	class SpriteSheetComponent;
-	class CollisionRectComponent;
-
 	namespace playerStates
 	{
 		enum class PlayerState
@@ -54,13 +51,13 @@ namespace dae
 			TileMapComponent* m_pTileMap{};
 			GameObject* m_pPlayer{};
 			SpriteSheetComponent* m_pSpriteSheet{};
-			std::vector<MapData::TileType> m_LandingTiles{
-				MapData::TileType::BottomLeftCorner,
-				MapData::TileType::BottomRightCorner,
-				MapData::TileType::BottomWall,
-				MapData::TileType::BottomMiddleRoundOff,
-				MapData::TileType::BottomLeftRoundOff,
-				MapData::TileType::BottomRightRoundOff
+			std::vector<mapData::TileType> m_LandingTiles{
+				mapData::TileType::BottomLeftCorner,
+				mapData::TileType::BottomRightCorner,
+				mapData::TileType::BottomWall,
+				mapData::TileType::BottomMiddleRoundOff,
+				mapData::TileType::BottomLeftRoundOff,
+				mapData::TileType::BottomRightRoundOff
 			};
 			const float m_FallSpeed{ 50.f };
 		};
@@ -83,7 +80,7 @@ namespace dae
 		int GetLives() const { return m_Lives; }
 		void SetDir(glm::ivec2 dir);
 		glm::ivec2 GetDir() const { return m_CurrentDir; }
-		void SetRespawnPos(glm::vec2 pos) { m_RespawnPos = pos; }
+		void SetRespawnPos(glm::vec2 pos);
 		glm::vec2 GetRespawnPos() const { return m_RespawnPos; }
 		float GetSpeed() const { return m_Speed; }
 		void HitWall();

@@ -89,5 +89,7 @@ namespace dae
 
 		void OnPlayerDeath();
 		void OnCollision(CollisionRectComponent* pOther);
+		size_t m_ListenerId{};
+		Signal<>* m_pOnPlayerDeath{}; // only used to stop listening to the player death signal
 	};
 }

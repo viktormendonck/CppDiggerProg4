@@ -68,7 +68,7 @@ namespace dae
 			for (size_t i{}; i < directions.size(); ++i)
 			{
 				glm::ivec2 nextTile = m_CurrentTile + directions[i];
-				if (m_pTileMap->GetTileSprite(nextTile) == static_cast<int>(MapData::TileType::Empty) && nextTile != m_PreviousTile)
+				if (m_pTileMap->GetTileSprite(nextTile) == static_cast<int>(mapData::TileType::Empty) && nextTile != m_PreviousTile)
 				{
 					validDirections[i] = true;
 					foundValidDir = true;
@@ -179,7 +179,7 @@ namespace dae
 		m_pStateMachine->AddState(std::make_unique < enemyStates::NormalState>());
 		m_pStateMachine->AddState(std::make_unique < enemyStates::AngeredState>());
 
-		onPLayerDeath->AddListener([this]() {OnPlayerDeath();});
+		m_ListenerId = onPLayerDeath->AddListener([this]() {OnPlayerDeath();});
 	}
 
 	auto EnemyComponent::Init() -> void
@@ -226,10 +226,7 @@ namespace dae
 
 	void EnemyComponent::OnPlayerDeath()
 	{
-		if (GetParent())
-		{
-			GetParent()->Destroy();
-		}
+		
 	}
 
 	void EnemyComponent::OnCollision(CollisionRectComponent* pOther)
@@ -246,8 +243,7 @@ namespace dae
 			}
 
 			m_pAnyEnemyKilledSignal->Emit(pOther->GetParent());
-
-
+			m_pOnPlayerDeath->RemoveListener(m_ListenerId);
 		}
 	}
 

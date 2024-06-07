@@ -33,10 +33,10 @@ void dae::DiggingCharacterComponent::Dig(glm::ivec2 currentDir) const
 			const int idx = (currentTile.y + yIdx) * pTileMap->GetWorldSize().x + currentTile.x + xIdx;
 			const int templateIdx = (yIdx + 1) * 3 + (xIdx + 1);
 
-			const int newTile = MapData::g_DigPatterns[dir][templateIdx];
+			const int newTile = mapData::g_DigPatterns[dir][templateIdx];
 			const int oldTile = pTileMap->GetTileSprite(idx);
 			if (newTile == -1 || oldTile == 10) continue;
-			pTileMap->SetTileSprite(idx, static_cast<int>(MapData::CompareTiles(static_cast<MapData::TileType>(newTile), static_cast<MapData::TileType>(oldTile))));
+			pTileMap->SetTileSprite(idx, static_cast<int>(mapData::CompareTiles(static_cast<mapData::TileType>(newTile), static_cast<mapData::TileType>(oldTile))));
 		}
 	}
 }

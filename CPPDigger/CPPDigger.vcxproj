@@ -224,6 +224,7 @@
     <ClCompile Include="GoldBagComponent.cpp" />
     <ClCompile Include="LevelManagerComponent.cpp" />
     <ClCompile Include="MapData.cpp" />
+    <ClCompile Include="CheatCommands.cpp" />
     <ClCompile Include="NumberDisplay.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="GoldBagComponent.h" />
     <ClInclude Include="LevelManagerComponent.h" />
     <ClInclude Include="MapData.h" />
+    <ClInclude Include="CheatCommands.h" />
     <ClInclude Include="NumberDisplay.h" />
     <ClInclude Include="PlayerCommands.h" />
     <ClInclude Include="PlayerComponent.h" />

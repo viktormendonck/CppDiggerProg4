@@ -25,9 +25,9 @@ namespace dae
 		glm::vec2 SpriteSize = GetParent()->GetComponent<SpriteSheetComponent>()->GetSpriteSize();
 		glm::vec2 pos = transform.GetLocalPosition() + glm::vec2{SpriteSize.x/2,SpriteSize.y/2};
 		TileMapComponent* tileMap = GetTileMapComponent();
-		MapData::TileType tile{static_cast<MapData::TileType>(tileMap->GetTileSprite(tileMap->LocalToTile(pos)))};
+		mapData::TileType tile{static_cast<mapData::TileType>(tileMap->GetTileSprite(tileMap->LocalToTile(pos)))};
 
-		if (tile != MapData::TileType::Empty)
+		if (tile != mapData::TileType::Empty)
 		{
 			OnHit();
 			return;

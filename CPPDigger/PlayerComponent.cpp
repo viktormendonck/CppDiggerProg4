@@ -77,7 +77,7 @@ namespace dae
 		{
 			const float dt = GameData::GetInstance().GetDeltaTime();
 			const glm::ivec2 checkPos = m_pTileMap->LocalToTile(m_pPlayer->GetTransform().GetLocalPosition() + glm::vec2(m_pSpriteSheet->GetSpriteSize().x / 2, 0));
-			MapData::TileType checkTile{};
+			mapData::TileType checkTile{};
 			//check for validity of the position
 			bool shouldLand{ false };
 			if (checkPos.x < 0 || checkPos.x >= m_pTileMap->GetWorldSize().x - 1 || checkPos.y < 0 || checkPos.y >= m_pTileMap->GetWorldSize().y - 1)
@@ -86,10 +86,10 @@ namespace dae
 			}
 			else
 			{
-				checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite(checkPos));
+				checkTile = static_cast<mapData::TileType>(m_pTileMap->GetTileSprite(checkPos));
 			}
 
-			for (MapData::TileType tile : m_LandingTiles)
+			for (mapData::TileType tile : m_LandingTiles)
 			{
 				if (checkTile == tile)
 				{
@@ -189,6 +189,13 @@ namespace dae
 		Dig(dir);
 	}
 
+	void PlayerComponent::SetRespawnPos(glm::vec2 pos)
+	{
+		m_RespawnPos = pos;
+		m_TargetPos = m_RespawnPos;
+		GetParent()->GetTransform().SetLocalPosition(m_RespawnPos);
+	}
+
 	void PlayerComponent::HitWall()
 	{
 		m_TargetPos = GetParent()->GetTransform().GetLocalPosition();
@@ -213,6 +220,8 @@ namespace dae
 
 	void PlayerComponent::StartRespawn()
 	{
+		m_CanMove = true;
+		m_TargetPos = m_RespawnPos;
 		m_pStateMachine->SetState(static_cast<int>(playerStates::PlayerState::Dead));
 		m_Lives--;
 		onDeath.Emit();

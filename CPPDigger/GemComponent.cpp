@@ -1,5 +1,7 @@
 #include "GemComponent.h"
 
+#include <iostream>
+
 #include "CollisionRectComponent.h"
 #include "PlayerComponent.h"
 #include "TextureComponent.h"
@@ -18,8 +20,10 @@ void dae::GemComponent::Init()
 
 void dae::GemComponent::OnPlayerInteraction(CollisionRectComponent* pOther)
 {
+	if (m_IsPickedUp) return;
 	if (pOther->ExistsOn(static_cast<uint16_t>(CollisionLayers::Pickup)))
 	{
+		m_IsPickedUp = true;
 		m_pAnyGemPickedUpSignal->Emit(pOther->GetParent());
 		GetParent()->Destroy();
 	}

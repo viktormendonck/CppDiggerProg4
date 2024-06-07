@@ -15,6 +15,7 @@ namespace dae
 	private:
 		void OnPlayerInteraction(CollisionRectComponent* pOther);
 		std::shared_ptr<Signal<GameObject*>> m_pAnyGemPickedUpSignal{};
+		bool m_IsPickedUp{ false };
 	};
 
 }

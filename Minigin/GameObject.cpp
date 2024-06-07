@@ -29,8 +29,11 @@ void dae::GameObject::Update()
 
 void dae::GameObject::Init()
 {
+	
 	for (size_t i{}; i < m_Components.size(); ++i)
 	{
+		if (m_Components[i]->m_HasInitialized) continue;
+		m_Components[i]->m_HasInitialized = true;
 		m_Components[i]->Init();
 	}
 	for (size_t i{}; i < m_Children.size(); ++i)

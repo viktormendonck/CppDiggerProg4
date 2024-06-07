@@ -52,8 +52,8 @@ namespace dae
 				
 				glm::vec2 OriginalSpriteSize{ m_pSpriteSheet->GetSpriteSize()};
 				glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition()+glm::vec2(OriginalSpriteSize.x/2, OriginalSpriteSize.y/2));
-				MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite({ pos.x, pos.y + 1 }));
-				if (checkTile == MapData::TileType::TopWall || checkTile == MapData::TileType::Empty || checkTile == MapData::TileType::TopMiddleRoundOff)
+				mapData::TileType checkTile = static_cast<mapData::TileType>(m_pTileMap->GetTileSprite({ pos.x, pos.y + 1 }));
+				if (checkTile == mapData::TileType::TopWall || checkTile == mapData::TileType::Empty || checkTile == mapData::TileType::TopMiddleRoundOff)
 				{
 					GetStateMachine()->SetState(static_cast<int>(GoldBagStates::Wiggle));
 					m_pGoldBag->GetComponent<CollisionRectComponent>()->RemoveSendingLayer(uint16_t{ static_cast<uint16_t>(CollisionLayers::Push) });
@@ -126,15 +126,15 @@ namespace dae
 		{
 			const float dt = GameData::GetInstance().GetDeltaTime();
 			const glm::ivec2 pos = m_pTileMap->LocalToTile(m_pGoldBag->GetTransform().GetLocalPosition() + glm::vec2{ m_pSpriteSheet->GetSpriteSize().x / 2, m_pSpriteSheet->GetSpriteSize().y / 4 });
-			const MapData::TileType checkTile = static_cast<MapData::TileType>(m_pTileMap->GetTileSprite(pos));
+			const mapData::TileType checkTile = static_cast<mapData::TileType>(m_pTileMap->GetTileSprite(pos));
 			//the tile underneath is BottomRightCorner, BottomLeftCorner, bottomMiddleRoundoff or BottomWall then stop falling and if it has fallen far enough then go to goldState
 			if (m_FallDist > 1 &&
-				(checkTile == MapData::TileType::BottomRightCorner	|| 
-				checkTile == MapData::TileType::BottomLeftCorner	|| 
-				checkTile == MapData::TileType::BottomMiddleRoundOff|| 
-				checkTile == MapData::TileType::BottomLeftRoundOff||
-				checkTile == MapData::TileType::BottomRightRoundOff||
-				checkTile == MapData::TileType::BottomWall))
+				(checkTile == mapData::TileType::BottomRightCorner	|| 
+				checkTile == mapData::TileType::BottomLeftCorner	|| 
+				checkTile == mapData::TileType::BottomMiddleRoundOff|| 
+				checkTile == mapData::TileType::BottomLeftRoundOff||
+				checkTile == mapData::TileType::BottomRightRoundOff||
+				checkTile == mapData::TileType::BottomWall))
 			{
 				if (m_FallDist >= m_MinBreakDist)
 				{

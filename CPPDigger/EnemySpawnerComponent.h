@@ -13,6 +13,7 @@ namespace dae
 		EnemySpawnerComponent(GameObject* pParent, std::shared_ptr<Signal<GameObject*>> pAnyEnemyKilledSignal, std::shared_ptr<Texture2D> pEnemyTex, int charges, float timeBetweenSpawns);
 
 		void Update() override;
+		int GetRemainingCharges() const { return m_RemainingCharges; }
 
 	private:
 		std::shared_ptr<Signal<GameObject*>> m_pAnyEnemyKilledSignal{};

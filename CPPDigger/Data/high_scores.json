@@ -1,0 +1,18 @@
+[
+    {
+        "player": "Player1",
+        "score": 1000
+    },
+    {
+        "player": "Player",
+        "score": 500
+    },
+    {
+        "player": "Player3",
+        "score": 200
+    },
+    {
+        "player": "Player4",
+        "score": 150
+    }
+]

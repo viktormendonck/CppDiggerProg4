@@ -1,12 +1,21 @@
 #pragma once
+#include <SDL_scancode.h>
 #include <vector>
 #include <glm/vec2.hpp>
 
 #include "BiMap.h"
-
+#include "CollisionRectComponent.h"
+#include "EnemySpawnerComponent.h"
+#include "GameObject.h"
+#include "KeyboardDevice.h"
+#include "json.hpp"
 
 namespace dae
 {
+	class KeyboardDevice;
+	class EnemySpawnerComponent;
+	class CollisionRectComponent;
+
 	enum class CollisionLayers : uint16_t
 	{
 		Pickup = 1 << 0,
@@ -14,10 +23,10 @@ namespace dae
 		EnemyDamage = 1 << 2,
 		Push = 1 << 3,
 	};
-	namespace MapData
+	namespace mapData
 	{
 		//Most of this data should be in a json loader but hey, ig it works
-		inline uint16_t boolVecToUInt16(const std::vector<bool>& vec) {
+		inline uint16_t BoolVecToUInt16(const std::vector<bool>& vec) {
 			uint16_t result = 0;
 			for (size_t i{}; i < vec.size(); ++i) {
 				result |= vec[i] << i;
@@ -54,126 +63,126 @@ namespace dae
 
 		static BiMap<uint16_t, TileType> g_TileRules{
 		{
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,1,1,1,
 					1,1,1,1,
 					1,1,1,1,
 					1,1,1,1
 				}),TileType::Full},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					0,0,0,0,
 					0,0,0,0,
 					0,0,0,0,
 					0,0,0,0
 				}),TileType::Empty},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,1,0,0,
 					1,1,0,0,
 					1,1,0,0,
 					1,1,0,0
 				}),TileType::LeftWall},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,1,1,1,
 					1,1,1,1,
 					0,0,0,0,
 					0,0,0,0
 				}),TileType::TopWall},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					0,0,0,0,
 					0,0,0,0,
 					1,1,1,1,
 					1,1,1,1,
 				}),TileType::BottomWall},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					0,0,1,1,
 					0,0,1,1,
 					0,0,1,1,
 					0,0,1,1
 				}),TileType::RightWall},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,1,1,1,
 					1,1,1,1,
 					1,1,0,0,
 					1,1,0,0
 				}),TileType::TopLeftRoundOff},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,1,1,1,
 					0,0,0,0,
 					0,0,0,0,
 					0,0,0,0
 				}),TileType::TopMiddleRoundOff},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,1,1,1,
 					1,1,1,1,
 					0,0,1,1,
 					0,0,1,1
 				}),TileType::TopRightRoundOff},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					0,0,0,0,
 					0,0,0,0,
 					0,0,1,1,
 					0,0,1,1
 				}),TileType::BottomRightCorner},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					0,0,0,0,
 					0,0,0,0,
 					1,1,0,0,
 					1,1,0,0
 				}),TileType::BottomLeftCorner},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					0,0,1,1,
 					0,0,1,1,
 					0,0,0,0,
 					0,0,0,0,
 				}),TileType::TopRightCorner},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,1,0,0,
 					1,1,0,0,
 					0,0,0,0,
 					0,0,0,0,
 				}),TileType::TopLeftCorner},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,0,0,0,
 					1,0,0,0,
 					1,0,0,0,
 					1,0,0,0
 				}),TileType::MiddleLeftRoundOff},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					0,0,0,1,
 					0,0,0,1,
 					0,0,0,1,
 					0,0,0,1
 				}),TileType::MiddleRightRoundOff},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					1,1,0,0,
 					1,1,0,0,
 					1,1,1,1,
 					1,1,1,1
 				}),TileType::BottomLeftRoundOff},
-			{boolVecToUInt16(
+			{BoolVecToUInt16(
 				{
 					0,0,0,0,
 					0,0,0,0,
 					0,0,0,0,
 					1,1,1,1
 				}),TileType::BottomMiddleRoundOff},
-			{ boolVecToUInt16(
+			{ BoolVecToUInt16(
 				{
 					0,0,1,1,
 					0,0,1,1,
@@ -209,10 +218,39 @@ namespace dae
 
 	namespace levelLoader
 	{
-		void StartGame(){
-			//make player and root gameobject
+		enum class GameMode {
+			SinglePlayer,
+			CoOp,
+			Versus
+		};
+		
+		void AddGem(dae::GameObject* pParent, std::shared_ptr<dae::Signal<dae::GameObject*>> pAnyGemPickedUpSignal, const std::shared_ptr<dae::Texture2D>& pTexture, glm::vec2 pos);
 
-		}
+		void AddGoldBag(dae::GameObject* pParent, std::shared_ptr<dae::Signal<dae::GameObject*>> pAnyGoldPickedUpSignal, const std::shared_ptr<dae::Texture2D>& pTexture, glm::vec2 pos);
+
+		struct PlayerRequirements
+		{
+			GameObject* pParent;
+			std::shared_ptr<Texture2D> pPlayerTexture;
+			std::shared_ptr<Texture2D> pFireBallTex;
+			glm::vec2 pos;
+			KeyboardDevice* pKeyboard;
+			Signal<GameObject*>* pGemPickedUpSignal;
+			Signal<GameObject*>* pGoldPickedUpSignal;
+			Signal<GameObject*>* pEnemyKilledSignal;
+			std::unique_ptr<Signal<int>> pScoreChangedSignal;
+			SDL_Scancode upButton;
+			SDL_Scancode downButton;
+			SDL_Scancode leftButton;
+			SDL_Scancode rightButton;
+			SDL_Scancode attackButton;
+		};
+
+		void AddPlayer(PlayerRequirements& requirements);
+
+		void AddEnemySpawner(dae::GameObject* pParent, glm::vec2 pos, std::shared_ptr<dae::Signal<dae::GameObject*>> pAnyEnemyKilledSignal, std::shared_ptr<dae::Texture2D> pEnemyTex, int charges, float timeBetweenSpawns);
+
+		void StartGame(GameMode gameMode);
 	}
 }
 

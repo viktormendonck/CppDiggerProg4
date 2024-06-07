@@ -6,6 +6,7 @@ namespace dae
 	class Component
 	{
 	public:
+		friend class GameObject;
 		explicit Component(GameObject* pParent);
 		virtual ~Component() = default;
 		Component(const Component& other) = delete;
@@ -21,8 +22,10 @@ namespace dae
 		virtual void Init() {}
 
 		GameObject* GetParent() const { return m_pParent; }
+	protected:
+		bool m_HasInitialized{};
 	private:
-		GameObject* m_pParent; 
+		GameObject* m_pParent;
 	};
 }
 
