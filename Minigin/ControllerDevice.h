@@ -34,6 +34,7 @@ namespace dae
         void ProcessInput() override;
 
         void BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button, InputState state);
+        void ClearCommands();
 	private:
 
         class ControllerDeviceImpl;

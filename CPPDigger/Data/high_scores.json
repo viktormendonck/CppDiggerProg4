@@ -1,18 +1,22 @@
 [
     {
-        "player": "Player1",
-        "score": 1000
+        "player": "Amber",
+        "score": 20000
     },
     {
-        "player": "Player",
-        "score": 500
+        "player": "Test",
+        "score": 625
     },
     {
-        "player": "Player3",
+        "player": "Patrick",
         "score": 200
     },
     {
-        "player": "Player4",
-        "score": 150
+        "player": "Vik",
+        "score": 100
+    },
+    {
+        "player": "Vik",
+        "score": 100
     }
 ]

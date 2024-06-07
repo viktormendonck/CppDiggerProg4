@@ -32,11 +32,23 @@
     <Filter Include="Source Files\Components\Game\Collectables">
       <UniqueIdentifier>{d83cd76a-a85d-48c2-a0ac-703c7d8a3e01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Game\score">
-      <UniqueIdentifier>{36d882e2-a63c-430a-9ab5-b802172f3c0f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Components\Game\Objects">
       <UniqueIdentifier>{892663aa-c08c-470d-8aa0-b3865f8c1826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Game\Data">
+      <UniqueIdentifier>{36d882e2-a63c-430a-9ab5-b802172f3c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\UI\GameUi">
+      <UniqueIdentifier>{7c6cabad-935c-4e6b-9d44-c410751aa7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\UI\MenuUi">
+      <UniqueIdentifier>{435b1f56-71cf-486c-894d-a6151ab5fd23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\UI\MenuUi\HighScore">
+      <UniqueIdentifier>{44e5d5c2-73bd-4004-af79-04f5157c9e4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\UI\MenuUi\Button">
+      <UniqueIdentifier>{131ad20c-3f74-4e54-852a-1115a3f1d26c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,10 +71,7 @@
       <Filter>Source Files\Characters</Filter>
     </ClCompile>
     <ClCompile Include="ScoreComponent.cpp">
-      <Filter>Source Files\Components\Game\score</Filter>
-    </ClCompile>
-    <ClCompile Include="NumberDisplay.cpp">
-      <Filter>Source Files\Components\UI</Filter>
+      <Filter>Source Files\Components\Game\Data</Filter>
     </ClCompile>
     <ClCompile Include="EnemyComponent.cpp">
       <Filter>Source Files\Characters\enemy</Filter>
@@ -70,14 +79,35 @@
     <ClCompile Include="EnemySpawnerComponent.cpp">
       <Filter>Source Files\Characters\enemy</Filter>
     </ClCompile>
-    <ClCompile Include="LevelManagerComponent.cpp">
-      <Filter>Source Files\Characters</Filter>
-    </ClCompile>
     <ClCompile Include="MapData.cpp">
       <Filter>Source Files\Data</Filter>
     </ClCompile>
     <ClCompile Include="CheatCommands.cpp">
-      <Filter>Source Files\Data</Filter>
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Source Files\Components\Game\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManagerComponent.cpp">
+      <Filter>Source Files\Components\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LivesDisplay.cpp">
+      <Filter>Source Files\Components\UI\GameUi</Filter>
+    </ClCompile>
+    <ClCompile Include="NumberDisplay.cpp">
+      <Filter>Source Files\Components\UI\GameUi</Filter>
+    </ClCompile>
+    <ClCompile Include="UITagComponent.cpp">
+      <Filter>Source Files\Components\UI\GameUi</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreDisplay.cpp">
+      <Filter>Source Files\Components\UI\MenuUi\HighScore</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleScoreDisplay.cpp">
+      <Filter>Source Files\Components\UI\MenuUi\HighScore</Filter>
+    </ClCompile>
+    <ClCompile Include="UIButtonComponent.cpp">
+      <Filter>Source Files\Components\UI\MenuUi\Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,10 +130,7 @@
       <Filter>Source Files\Characters</Filter>
     </ClInclude>
     <ClInclude Include="ScoreComponent.h">
-      <Filter>Source Files\Components\Game\score</Filter>
-    </ClInclude>
-    <ClInclude Include="NumberDisplay.h">
-      <Filter>Source Files\Components\UI</Filter>
+      <Filter>Source Files\Components\Game\Data</Filter>
     </ClInclude>
     <ClInclude Include="EnemyComponent.h">
       <Filter>Source Files\Characters\enemy</Filter>
@@ -111,14 +138,35 @@
     <ClInclude Include="EnemySpawnerComponent.h">
       <Filter>Source Files\Characters\enemy</Filter>
     </ClInclude>
-    <ClInclude Include="LevelManagerComponent.h">
-      <Filter>Source Files\Characters</Filter>
-    </ClInclude>
     <ClInclude Include="MapData.h">
       <Filter>Source Files\Data</Filter>
     </ClInclude>
     <ClInclude Include="CheatCommands.h">
-      <Filter>Source Files\Data</Filter>
+      <Filter>Source Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Source Files\Components\Game\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManagerComponent.h">
+      <Filter>Source Files\Components\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="LivesDisplay.h">
+      <Filter>Source Files\Components\UI\GameUi</Filter>
+    </ClInclude>
+    <ClInclude Include="NumberDisplay.h">
+      <Filter>Source Files\Components\UI\GameUi</Filter>
+    </ClInclude>
+    <ClInclude Include="UITagComponent.h">
+      <Filter>Source Files\Components\UI\GameUi</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreDisplay.h">
+      <Filter>Source Files\Components\UI\MenuUi\HighScore</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleScoreDisplay.h">
+      <Filter>Source Files\Components\UI\MenuUi\HighScore</Filter>
+    </ClInclude>
+    <ClInclude Include="UIButtonComponent.h">
+      <Filter>Source Files\Components\UI\MenuUi\Button</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

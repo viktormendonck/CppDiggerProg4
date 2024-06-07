@@ -36,10 +36,9 @@ void dae::SceneManager::ImGuiUpdate()
 
 void dae::SceneManager::HandleDestroy()
 {
-	for (auto& scene : m_Scenes)
-	{
-		scene->HandleDestruction();
-	}
+	
+	m_Scenes[m_ActiveSceneIndex]->HandleDestruction();
+	
 
 }
 
@@ -66,6 +65,18 @@ dae::Scene* dae::SceneManager::GetScene(const std::string& name)
 		}
 	}
 	return nullptr;
+}
+
+void dae::SceneManager::RemoveScene(const std::string& name)
+{
+	for (int i = static_cast<int>(m_Scenes.size())-1; i >= 0; --i)
+	{
+		if (m_Scenes[i]->GetName() == name)
+		{
+			m_Scenes.erase(m_Scenes.begin() + i);
+			return;
+		}
+	}
 }
 
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)

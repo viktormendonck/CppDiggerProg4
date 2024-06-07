@@ -222,12 +222,18 @@
     <ClCompile Include="FireBallComponent.cpp" />
     <ClCompile Include="GemComponent.cpp" />
     <ClCompile Include="GoldBagComponent.cpp" />
+    <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="HighScoreDisplay.cpp" />
     <ClCompile Include="LevelManagerComponent.cpp" />
+    <ClCompile Include="LivesDisplay.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="CheatCommands.cpp" />
     <ClCompile Include="NumberDisplay.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
+    <ClCompile Include="SingleScoreDisplay.cpp" />
+    <ClCompile Include="UIButtonComponent.cpp" />
+    <ClCompile Include="UITagComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DiggingCharacterComponent.h" />
@@ -236,13 +242,19 @@
     <ClInclude Include="FireBallComponent.h" />
     <ClInclude Include="GemComponent.h" />
     <ClInclude Include="GoldBagComponent.h" />
+    <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="HighScoreDisplay.h" />
     <ClInclude Include="LevelManagerComponent.h" />
+    <ClInclude Include="LivesDisplay.h" />
     <ClInclude Include="MapData.h" />
     <ClInclude Include="CheatCommands.h" />
     <ClInclude Include="NumberDisplay.h" />
     <ClInclude Include="PlayerCommands.h" />
     <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="ScoreComponent.h" />
+    <ClInclude Include="SingleScoreDisplay.h" />
+    <ClInclude Include="UIButtonComponent.h" />
+    <ClInclude Include="UITagComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

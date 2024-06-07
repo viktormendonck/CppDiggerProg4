@@ -49,3 +49,16 @@ void dae::InputManager::AddInputDevice(std::unique_ptr<KeyboardDevice> pDevice)
 }
 
 
+void dae::InputManager::ClearCommands()
+{
+	for (const std::unique_ptr<ControllerDevice>& pDevice : m_pDevices)
+	{
+		pDevice->ClearCommands();
+	}
+	if (m_pKeyboardDevice)
+	{
+		m_pKeyboardDevice->ClearCommands();
+	}
+}
+
+

@@ -23,6 +23,7 @@ namespace dae
 		void HandleDestroy();
 		bool SetActiveScene(const std::string& name);
 		Scene* GetScene(const std::string& name);
+		void RemoveScene(const std::string& name);
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;

@@ -7,13 +7,15 @@
 #include "json.hpp"
 #include "PlayerComponent.h"
 #include "EnemyComponent.h"
+#include "ScoreComponent.h"
 
-dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, levelLoader::GameMode gameMode, std::unique_ptr<Signal<int>> pScoreChangedSignal, KeyboardDevice* pKeyboard, ControllerDevice* pController, ControllerDevice* pControllerTwo)
+dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, levelLoader::GameMode gameMode,std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal,KeyboardDevice* pKeyboard, ControllerDevice* pController, ControllerDevice* pControllerTwo)
 	: Component(pParent)
 	, m_pKeyboard(pKeyboard)
 	, m_pController(pController)
 	, m_pControllerTwo(pControllerTwo)
 	, m_pScoreChangedSignal(std::move(pScoreChangedSignal))
+	, m_pLivesChangedSignal(std::move(pLivesChangedSignal))
 	, m_GameMode(gameMode)
 
 {
@@ -28,6 +30,7 @@ dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, levelLoad
 	m_pAnyEnemyKilledSignal = std::make_shared<dae::Signal<dae::GameObject*>>();
 	m_Level = 0;
 }
+
 
 
 void dae::LevelManagerComponent::Init()
@@ -59,13 +62,37 @@ void dae::LevelManagerComponent::Update()
 
 		if (GetParent()->GetComponents<GemComponent>().empty()|| (GetParent()->GetComponents<EnemyComponent>().empty() && !allSpawnersDead))
 		{
-			CloseLevel();
-			if (m_Level == m_Levels.size()-1) return;
-			m_ShouldLoadNextLevel = true;
+			NextLevel();
+		}
+		std::vector<PlayerComponent*> players = GetParent()->GetComponents<PlayerComponent>();
+		bool allPlayersDead = true;
+		for (PlayerComponent* pPlayer : players)
+		{
+			if (pPlayer->GetLives())
+			{
+				allPlayersDead = false;
+			}
+		}
+
+		if (allPlayersDead || m_Level == m_Levels.size())
+		{
+			if (m_GameMode == levelLoader::GameMode::SinglePlayer)
+			{
+				levelLoader::OpenMenu(m_PlayerName, players[0]->GetParent()->GetComponent<ScoreComponent>()->GetScore());
+			}
+			else
+			{
+				levelLoader::OpenMenu();
+			}
 		}
 	}
+}
 
-
+void dae::LevelManagerComponent::NextLevel()
+{
+	CloseLevel();
+	if (m_Level == m_Levels.size()) return;
+	m_ShouldLoadNextLevel = true;
 }
 
 
@@ -110,6 +137,7 @@ void dae::LevelManagerComponent::LoadNextLevel()
 			m_pAnyGoldPickedUpSignal.get(),
 			m_pAnyEnemyKilledSignal.get(),
 			std::move(m_pScoreChangedSignal),
+			std::move(m_pLivesChangedSignal),
 			SDL_SCANCODE_W,
 			SDL_SCANCODE_S,
 			SDL_SCANCODE_A,

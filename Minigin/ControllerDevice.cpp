@@ -19,6 +19,7 @@ namespace dae
 		void ProcessInput();
 
 		void BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button, InputState state);
+		void Clear();
 	private:
 		std::vector<std::tuple<std::unique_ptr<Command>, ControllerButton, InputState>> m_Commands;
 		const int m_ControllerIndex{};
@@ -40,6 +41,11 @@ namespace dae
 	void ControllerDevice::ControllerDeviceImpl::BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button,InputState state)
 	{
 		m_Commands.emplace_back(std::move(pCommand), button, state);
+	}
+
+	void ControllerDevice::ControllerDeviceImpl::Clear()
+	{
+		m_Commands.clear();
 	}
 
 
@@ -77,5 +83,10 @@ namespace dae
 	void ControllerDevice::BindCommand(std::unique_ptr<Command> pCommand, ControllerButton button,InputState state)
 	{
 		m_pImpl->BindCommand(std::move(pCommand), button, state);
+	}
+
+	void ControllerDevice::ClearCommands()
+	{
+		m_pImpl->Clear();
 	}
 }

@@ -25,6 +25,8 @@ namespace dae
 		Scene(Scene&& other) = delete;
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
+		void Destroy() { m_Destroyed = true; }
+		bool IsDestroyed() const { return m_Destroyed; }
 
 		const std::string& GetName() const { return m_Name; }
 	private: 
@@ -34,7 +36,8 @@ namespace dae
 		std::string m_Name;
 		std::vector < std::shared_ptr<GameObject>> m_Objects{};
 
-		static unsigned int m_IdCounter; 
+		static unsigned int m_IdCounter;
+		bool m_Destroyed{};
 	};
 
 }

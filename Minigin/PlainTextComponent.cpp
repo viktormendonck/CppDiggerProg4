@@ -34,7 +34,7 @@ void dae::PlainTextComponent::Render() const
 	if (!m_pTexture)
 		throw (std::string("PlainTextComponent::Render() > No texture found!"));
 
-	const glm::vec2& pos = GetParent()->GetTransform().GetWorldPosition();
+	const glm::vec2& pos = GetParent()->GetTransform().GetWorldPosition() + m_RenderOffset;
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }
 
@@ -42,6 +42,11 @@ void dae::PlainTextComponent::SetText(const std::string& text)
 {
 	m_Text = text;
 	m_Dirty = true;
+}
+
+void dae::PlainTextComponent::SetRenderOffset(const glm::vec2& offset)
+{
+	m_RenderOffset = offset;
 }
 
 

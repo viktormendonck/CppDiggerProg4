@@ -239,6 +239,7 @@ namespace dae
 			Signal<GameObject*>* pGoldPickedUpSignal;
 			Signal<GameObject*>* pEnemyKilledSignal;
 			std::unique_ptr<Signal<int>> pScoreChangedSignal;
+			std::unique_ptr<Signal<int>> pLivesChangedSignal;
 			SDL_Scancode upButton;
 			SDL_Scancode downButton;
 			SDL_Scancode leftButton;
@@ -251,6 +252,9 @@ namespace dae
 		void AddEnemySpawner(dae::GameObject* pParent, glm::vec2 pos, std::shared_ptr<dae::Signal<dae::GameObject*>> pAnyEnemyKilledSignal, std::shared_ptr<dae::Texture2D> pEnemyTex, int charges, float timeBetweenSpawns);
 
 		void StartGame(GameMode gameMode);
+
+		void OpenMenu();
+		void OpenMenu(const std::string& name, int score);
 	}
 }
 

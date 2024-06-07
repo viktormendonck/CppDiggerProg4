@@ -31,8 +31,14 @@
 #include "EnemySpawnerComponent.h"
 #include "MapData.h"
 
+#include "CheatCommands.h"
+#include "HealthComponent.h"
+#include "HighScoreDisplay.h"
 #include "LevelManagerComponent.h"
+#include "LivesDisplay.h"
 #include "NumberDisplay.h"
+#include "UIButtonComponent.h"
+#include "UITagComponent.h"
 
 
 namespace dae
@@ -105,8 +111,8 @@ namespace dae
 				uint16_t{ static_cast<uint16_t>(CollisionLayers::Pickup) | static_cast<uint16_t>(CollisionLayers::Push) }
 			));
 			pPlayerObject->AddComponent(std::make_unique<ScoreComponent>(pPlayerObject.get(), requirements.pGemPickedUpSignal, requirements.pGoldPickedUpSignal, requirements.pEnemyKilledSignal, std::move(requirements.pScoreChangedSignal)));
+			pPlayerObject->AddComponent(std::make_unique<HealthComponent>(pPlayerObject.get(), std::move(requirements.pLivesChangedSignal)));
 			pPlayerObject->SetParent(requirements.pParent, false);
-
 			requirements.pKeyboard->BindCommand(
 				std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, -1 }),
 				requirements.upButton,
@@ -149,43 +155,115 @@ namespace dae
 
 		void StartGame(GameMode gameMode)
 		{
+			InputManager::GetInstance().ClearCommands();
+			SceneManager::GetInstance().RemoveScene("Game");
 			auto& scene = SceneManager::GetInstance().CreateScene("Game");
+			SceneManager::GetInstance().SetActiveScene("Game");
 			ServiceLocator::RegisterSoundSystem(std::make_unique<SDLSoundSystem>());
 			ServiceLocator::GetSoundSystem().AddSound("Data/Sounds/DeathSound.mp3", SoundSystem::SoundType::SoundEffect);
 
-			auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 			//add devices
 
-			std::unique_ptr<KeyboardDevice> pKeyboard = std::make_unique<KeyboardDevice>();
-			std::unique_ptr<ControllerDevice> pController = std::make_unique<ControllerDevice>(0);
-			std::unique_ptr<ControllerDevice> pControllerTwo = std::make_unique<ControllerDevice>(1);
-			const auto pWorldObject = std::make_shared<GameObject>();
+			KeyboardDevice* pKeyboard = InputManager::GetInstance().GetKeyboardDevice();
+			ControllerDevice* pController = InputManager::GetInstance().GetControllerDevice(0);
+			ControllerDevice* pControllerTwo = InputManager::GetInstance().GetControllerDevice(1);
+			const std::shared_ptr<GameObject> pWorldObject = std::make_shared<GameObject>();
 			std::shared_ptr<Texture2D> pTileSet{ ResourceManager::GetInstance().LoadTexture("tileset.png") };
 			pWorldObject->GetTransform().SetLocalPosition({ 75, 200 });
 			pWorldObject->GetTransform().SetLocalScale({ 2,2 });
 			std::unique_ptr<TileMapComponent> pTileMap = std::make_unique<TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 });
 			pWorldObject->AddComponent(std::move(pTileMap));
 			std::unique_ptr<Signal<int>> pScoreChangedSignal = std::make_unique<Signal<int>>();
+			std::unique_ptr<Signal<int>> pLivesChangedSignal = std::make_unique<Signal<int>>();
+
 			Signal<int>* pScoreChangedSignalPtr = pScoreChangedSignal.get();
-			pWorldObject->AddComponent(std::make_unique<LevelManagerComponent>(pWorldObject.get(), gameMode, std::move(pScoreChangedSignal), pKeyboard.get(), pController.get(), pControllerTwo.get()));
+			Signal<int>* pLivesChangedSignalPtr = pLivesChangedSignal.get();
+			pWorldObject->AddComponent(std::make_unique<LevelManagerComponent>(pWorldObject.get(), gameMode, std::move(pScoreChangedSignal),std::move(pLivesChangedSignal), pKeyboard, pController, pControllerTwo));
 
+			pKeyboard->BindCommand(
+				std::make_unique<SkipLevelCommand>(pWorldObject.get()),
+				SDL_SCANCODE_F1,
+				InputState::Pressed
+			);
 
-			const auto pUiObject = std::make_shared<GameObject>();
+			const std::shared_ptr<GameObject> pUiObject = std::make_shared<GameObject>();
+			pUiObject->AddComponent(std::make_unique<UITagComponent>(pUiObject.get()));
 			std::shared_ptr<Texture2D> pNumbers{ ResourceManager::GetInstance().LoadTexture("nums.png") };
 
-			const auto pScoreObject = std::make_shared<GameObject>();
+			const std::shared_ptr<GameObject> pScoreObject = std::make_shared<GameObject>();
 			pScoreObject->AddComponent(std::make_unique<NumberDisplay>(pScoreObject.get(), pScoreChangedSignalPtr, pNumbers, glm::vec2(2, 2)));
 			pScoreObject->GetTransform().SetLocalPosition(glm::vec2(20, 20));
-			pScoreObject->SetParent(pUiObject.get(), true);
+			pScoreObject->SetParent(pUiObject.get(), false);
+
+			const auto pLivesObject = std::make_shared<GameObject>();
+			std::shared_ptr<Texture2D> pLife{ ResourceManager::GetInstance().LoadTexture("life.png") };
+
+			pLivesObject->AddComponent(std::make_unique<LivesDisplay>(pLivesObject.get(), pLife,pLivesChangedSignalPtr ));
+			pLivesObject->GetTransform().SetLocalPosition(glm::vec2(600, 20));
+			pLivesObject->SetParent(pUiObject.get(), false);
 
 			scene.Add(pUiObject);
 			scene.Add(pWorldObject);
-
 			scene.Init();
-			InputManager::GetInstance().AddInputDevice(std::move(pController));
-			InputManager::GetInstance().AddInputDevice(std::move(pControllerTwo));
-			InputManager::GetInstance().AddInputDevice(std::move(pKeyboard));
 		}
 
+		void OpenMenu()
+		{
+			OpenMenu("---", 0);
+		}
+
+		void OpenMenu(const std::string& name , int score )
+		{
+			SceneManager::GetInstance().RemoveScene("UI");
+			auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+			Scene& scene = SceneManager::GetInstance().CreateScene("UI");
+			SceneManager::GetInstance().SetActiveScene("UI");
+
+			std::shared_ptr<GameObject> pMainUIScene = std::make_shared<GameObject>();
+			std::shared_ptr<Texture2D> pHomeScreenTex{ ResourceManager::GetInstance().LoadTexture("HomeScreen.png") };
+
+			pMainUIScene->AddComponent(std::make_unique<TextureComponent>(pMainUIScene.get(), pHomeScreenTex, false));
+			std::shared_ptr<Texture2D> pNumbers{ ResourceManager::GetInstance().LoadTexture("nums.png") };
+
+			std::shared_ptr<GameObject> pHighScoreObject = std::make_shared<GameObject>();
+			pHighScoreObject->AddComponent(std::make_unique<HighScoreDisplayComponent>(pHighScoreObject.get(), "Data/high_scores.json", score, name, font, pNumbers));
+			pHighScoreObject->GetTransform().SetLocalPosition(glm::vec2{ 100,220 });
+			pHighScoreObject->SetParent(pMainUIScene.get(), false);
+			glm::vec2 buttonSize{ 220,50 };
+
+			std::shared_ptr<Texture2D> pSinglePlayerButtonTex{ ResourceManager::GetInstance().LoadTexture("SinglePlayerButton.png") };
+			std::shared_ptr<Texture2D> pCoopButtonTex{ ResourceManager::GetInstance().LoadTexture("CoopButton.png") };
+			std::shared_ptr<Texture2D> pVersusButtonTex{ ResourceManager::GetInstance().LoadTexture("VersusButton.png") };
+			glm::vec2 singlePlayerButtonPos{ 450, 240 };
+			glm::vec2 coOpButtonPos { 450, 310 };
+			glm::vec2 versusButtonPos { 450, 380 };
+
+			std::shared_ptr<GameObject> pSinglePlayerButtonObject = std::make_shared<GameObject>();
+			std::unique_ptr<UIButtonComponent> pSinglePlayerButton = std::make_unique<UIButtonComponent>(pSinglePlayerButtonObject.get(),buttonSize);
+			pSinglePlayerButton->onClick.AddListener([]() {StartGame(GameMode::SinglePlayer); });
+			pSinglePlayerButtonObject->AddComponent(std::move(pSinglePlayerButton));
+			pSinglePlayerButtonObject->AddComponent(std::make_unique<TextureComponent>(pSinglePlayerButtonObject.get(), pSinglePlayerButtonTex, false));
+			pSinglePlayerButtonObject->GetTransform().SetLocalPosition(singlePlayerButtonPos);
+			pSinglePlayerButtonObject->SetParent(pMainUIScene.get(),false);
+
+			std::shared_ptr<GameObject> pCoOpButtonObject = std::make_shared<GameObject>();
+			std::unique_ptr<UIButtonComponent> pCoOpButton = std::make_unique<UIButtonComponent>(pCoOpButtonObject.get(), buttonSize);
+			pCoOpButton->onClick.AddListener([]() {StartGame(GameMode::CoOp); });
+			pCoOpButtonObject->AddComponent(std::move(pCoOpButton));
+			pCoOpButtonObject->AddComponent(std::make_unique<TextureComponent>(pCoOpButtonObject.get(), pCoopButtonTex, false));
+			pCoOpButtonObject->GetTransform().SetLocalPosition(coOpButtonPos);
+			pCoOpButtonObject->SetParent(pMainUIScene.get(), false);
+
+			std::shared_ptr<GameObject> pVersusButtonObject = std::make_shared<GameObject>();
+			std::unique_ptr<UIButtonComponent> pVersusButton = std::make_unique<UIButtonComponent>(pVersusButtonObject.get(), buttonSize);
+			pVersusButton->onClick.AddListener([]() {StartGame(GameMode::Versus); });
+			pVersusButtonObject->AddComponent(std::move(pVersusButton));
+			pVersusButtonObject->AddComponent(std::make_unique<TextureComponent>(pVersusButtonObject.get(), pVersusButtonTex, false));
+			pVersusButtonObject->GetTransform().SetLocalPosition(versusButtonPos);
+			pVersusButtonObject->SetParent(pMainUIScene.get(), false);
+
+			pMainUIScene->Init();
+			scene.Add(pMainUIScene);
+		}
 	}
 }

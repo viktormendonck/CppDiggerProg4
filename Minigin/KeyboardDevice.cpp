@@ -39,4 +39,9 @@ namespace dae
 	{
 		m_Commands.emplace_back(std::move(pCommand), button, state);
 	}
+
+	void KeyboardDevice::ClearCommands()
+	{
+		m_Commands.clear();
+	}
 }

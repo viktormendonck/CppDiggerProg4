@@ -25,6 +25,7 @@ namespace dae
         void ProcessInput() override;
 
         void BindCommand(std::unique_ptr<Command> pCommand, SDL_Scancode button, InputState state);
+        void ClearCommands();
     private:
         
         std::vector<std::tuple<std::unique_ptr<Command>, SDL_Scancode, InputState>> m_Commands;

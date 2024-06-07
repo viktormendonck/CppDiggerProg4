@@ -23,7 +23,7 @@ void dae::TextureComponent::Render() const
 		throw (std::string("TextureRenderer::Render() > No texture found!"));
 	Transform& transform = GetParent()->GetTransform();
 	glm::vec2 texSize{ m_pTexture->GetSize() };
-	glm::vec2 renderPos{transform.GetWorldPosition().x - texSize.x / 2, transform.GetWorldPosition().y - texSize.y / 2};
+	glm::vec2 renderPos{transform.GetWorldPosition().x, transform.GetWorldPosition().y};
 	if (m_CanRotate)
 	{
 		Renderer::GetInstance().RenderTexture(*m_pTexture, renderPos, transform.GetLocalRotation(), m_RenderScale);

@@ -9,35 +9,29 @@
 
 #include <fstream>
 
+#include "ControllerDevice.h"
+#include "HighScoreDisplay.h"
+#include "InputManager.h"
 #include "Minigin.h"
 
 #include "MapData.h"
-#include "NumberDisplay.h"
 #include "json.hpp"
+#include "ResourceManager.h"
 
 void load()
 {
-    std::vector<std::pair<std::string, int>> scores{
-        std::make_pair("Player1", 1000),
-        std::make_pair("Player", 500),
-        std::make_pair("Player3", 200),
-        std::make_pair("Player4", 150),
-    };
-    nlohmann::json j;
+    using namespace dae;
+    std::unique_ptr<KeyboardDevice> pKeyboard = std::make_unique<dae::KeyboardDevice>();
+    std::unique_ptr<ControllerDevice> pController = std::make_unique<dae::ControllerDevice>(0);
+    std::unique_ptr<ControllerDevice> pControllerTwo = std::make_unique<dae::ControllerDevice>(1);
 
-    for (const auto& score : scores) {
-        nlohmann::json scoreJson;
-        scoreJson["player"] = score.first;
-        scoreJson["score"] = score.second;
-        j.push_back(scoreJson);
-    }
+    auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
-    std::ofstream file("Data/high_scores.json");
-    file << j.dump(4);
-
-
-
-	dae::levelLoader::StartGame(dae::levelLoader::GameMode::SinglePlayer);
+    levelLoader::OpenMenu();
+   
+    InputManager::GetInstance().AddInputDevice(std::move(pController));
+    InputManager::GetInstance().AddInputDevice(std::move(pControllerTwo));
+    InputManager::GetInstance().AddInputDevice(std::move(pKeyboard));
 }
 
 int main(int, char* []) {

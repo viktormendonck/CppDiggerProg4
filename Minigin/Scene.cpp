@@ -63,7 +63,6 @@ void Scene::HandleObjectDestruction(const std::shared_ptr<GameObject>& object)
 		}
 		if (!children[i]->IsMarkedForDestruction()) continue;
 		object->Erase(children[i]);
-		//TODO: THIS IS SO FUCKED LIKE SOMETHING DIED IN HERE
 	}
 }
 
