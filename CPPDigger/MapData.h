@@ -217,7 +217,7 @@ namespace dae
 
 	}
 
-	namespace levelLoader
+	namespace GameLoader
 	{
 		enum class GameMode {
 			SinglePlayer,

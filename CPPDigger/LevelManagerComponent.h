@@ -16,7 +16,7 @@ namespace dae
 	{
 	public:
 		
-		LevelManagerComponent(GameObject* pParent,levelLoader::GameMode gameMode, std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal,std::unique_ptr<Signal<int>> pPlayerTwoLivesChangedSignal, KeyboardDevice* pKeyboard, ControllerDevice* pController, ControllerDevice* pControllerTwo, const std::string& name );
+		LevelManagerComponent(GameObject* pParent,GameLoader::GameMode gameMode, std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal,std::unique_ptr<Signal<int>> pPlayerTwoLivesChangedSignal, KeyboardDevice* pKeyboard, ControllerDevice* pController, ControllerDevice* pControllerTwo, const std::string& name );
 		void Init() override; // make player Object and load first level
 		void Update() override;
 
@@ -29,7 +29,8 @@ namespace dae
 		const std::vector<std::string> m_Levels{
 			"Data/Level1.json",
 			"Data/Level2.json",
-			"Data/Level3.json"
+			"Data/Level3.json",
+			"Data/TestLevel.json"
 		};
 		std::shared_ptr<Texture2D> m_pPlayerTexture;
 		std::shared_ptr<Texture2D> m_pEnemyTexture;
@@ -49,7 +50,7 @@ namespace dae
 		std::unique_ptr<Signal<int>> m_pScoreChangedSignal;
 		std::unique_ptr<Signal<int>> m_pLivesChangedSignal;
 		std::unique_ptr<Signal<int>> m_pPlayerTwoLivesChangedSignal;
-		levelLoader::GameMode m_GameMode;
+		GameLoader::GameMode m_GameMode;
 		int m_Level{0};
 		bool m_IsInitialized{};
 

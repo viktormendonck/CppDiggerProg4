@@ -64,9 +64,9 @@ namespace dae
 		}
 
 	}
-	namespace levelLoader
+	namespace GameLoader
 	{
-
+		//all functions needed to add objects to the game and start parts of it
 		void AddGem(GameObject* pParent,
 			std::shared_ptr<Signal<GameObject*>> pAnyGemPickedUpSignal,
 			const std::shared_ptr<Texture2D>& pTexture, glm::vec2 pos)
@@ -306,7 +306,7 @@ namespace dae
 			std::shared_ptr<GameObject> pTextInputFieldObject = std::make_shared<GameObject>();
 			pTextInputFieldObject->AddComponent(std::make_unique<TextureComponent>(pTextInputFieldObject.get(), pNameFieldTex, false));
 			pTextInputFieldObject->AddComponent(std::make_unique<TextInputField>(pTextInputFieldObject.get(), font));
-			pTextInputFieldObject->GetTransform().SetLocalPosition(glm::vec2{ 200,200 });
+			pTextInputFieldObject->GetTransform().SetLocalPosition(glm::vec2{ 300,300 });
 			pTextInputFieldObject->SetParent(pNamingScene.get(), false);
 
 			std::shared_ptr<GameObject> pPlayButton = std::make_shared<GameObject>();
@@ -326,7 +326,7 @@ namespace dae
 			});
 			pPlayButton->AddComponent(std::move(pVersusButton));
 			pPlayButton->AddComponent(std::make_unique<TextureComponent>(pPlayButton.get(), pPlayButtonTex, false));
-			pPlayButton->GetTransform().SetLocalPosition({200,280});
+			pPlayButton->GetTransform().SetLocalPosition({300,380});
 			pPlayButton->SetParent(pNamingScene.get(), false);
 
 

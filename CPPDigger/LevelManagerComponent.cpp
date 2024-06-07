@@ -9,7 +9,7 @@
 #include "EnemyComponent.h"
 #include "ScoreComponent.h"
 
-dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, levelLoader::GameMode gameMode,
+dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, GameLoader::GameMode gameMode,
 	std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal,
 	std::unique_ptr<Signal<int>> pPlayerTwoLivesChangedSignal, KeyboardDevice* pKeyboard, ControllerDevice* pController,
 	ControllerDevice* pControllerTwo, const std::string& name)
@@ -82,24 +82,24 @@ void dae::LevelManagerComponent::Update()
 		//check end conditions
 		switch (m_GameMode)
 		{
-		case levelLoader::GameMode::SinglePlayer:
+		case GameLoader::GameMode::SinglePlayer:
 			if (allPlayersDead || static_cast<size_t>(m_Level) == m_Levels.size())
 			{
-				levelLoader::OpenMenu(m_PlayerName, players[0]->GetParent()->GetComponent<ScoreComponent>()->GetScore());
+				GameLoader::OpenMenu(m_PlayerName, players[0]->GetParent()->GetComponent<ScoreComponent>()->GetScore());
 			}
 			break;
-		case levelLoader::GameMode::CoOp:
+		case GameLoader::GameMode::CoOp:
 			if (allPlayersDead || static_cast<size_t>(m_Level) == m_Levels.size())
 			{
-				levelLoader::OpenMenu();
+				GameLoader::OpenMenu();
 			}
 			break;
-		case levelLoader::GameMode::Versus:
+		case GameLoader::GameMode::Versus:
 			for (PlayerComponent* pPlayer : players)
 			{
 				if (pPlayer->GetLives() == 0)
 				{
-					levelLoader::OpenMenu();
+					GameLoader::OpenMenu();
 				}
 			}
 		}
@@ -142,7 +142,7 @@ void dae::LevelManagerComponent::LoadNextLevel()
 
 	if (!m_pPlayer)
 	{
-		levelLoader::PlayerRequirements playerRequirements
+		GameLoader::PlayerRequirements playerRequirements
 		{
 			GetParent(),
 			m_pPlayerTexture,
@@ -170,7 +170,7 @@ void dae::LevelManagerComponent::LoadNextLevel()
 				break;
 			}
 		}
-		if (m_GameMode != levelLoader::GameMode::SinglePlayer)
+		if (m_GameMode != GameLoader::GameMode::SinglePlayer)
 		{
 			playerRequirements.playerIndex = 1;
 			AddPlayer(playerRequirements);
@@ -182,17 +182,17 @@ void dae::LevelManagerComponent::LoadNextLevel()
 
 	for (const std::vector<int>& bagPos : json["moneyBagPositions"].get<std::vector<std::vector<int>>>())
 	{
-		levelLoader::AddGoldBag(GetParent(), m_pAnyGoldPickedUpSignal, m_pGoldBagTexture, pTileMap->TileToLocal(glm::ivec2{ bagPos[0], bagPos[1] }));
+		GameLoader::AddGoldBag(GetParent(), m_pAnyGoldPickedUpSignal, m_pGoldBagTexture, pTileMap->TileToLocal(glm::ivec2{ bagPos[0], bagPos[1] }));
 	}
 
 	for (const std::vector<int>& gemPos : json["gemPositions"].get<std::vector<std::vector<int>>>())
 	{
-		levelLoader::AddGem(GetParent(), m_pAnyGemPickedUpSignal, m_pGemTexture, pTileMap->TileToLocal(glm::ivec2{ gemPos[0], gemPos[1] }));
+		GameLoader::AddGem(GetParent(), m_pAnyGemPickedUpSignal, m_pGemTexture, pTileMap->TileToLocal(glm::ivec2{ gemPos[0], gemPos[1] }));
 	}
 
 	for (const std::vector<int>& spawnerInfo : json["spawnerPositions"].get<std::vector<std::vector<int>>>())
 	{
-		levelLoader::AddEnemySpawner(GetParent(), pTileMap->TileToLocal(glm::ivec2{ spawnerInfo[0], spawnerInfo[1] }), m_pAnyEnemyKilledSignal, m_pEnemyTexture, spawnerInfo[2], static_cast<float>(spawnerInfo[3]));
+		GameLoader::AddEnemySpawner(GetParent(), pTileMap->TileToLocal(glm::ivec2{ spawnerInfo[0], spawnerInfo[1] }), m_pAnyEnemyKilledSignal, m_pEnemyTexture, spawnerInfo[2], static_cast<float>(spawnerInfo[3]));
 	}
 	GetParent()->Init();
 }

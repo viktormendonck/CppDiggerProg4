@@ -26,7 +26,7 @@ void load()
 
     auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
-    levelLoader::OpenMenu();
+    GameLoader::OpenMenu();
    
     InputManager::GetInstance().AddInputDevice(std::move(pController));
     InputManager::GetInstance().AddInputDevice(std::move(pControllerTwo));
