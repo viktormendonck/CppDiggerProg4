@@ -110,32 +110,92 @@ namespace dae
 				uint16_t{ static_cast<uint16_t>(CollisionLayers::PlayerDamage) },
 				uint16_t{ static_cast<uint16_t>(CollisionLayers::Pickup) | static_cast<uint16_t>(CollisionLayers::Push) }
 			));
-			pPlayerObject->AddComponent(std::make_unique<ScoreComponent>(pPlayerObject.get(), requirements.pGemPickedUpSignal, requirements.pGoldPickedUpSignal, requirements.pEnemyKilledSignal, std::move(requirements.pScoreChangedSignal)));
-			pPlayerObject->AddComponent(std::make_unique<HealthComponent>(pPlayerObject.get(), std::move(requirements.pLivesChangedSignal)));
+			if (requirements.gameMode == GameMode::CoOp)
+			{
+				if (requirements.playerIndex == 0)
+				{
+					pPlayerObject->AddComponent(std::make_unique<ScoreComponent>(pPlayerObject.get(), requirements.pGemPickedUpSignal, requirements.pGoldPickedUpSignal, requirements.pEnemyKilledSignal, std::move(requirements.pScoreChangedSignal)));
+				}
+				else
+				{
+					requirements.pParent->GetComponents<PlayerComponent>()[0]->GetParent()->GetComponent<ScoreComponent>()->SetSecondPlayer(pPlayerObject.get());
+				}
+			}
+			else if (requirements.gameMode == GameMode::SinglePlayer)
+			{
+				pPlayerObject->AddComponent(std::make_unique<ScoreComponent>(pPlayerObject.get(), requirements.pGemPickedUpSignal, requirements.pGoldPickedUpSignal, requirements.pEnemyKilledSignal, std::move(requirements.pScoreChangedSignal)));
+			}
+			if (requirements.playerIndex == 0)
+			{
+				pPlayerObject->AddComponent(std::make_unique<HealthComponent>(pPlayerObject.get(), std::move(requirements.pLivesChangedSignal)));
+			}
+			else
+			{
+				pPlayerObject->AddComponent(std::make_unique<HealthComponent>(pPlayerObject.get(), std::move(requirements.pPlayerTwoLivesChangedSignal)));
+			}
+
 			pPlayerObject->SetParent(requirements.pParent, false);
-			requirements.pKeyboard->BindCommand(
+			if (requirements.playerIndex == 0)
+			{
+				requirements.pKeyboard->BindCommand(
+					std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, -1 }),
+					SDL_SCANCODE_W,
+					InputState::Held
+				);
+				requirements.pKeyboard->BindCommand(
+					std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, 1 }),
+					SDL_SCANCODE_S,
+					InputState::Held
+				);
+				requirements.pKeyboard->BindCommand(
+					std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ 1, 0 }),
+					SDL_SCANCODE_D,
+					InputState::Held
+				);
+				requirements.pKeyboard->BindCommand(
+					std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ -1, 0 }),
+					SDL_SCANCODE_A,
+					InputState::Held
+				);
+				requirements.pKeyboard->BindCommand(
+					std::make_unique<ShootCommand>(pPlayerObject.get(), requirements.pFireBallTex),
+					SDL_SCANCODE_SPACE,
+					InputState::Pressed
+				);
+			}
+			ControllerDevice* pController{};
+			if (requirements.gameMode == GameMode::SinglePlayer || requirements.playerIndex != 0)
+			{
+				pController = requirements.pController;
+			}
+			else
+			{
+				pController = requirements.pControllerTwo;
+			}
+
+			pController->BindCommand(
 				std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, -1 }),
-				requirements.upButton,
+				ControllerDevice::ControllerButton::DPadUp,
 				InputState::Held
 			);
-			requirements.pKeyboard->BindCommand(
+			pController->BindCommand(
 				std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ 0, 1 }),
-				requirements.downButton,
+				ControllerDevice::ControllerButton::DPadDown,
 				InputState::Held
 			);
-			requirements.pKeyboard->BindCommand(
+			pController->BindCommand(
 				std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ 1, 0 }),
-				requirements.rightButton,
+				ControllerDevice::ControllerButton::DPadRight,
 				InputState::Held
 			);
-			requirements.pKeyboard->BindCommand(
+			pController->BindCommand(
 				std::make_unique<MoveCommand>(pPlayerObject.get(), glm::ivec2{ -1, 0 }),
-				requirements.leftButton,
+				ControllerDevice::ControllerButton::DPadLeft,
 				InputState::Held
 			);
-			requirements.pKeyboard->BindCommand(
+			pController->BindCommand(
 				std::make_unique<ShootCommand>(pPlayerObject.get(), requirements.pFireBallTex),
-				requirements.attackButton,
+				ControllerDevice::ControllerButton::X,
 				InputState::Pressed
 			);
 
@@ -174,11 +234,16 @@ namespace dae
 			std::unique_ptr<TileMapComponent> pTileMap = std::make_unique<TileMapComponent>(pWorldObject.get(), pTileSet, glm::ivec2{ 6,3 }, glm::ivec2{ 40,25 });
 			pWorldObject->AddComponent(std::move(pTileMap));
 			std::unique_ptr<Signal<int>> pScoreChangedSignal = std::make_unique<Signal<int>>();
-			std::unique_ptr<Signal<int>> pLivesChangedSignal = std::make_unique<Signal<int>>();
+			std::unique_ptr<Signal<int>> pPlayerOneLivesChangedSignal = std::make_unique<Signal<int>>();
+
+			std::unique_ptr<Signal<int>> pPlayerTwoLivesChangedSignal = std::make_unique<Signal<int>>();
 
 			Signal<int>* pScoreChangedSignalPtr = pScoreChangedSignal.get();
-			Signal<int>* pLivesChangedSignalPtr = pLivesChangedSignal.get();
-			pWorldObject->AddComponent(std::make_unique<LevelManagerComponent>(pWorldObject.get(), gameMode, std::move(pScoreChangedSignal),std::move(pLivesChangedSignal), pKeyboard, pController, pControllerTwo));
+			Signal<int>* pPlayerOneLivesChangedSignalPtr = pPlayerOneLivesChangedSignal.get();
+			Signal<int>* pPlayerTwoLivesChangedSignalPtr = pPlayerTwoLivesChangedSignal.get();
+
+
+			pWorldObject->AddComponent(std::make_unique<LevelManagerComponent>(pWorldObject.get(), gameMode, std::move(pScoreChangedSignal), std::move(pPlayerOneLivesChangedSignal), std::move(pPlayerTwoLivesChangedSignal), pKeyboard, pController, pControllerTwo));
 
 			pKeyboard->BindCommand(
 				std::make_unique<SkipLevelCommand>(pWorldObject.get()),
@@ -186,21 +251,32 @@ namespace dae
 				InputState::Pressed
 			);
 
+			std::shared_ptr<Texture2D> pLife{ ResourceManager::GetInstance().LoadTexture("life.png") };
 			const std::shared_ptr<GameObject> pUiObject = std::make_shared<GameObject>();
-			pUiObject->AddComponent(std::make_unique<UITagComponent>(pUiObject.get()));
+
+			const auto pLivesDisplayObject = std::make_shared<GameObject>();
+			pLivesDisplayObject->AddComponent(std::make_unique<LivesDisplay>(pLivesDisplayObject.get(), pLife, pPlayerOneLivesChangedSignalPtr));
+			pLivesDisplayObject->GetTransform().SetLocalPosition(glm::vec2(600, 20));
+			pLivesDisplayObject->SetParent(pUiObject.get(), false);
+
+			if (gameMode != GameMode::SinglePlayer)
+			{
+				const auto pSecondLivesDisplayObject = std::make_shared<GameObject>();
+				pSecondLivesDisplayObject->AddComponent(std::make_unique<LivesDisplay>(pSecondLivesDisplayObject.get(), pLife, pPlayerTwoLivesChangedSignalPtr));
+				pSecondLivesDisplayObject->GetTransform().SetLocalPosition(glm::vec2(600, 600));
+				pSecondLivesDisplayObject->SetParent(pUiObject.get(), false);
+			}
 			std::shared_ptr<Texture2D> pNumbers{ ResourceManager::GetInstance().LoadTexture("nums.png") };
 
-			const std::shared_ptr<GameObject> pScoreObject = std::make_shared<GameObject>();
-			pScoreObject->AddComponent(std::make_unique<NumberDisplay>(pScoreObject.get(), pScoreChangedSignalPtr, pNumbers, glm::vec2(2, 2)));
-			pScoreObject->GetTransform().SetLocalPosition(glm::vec2(20, 20));
-			pScoreObject->SetParent(pUiObject.get(), false);
 
-			const auto pLivesObject = std::make_shared<GameObject>();
-			std::shared_ptr<Texture2D> pLife{ ResourceManager::GetInstance().LoadTexture("life.png") };
+			if (gameMode != GameMode::Versus)
+			{
+				const std::shared_ptr<GameObject> pScoreObject = std::make_shared<GameObject>();
+				pScoreObject->AddComponent(std::make_unique<NumberDisplay>(pScoreObject.get(), pScoreChangedSignalPtr, pNumbers, glm::vec2(2, 2)));
+				pScoreObject->GetTransform().SetLocalPosition(glm::vec2(20, 20));
+				pScoreObject->SetParent(pUiObject.get(), false);
+			}
 
-			pLivesObject->AddComponent(std::make_unique<LivesDisplay>(pLivesObject.get(), pLife,pLivesChangedSignalPtr ));
-			pLivesObject->GetTransform().SetLocalPosition(glm::vec2(600, 20));
-			pLivesObject->SetParent(pUiObject.get(), false);
 
 			scene.Add(pUiObject);
 			scene.Add(pWorldObject);
@@ -212,7 +288,7 @@ namespace dae
 			OpenMenu("---", 0);
 		}
 
-		void OpenMenu(const std::string& name , int score )
+		void OpenMenu(const std::string& name, int score)
 		{
 			SceneManager::GetInstance().RemoveScene("UI");
 			auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
@@ -235,16 +311,16 @@ namespace dae
 			std::shared_ptr<Texture2D> pCoopButtonTex{ ResourceManager::GetInstance().LoadTexture("CoopButton.png") };
 			std::shared_ptr<Texture2D> pVersusButtonTex{ ResourceManager::GetInstance().LoadTexture("VersusButton.png") };
 			glm::vec2 singlePlayerButtonPos{ 450, 240 };
-			glm::vec2 coOpButtonPos { 450, 310 };
-			glm::vec2 versusButtonPos { 450, 380 };
+			glm::vec2 coOpButtonPos{ 450, 310 };
+			glm::vec2 versusButtonPos{ 450, 380 };
 
 			std::shared_ptr<GameObject> pSinglePlayerButtonObject = std::make_shared<GameObject>();
-			std::unique_ptr<UIButtonComponent> pSinglePlayerButton = std::make_unique<UIButtonComponent>(pSinglePlayerButtonObject.get(),buttonSize);
+			std::unique_ptr<UIButtonComponent> pSinglePlayerButton = std::make_unique<UIButtonComponent>(pSinglePlayerButtonObject.get(), buttonSize);
 			pSinglePlayerButton->onClick.AddListener([]() {StartGame(GameMode::SinglePlayer); });
 			pSinglePlayerButtonObject->AddComponent(std::move(pSinglePlayerButton));
 			pSinglePlayerButtonObject->AddComponent(std::make_unique<TextureComponent>(pSinglePlayerButtonObject.get(), pSinglePlayerButtonTex, false));
 			pSinglePlayerButtonObject->GetTransform().SetLocalPosition(singlePlayerButtonPos);
-			pSinglePlayerButtonObject->SetParent(pMainUIScene.get(),false);
+			pSinglePlayerButtonObject->SetParent(pMainUIScene.get(), false);
 
 			std::shared_ptr<GameObject> pCoOpButtonObject = std::make_shared<GameObject>();
 			std::unique_ptr<UIButtonComponent> pCoOpButton = std::make_unique<UIButtonComponent>(pCoOpButtonObject.get(), buttonSize);

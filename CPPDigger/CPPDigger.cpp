@@ -7,7 +7,6 @@
 #endif
 #endif
 
-#include <fstream>
 
 #include "ControllerDevice.h"
 #include "HighScoreDisplay.h"

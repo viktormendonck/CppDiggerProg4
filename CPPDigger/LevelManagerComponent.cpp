@@ -9,13 +9,17 @@
 #include "EnemyComponent.h"
 #include "ScoreComponent.h"
 
-dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, levelLoader::GameMode gameMode,std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal,KeyboardDevice* pKeyboard, ControllerDevice* pController, ControllerDevice* pControllerTwo)
+dae::LevelManagerComponent::LevelManagerComponent(GameObject* pParent, levelLoader::GameMode gameMode,
+	std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal,
+	std::unique_ptr<Signal<int>> pPlayerTwoLivesChangedSignal, KeyboardDevice* pKeyboard, ControllerDevice* pController,
+	ControllerDevice* pControllerTwo)
 	: Component(pParent)
 	, m_pKeyboard(pKeyboard)
 	, m_pController(pController)
 	, m_pControllerTwo(pControllerTwo)
 	, m_pScoreChangedSignal(std::move(pScoreChangedSignal))
 	, m_pLivesChangedSignal(std::move(pLivesChangedSignal))
+	, m_pPlayerTwoLivesChangedSignal(std::move(pPlayerTwoLivesChangedSignal))
 	, m_GameMode(gameMode)
 
 {
@@ -60,7 +64,7 @@ void dae::LevelManagerComponent::Update()
 		}
 
 
-		if (GetParent()->GetComponents<GemComponent>().empty()|| (GetParent()->GetComponents<EnemyComponent>().empty() && !allSpawnersDead))
+		if (GetParent()->GetComponents<GemComponent>().empty() || (GetParent()->GetComponents<EnemyComponent>().empty() && !allSpawnersDead))
 		{
 			NextLevel();
 		}
@@ -122,42 +126,44 @@ void dae::LevelManagerComponent::LoadNextLevel()
 	}
 	pTileMap->SetMap(map);
 
-
 	if (!m_pPlayer)
-	{
-
-		levelLoader::PlayerRequirements playerRequirements
 		{
-			GetParent(),
-			m_pPlayerTexture,
-			m_pFireBallTexture,
-			pTileMap->TileToLocal(playerSpawnPos),
-			m_pKeyboard,
-			m_pAnyGemPickedUpSignal.get(),
-			m_pAnyGoldPickedUpSignal.get(),
-			m_pAnyEnemyKilledSignal.get(),
-			std::move(m_pScoreChangedSignal),
-			std::move(m_pLivesChangedSignal),
-			SDL_SCANCODE_W,
-			SDL_SCANCODE_S,
-			SDL_SCANCODE_A,
-			SDL_SCANCODE_D,
-			SDL_SCANCODE_SPACE
-		};
-
-		levelLoader::AddPlayer(playerRequirements);
-		for (const auto& child : GetParent()->GetChildren())
-		{
-			if (child->GetComponent<PlayerComponent>())
+			levelLoader::PlayerRequirements playerRequirements
 			{
-				m_pPlayer = child;
-				break;
-			}
-		}
-	}
+				GetParent(),
+				m_pPlayerTexture,
+				m_pFireBallTexture,
+				pTileMap->TileToLocal(playerSpawnPos),
+				m_pKeyboard,
+				m_pController,
+				m_pControllerTwo,
+				m_pAnyGemPickedUpSignal.get(),
+				m_pAnyGoldPickedUpSignal.get(),
+				m_pAnyEnemyKilledSignal.get(),
+				std::move(m_pScoreChangedSignal),
+				std::move(m_pLivesChangedSignal),
+				std::move(m_pPlayerTwoLivesChangedSignal),
+				m_GameMode,
+				0
+			};
 
+			AddPlayer(playerRequirements);
+			for (const auto& child : GetParent()->GetChildren())
+			{
+				if (child->GetComponent<PlayerComponent>())
+				{
+					m_pPlayer = child;
+					break;
+				}
+			}
+			if (m_GameMode != levelLoader::GameMode::SinglePlayer)
+			{
+				playerRequirements.playerIndex = 1;
+				AddPlayer(playerRequirements);
+			}
+
+		}
 	m_pPlayer->GetComponent<PlayerComponent>()->SetRespawnPos(pTileMap->TileToLocal(playerSpawnPos));
-	
 
 
 	for (const std::vector<int>& bagPos : json["moneyBagPositions"].get<std::vector<std::vector<int>>>())

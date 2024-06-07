@@ -14,14 +14,14 @@ dae::ScoreComponent::ScoreComponent(GameObject* pParent, Signal<GameObject*>* pG
 
 void dae::ScoreComponent::OnEnemyKill(const GameObject* killingCharacter)
 {
-	if (GetParent() != killingCharacter)return;
+	if (GetParent() != killingCharacter && m_pSecondPlayerObject != killingCharacter)return;
 	m_Score += m_EnemyKillScore;
 	m_pScoreChangedSignal->Emit(m_Score);
 }
 
 void dae::ScoreComponent::OnGoldPickedUp(const GameObject* pPickupCharacter)
 {
-	if (GetParent() != pPickupCharacter)return;
+	if (GetParent() != pPickupCharacter && m_pSecondPlayerObject != pPickupCharacter)return;
 	m_Score += m_GoldScore;
 	m_pScoreChangedSignal->Emit(m_Score);
 }
@@ -30,7 +30,7 @@ void dae::ScoreComponent::OnGoldPickedUp(const GameObject* pPickupCharacter)
 void dae::ScoreComponent::OnGemPickedUp(const GameObject* pPickupCharacter)
 {
 	using namespace std::chrono;
-	if (GetParent() != pPickupCharacter)return;
+	if (GetParent() != pPickupCharacter && m_pSecondPlayerObject != pPickupCharacter)return;
 
 	if (duration_cast<milliseconds>(high_resolution_clock::now() - m_LastGemPickup).count() > m_GemBonusMaxTimeMs)
 	{

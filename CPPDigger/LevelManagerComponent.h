@@ -16,7 +16,7 @@ namespace dae
 	{
 	public:
 		
-		LevelManagerComponent(GameObject* pParent,levelLoader::GameMode gameMode, std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal, KeyboardDevice* pKeyboard, ControllerDevice* pController, ControllerDevice* pControllerTwo);
+		LevelManagerComponent(GameObject* pParent,levelLoader::GameMode gameMode, std::unique_ptr<Signal<int>> pScoreChangedSignal, std::unique_ptr<Signal<int>> pLivesChangedSignal,std::unique_ptr<Signal<int>> pLivesChanged, KeyboardDevice* pKeyboard, ControllerDevice* pController, ControllerDevice* pControllerTwo);
 		void Init() override; // make player Object and load first level
 		void Update() override;
 
@@ -48,6 +48,7 @@ namespace dae
 
 		std::unique_ptr<Signal<int>> m_pScoreChangedSignal;
 		std::unique_ptr<Signal<int>> m_pLivesChangedSignal;
+		std::unique_ptr<Signal<int>> m_pPlayerTwoLivesChangedSignal;
 		levelLoader::GameMode m_GameMode;
 		int m_Level{0};
 		bool m_IsInitialized{};

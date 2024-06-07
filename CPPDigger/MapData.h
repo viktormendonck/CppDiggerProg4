@@ -13,6 +13,7 @@
 namespace dae
 {
 	class KeyboardDevice;
+	class ControllerDevice;
 	class EnemySpawnerComponent;
 	class CollisionRectComponent;
 
@@ -235,16 +236,16 @@ namespace dae
 			std::shared_ptr<Texture2D> pFireBallTex;
 			glm::vec2 pos;
 			KeyboardDevice* pKeyboard;
+			ControllerDevice* pController;
+			ControllerDevice* pControllerTwo;
 			Signal<GameObject*>* pGemPickedUpSignal;
 			Signal<GameObject*>* pGoldPickedUpSignal;
 			Signal<GameObject*>* pEnemyKilledSignal;
 			std::unique_ptr<Signal<int>> pScoreChangedSignal;
 			std::unique_ptr<Signal<int>> pLivesChangedSignal;
-			SDL_Scancode upButton;
-			SDL_Scancode downButton;
-			SDL_Scancode leftButton;
-			SDL_Scancode rightButton;
-			SDL_Scancode attackButton;
+			std::unique_ptr<Signal<int>> pPlayerTwoLivesChangedSignal;
+			GameMode gameMode;
+			int playerIndex{};
 		};
 
 		void AddPlayer(PlayerRequirements& requirements);

@@ -11,6 +11,7 @@ namespace dae
 	public:
 		ScoreComponent(GameObject* pParent, Signal<GameObject*>* pGemSignal, Signal<GameObject*>* pGoldBagSignal, Signal<GameObject*>* pEnemySignal,std::unique_ptr<Signal<int>> pScoreChangedSignal);
 		int GetScore() const { return m_Score; }
+		void SetSecondPlayer(GameObject* player) { m_pSecondPlayerObject = player; }
 	private:
 		int m_Score{};
 
@@ -28,5 +29,7 @@ namespace dae
 		const int m_GemScore{ 25 };
 		const int m_ConsecutiveGemBonusScore{ 250 };
 		std::unique_ptr<Signal<int>> m_pScoreChangedSignal{};
+
+		GameObject* m_pSecondPlayerObject{}; //needed for co-op
 	};
 }
